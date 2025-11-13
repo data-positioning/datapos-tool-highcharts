@@ -2,16 +2,21 @@
  * Highcharts tool class.
  */
 
-import 'highcharts/es-modules/Core/Defaults.js';
-
-// Dependencies - Highcharts.
+// Core Highcharts
 import Chart from 'highcharts/es-modules/Core/Chart/Chart.js';
 
+// Series types
 import 'highcharts/es-modules/Series/Area/AreaSeries.js';
 import 'highcharts/es-modules/Series/Column/ColumnSeries.js';
 import 'highcharts/es-modules/Series/Line/LineSeries.js';
-import 'highcharts/es-modules/Core/Axis/Axis.js';
-import 'highcharts/es-modules/Core/Legend/Legend.js';
+
+// Required compositions for axis and legend functionality
+import Axis from 'highcharts/es-modules/Core/Axis/Axis.js';
+import Legend from 'highcharts/es-modules/Core/Legend/Legend.js';
+
+// Compose the required functionality
+Legend.compose(Chart);
+Axis.compose(Chart);
 
 // Classes - Highcharts tool.
 export default class HighchartsTool {
