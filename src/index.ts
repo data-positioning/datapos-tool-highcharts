@@ -101,8 +101,8 @@ class HighchartsTool {
     // Utilities - Load Highcharts more module.
     private async loadHighchartsMoreModule(): Promise<void> {
         if (highchartsMoreModuleLoaded) return;
-        const moreModule = await import('highcharts/highcharts-more');
-        console.log('moreModule', moreModule);
+
+        await import('highcharts/highcharts-more');
         highchartsMoreModuleLoaded = true;
     }
 }
