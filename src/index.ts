@@ -5,6 +5,8 @@
 // Dependencies - Highcharts.
 import Chart from 'highcharts/es-modules/Core/Chart/Chart.js';
 
+import 'highcharts/es-modules/Series/Column/ColumnSeries.js';
+
 // Classes - Highcharts tool.
 export default class HighchartsTool {
     constructor() {}
