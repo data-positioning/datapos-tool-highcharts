@@ -23,7 +23,7 @@ export default class HighchartsTool {
         try {
             const chart = Highcharts.chart(renderTo, {
                 chart: { type: 'column', reflow: false },
-                title: { text: 'Fruit Consumption' },
+                title: { text: 'Fruit Consumption 2' },
                 xAxis: { categories: ['Apples', 'Bananas', 'Oranges'] },
                 yAxis: { title: { text: 'Fruit eaten' } },
                 series: [

@@ -5014,7 +5014,7 @@ class Ap {
     try {
       const xt = Cp.chart(Cr, {
         chart: { type: "column", reflow: !1 },
-        title: { text: "Fruit Consumption" },
+        title: { text: "Fruit Consumption 2" },
         xAxis: { categories: ["Apples", "Bananas", "Oranges"] },
         yAxis: { title: { text: "Fruit eaten" } },
         series: [
