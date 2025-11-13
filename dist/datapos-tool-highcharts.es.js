@@ -1,1418 +1,123 @@
-const $r = {
-  /**
-   * Default `mapData` for all series, in terms of a GeoJSON or TopoJSON
-   * object. If set to a string, it functions as an index into the
-   * `Highcharts.maps` array.
-   *
-   * For picking out individual shapes and geometries to use for each series
-   * of the map, see [series.mapData](#series.map.mapData).
-   *
-   * @sample    maps/demo/geojson
-   *            Loading GeoJSON data
-   * @sample    maps/chart/topojson
-   *            Loading TopoJSON data
-   *
-   * @type      {string|Array<*>|Highcharts.GeoJSON|Highcharts.TopoJSON}
-   * @since     5.0.0
-   * @product   highmaps
-   * @apioption chart.map
-   */
-  /**
-   * Set lat/lon transformation definitions for the chart. If not defined,
-   * these are extracted from the map data.
-   *
-   * @type      {*}
-   * @since     5.0.0
-   * @product   highmaps
-   * @apioption chart.mapTransforms
-   */
-  /**
-   * When using multiple axes, the ticks of two or more opposite axes
-   * will automatically be aligned by adding ticks to the axis or axes
-   * with the least ticks, as if `tickAmount` were specified.
-   *
-   * This can be prevented by setting `alignTicks` to false. If the grid
-   * lines look messy, it's a good idea to hide them for the secondary
-   * axis by setting `gridLineWidth` to 0.
-   *
-   * If `startOnTick` or `endOnTick` in the axis options are set to false,
-   * then the `alignTicks ` will be disabled for the axis.
-   *
-   * Disabled for logarithmic axes.
-   *
-   * @sample {highcharts} highcharts/chart/alignticks-true/
-   *         True by default
-   * @sample {highcharts} highcharts/chart/alignticks-false/
-   *         False
-   * @sample {highstock} stock/chart/alignticks-true/
-   *         True by default
-   * @sample {highstock} stock/chart/alignticks-false/
-   *         False
-   *
-   * @type      {boolean}
-   * @default   true
-   * @product   highcharts highstock gantt
-   * @apioption chart.alignTicks
-   */
-  /**
-   * When using multiple axes, align the thresholds. When this is true, other
-   * ticks will also be aligned.
-   *
-   * Note that for line series and some other series types, the `threshold`
-   * option is set to `null` by default. This will in turn cause their y-axis
-   * to not have a threshold. In order to avoid that, set the series
-   * `threshold` to 0 or another number.
-   *
-   * If `startOnTick` or `endOnTick` in the axis options are set to false, or
-   * if the axis is logarithmic, the threshold will not be aligned.
-   *
-   * @sample {highcharts} highcharts/chart/alignthresholds/ Set to true
-   *
-   * @since 10.0.0
-   * @product   highcharts highstock gantt
-   * @apioption chart.alignThresholds
-   */
-  alignThresholds: !1,
-  /**
-   * Set the overall animation for all chart updating. Animation can be
-   * disabled throughout the chart by setting it to false here. It can
-   * be overridden for each individual API method as a function parameter.
-   * The only animation not affected by this option is the initial series
-   * animation, see [plotOptions.series.animation](
-   * #plotOptions.series.animation).
-   *
-   * The animation can either be set as a boolean or a configuration
-   * object. If `true`, it will use the 'swing' jQuery easing and a
-   * duration of 500 ms. If used as a configuration object, the following
-   * properties are supported:
-   *
-   * - `defer`: The animation delay time in milliseconds.
-   *
-   * - `duration`: The duration of the animation in milliseconds.
-   *
-   * - `easing`: A string reference to an easing function set on the
-   *   `Math` object. See
-   *   [the easing demo](https://jsfiddle.net/gh/get/library/pure/highcharts/highcharts/tree/master/samples/highcharts/plotoptions/series-animation-easing/).
-   *
-   * When zooming on a series with less than 100 points, the chart redraw
-   * will be done with animation, but in case of more data points, it is
-   * necessary to set this option to ensure animation on zoom.
-   *
-   * @sample {highcharts} highcharts/chart/animation-none/
-   *         Updating with no animation
-   * @sample {highcharts} highcharts/chart/animation-duration/
-   *         With a longer duration
-   * @sample {highcharts} highcharts/chart/animation-easing/
-   *         With a jQuery UI easing
-   * @sample {highmaps} maps/chart/animation-none/
-   *         Updating with no animation
-   * @sample {highmaps} maps/chart/animation-duration/
-   *         With a longer duration
-   *
-   * @type      {boolean|Partial<Highcharts.AnimationOptionsObject>}
-   * @default   true
-   * @apioption chart.animation
-   */
-  /**
-   * A CSS class name to apply to the charts container `div`, allowing
-   * unique CSS styling for each chart.
-   *
-   * @type      {string}
-   * @apioption chart.className
-   */
-  /**
-   * Event listeners for the chart.
-   *
-   * @apioption chart.events
-   */
-  /**
-   * Fires when a series is added to the chart after load time, using the
-   * `addSeries` method. One parameter, `event`, is passed to the
-   * function, containing common event information. Through
-   * `event.options` you can access the series options that were passed to
-   * the `addSeries` method. Returning false prevents the series from
-   * being added.
-   *
-   * @sample {highcharts} highcharts/chart/events-addseries/
-   *         Alert on add series
-   * @sample {highstock} stock/chart/events-addseries/
-   *         Alert on add series
-   *
-   * @type      {Highcharts.ChartAddSeriesCallbackFunction}
-   * @since     1.2.0
-   * @context   Highcharts.Chart
-   * @apioption chart.events.addSeries
-   */
-  /**
-   * Fires when clicking on the plot background. One parameter, `event`,
-   * is passed to the function, containing common event information.
-   *
-   * Information on the clicked spot can be found through `event.xAxis`
-   * and `event.yAxis`, which are arrays containing the axes of each
-   * dimension and each axis' value at the clicked spot. The primary axes
-   * are `event.xAxis[0]` and `event.yAxis[0]`. Remember the unit of a
-   * datetime axis is milliseconds since 1970-01-01 00:00:00.
-   *
-   * ```js
-   * click: function(e) {
-   *     console.log(
-   *         Highcharts.dateFormat('%Y-%m-%d %H:%M:%S', e.xAxis[0].value),
-   *         e.yAxis[0].value
-   *     )
-   * }
-   * ```
-   *
-   * @sample {highcharts} highcharts/chart/events-click/
-   *         Alert coordinates on click
-   * @sample {highcharts} highcharts/chart/events-container/
-   *         Alternatively, attach event to container
-   * @sample {highstock} stock/chart/events-click/
-   *         Alert coordinates on click
-   * @sample {highstock} highcharts/chart/events-container/
-   *         Alternatively, attach event to container
-   * @sample {highmaps} maps/chart/events-click/
-   *         Record coordinates on click
-   * @sample {highmaps} highcharts/chart/events-container/
-   *         Alternatively, attach event to container
-   *
-   * @type      {Highcharts.ChartClickCallbackFunction}
-   * @since     1.2.0
-   * @context   Highcharts.Chart
-   * @apioption chart.events.click
-   */
-  /**
-   * Fires when the chart is finished loading. Since v4.2.2, it also waits
-   * for images to be loaded, for example from point markers. One
-   * parameter, `event`, is passed to the function, containing common
-   * event information.
-   *
-   * There is also a second parameter to the chart constructor where a
-   * callback function can be passed to be executed on chart.load.
-   *
-   * @sample {highcharts} highcharts/chart/events-load/
-   *         Alert on chart load
-   * @sample {highcharts} highcharts/chart/events-render/
-   *         Load vs Redraw vs Render
-   * @sample {highstock} stock/chart/events-load/
-   *         Alert on chart load
-   * @sample {highmaps} maps/chart/events-load/
-   *         Add series on chart load
-   *
-   * @type      {Highcharts.ChartLoadCallbackFunction}
-   * @context   Highcharts.Chart
-   * @apioption chart.events.load
-   */
-  /**
-   * Fires when the chart is redrawn, either after a call to
-   * `chart.redraw()` or after an axis, series or point is modified with
-   * the `redraw` option set to `true`. One parameter, `event`, is passed
-   * to the function, containing common event information.
-   *
-   * @sample {highcharts} highcharts/chart/events-redraw/
-   *         Alert on chart redraw
-   * @sample {highcharts} highcharts/chart/events-render/
-   *         Load vs Redraw vs Render
-   * @sample {highstock} stock/chart/events-redraw/
-   *         Alert on chart redraw when adding a series or moving the
-   *         zoomed range
-   * @sample {highmaps} maps/chart/events-redraw/
-   *         Set subtitle on chart redraw
-   *
-   * @type      {Highcharts.ChartRedrawCallbackFunction}
-   * @since     1.2.0
-   * @context   Highcharts.Chart
-   * @apioption chart.events.redraw
-   */
-  /**
-   * Fires after initial load of the chart (directly after the `load`
-   * event), and after each redraw (directly after the `redraw` event).
-   *
-   * @sample {highcharts} highcharts/chart/events-render/
-   *         Load vs Redraw vs Render
-   *
-   * @type      {Highcharts.ChartRenderCallbackFunction}
-   * @since     5.0.7
-   * @context   Highcharts.Chart
-   * @apioption chart.events.render
-   */
-  /**
-   * Fires when an area of the chart has been selected. Selection is
-   * enabled by setting the chart's zoomType. One parameter, `event`, is
-   * passed to the function, containing common event information. The
-   * default action for the selection event is to zoom the chart to the
-   * selected area. It can be prevented by calling
-   * `event.preventDefault()` or return false.
-   *
-   * Information on the selected area can be found through `event.xAxis`
-   * and `event.yAxis`, which are arrays containing the axes of each
-   * dimension and each axis' min and max values. The primary axes are
-   * `event.xAxis[0]` and `event.yAxis[0]`. Remember the unit of a
-   * datetime axis is milliseconds since 1970-01-01 00:00:00.
-   *
-   * ```js
-   * selection: function(event) {
-   *     // log the min and max of the primary, datetime x-axis
-   *     console.log(
-   *         Highcharts.dateFormat(
-   *             '%Y-%m-%d %H:%M:%S',
-   *             event.xAxis[0].min
-   *         ),
-   *         Highcharts.dateFormat(
-   *             '%Y-%m-%d %H:%M:%S',
-   *             event.xAxis[0].max
-   *         )
-   *     );
-   *     // log the min and max of the y axis
-   *     console.log(event.yAxis[0].min, event.yAxis[0].max);
-   * }
-   * ```
-   *
-   * @sample {highcharts} highcharts/chart/events-selection/
-   *         Report on selection and reset
-   * @sample {highcharts} highcharts/chart/events-selection-points/
-   *         Select a range of points through a drag selection
-   * @sample {highstock} stock/chart/events-selection/
-   *         Report on selection and reset
-   * @sample {highstock} highcharts/chart/events-selection-points/
-   *         Select a range of points through a drag selection
-   *         (Highcharts)
-   *
-   * @type      {Highcharts.ChartSelectionCallbackFunction}
-   * @apioption chart.events.selection
-   */
-  /**
-   * The margin between the outer edge of the chart and the plot area.
-   * The numbers in the array designate top, right, bottom and left
-   * respectively. Use the options `marginTop`, `marginRight`,
-   * `marginBottom` and `marginLeft` for shorthand setting of one option.
-   *
-   * By default there is no margin. The actual space is dynamically
-   * calculated from the offset of axis labels, axis title, title,
-   * subtitle and legend in addition to the `spacingTop`, `spacingRight`,
-   * `spacingBottom` and `spacingLeft` options.
-   *
-   * @sample {highcharts} highcharts/chart/margins-zero/
-   *         Zero margins
-   * @sample {highstock} stock/chart/margin-zero/
-   *         Zero margins
-   *
-   * @type      {number|Array<number>}
-   * @apioption chart.margin
-   */
-  /**
-   * The margin between the bottom outer edge of the chart and the plot
-   * area. Use this to set a fixed pixel value for the margin as opposed
-   * to the default dynamic margin. See also `spacingBottom`.
-   *
-   * @sample {highcharts} highcharts/chart/marginbottom/
-   *         100px bottom margin
-   * @sample {highstock} stock/chart/marginbottom/
-   *         100px bottom margin
-   * @sample {highmaps} maps/chart/margin/
-   *         100px margins
-   *
-   * @type      {number}
-   * @since     2.0
-   * @apioption chart.marginBottom
-   */
-  /**
-   * The margin between the left outer edge of the chart and the plot
-   * area. Use this to set a fixed pixel value for the margin as opposed
-   * to the default dynamic margin. See also `spacingLeft`.
-   *
-   * @sample {highcharts} highcharts/chart/marginleft/
-   *         150px left margin
-   * @sample {highstock} stock/chart/marginleft/
-   *         150px left margin
-   * @sample {highmaps} maps/chart/margin/
-   *         100px margins
-   *
-   * @type      {number}
-   * @since     2.0
-   * @apioption chart.marginLeft
-   */
-  /**
-   * The margin between the right outer edge of the chart and the plot
-   * area. Use this to set a fixed pixel value for the margin as opposed
-   * to the default dynamic margin. See also `spacingRight`.
-   *
-   * @sample {highcharts} highcharts/chart/marginright/
-   *         100px right margin
-   * @sample {highstock} stock/chart/marginright/
-   *         100px right margin
-   * @sample {highmaps} maps/chart/margin/
-   *         100px margins
-   *
-   * @type      {number}
-   * @since     2.0
-   * @apioption chart.marginRight
-   */
-  /**
-   * The margin between the top outer edge of the chart and the plot area.
-   * Use this to set a fixed pixel value for the margin as opposed to
-   * the default dynamic margin. See also `spacingTop`.
-   *
-   * @sample {highcharts} highcharts/chart/margintop/ 100px top margin
-   * @sample {highstock} stock/chart/margintop/
-   *         100px top margin
-   * @sample {highmaps} maps/chart/margin/
-   *         100px margins
-   *
-   * @type      {number}
-   * @since     2.0
-   * @apioption chart.marginTop
-   */
-  /**
-   * Callback function to override the default function that formats all
-   * the numbers in the chart. Returns a string with the formatted number.
-   *
-   * @sample highcharts/members/highcharts-numberformat
-   *      Arabic digits in Highcharts
-   * @type {Highcharts.NumberFormatterCallbackFunction}
-   * @since 8.0.0
-   * @apioption chart.numberFormatter
-   */
-  /**
-   * When a chart with an x and a y-axis is rendered, we first pre-render the
-   * labels of both in order to measure them. Then, if either of the axis
-   * labels take up so much space that it significantly affects the length of
-   * the other axis, we repeat the process.
-   *
-   * By default we stop at two axis layout runs, but it may be that the second
-   * run also alter the space required by either axis, for example if it
-   * causes the labels to rotate. In this situation, a subsequent redraw of
-   * the chart may cause the tick and label placement to change for apparently
-   * no reason.
-   *
-   * Use the `axisLayoutRuns` option to set the maximum allowed number of
-   * repetitions. But keep in mind that the default value of 2 is set because
-   * every run costs performance time.
-   *
-   * **Note:** Changing that option to higher than the default might decrease
-   * performance significantly, especially with bigger sets of data.
-   *
-   * @type      {number}
-   * @default   2
-   * @since     11.3.0
-   * @apioption chart.axisLayoutRuns
-   */
-  /**
-   * Allows setting a key to switch between zooming and panning. Can be
-   * one of `alt`, `ctrl`, `meta` (the command key on Mac and Windows
-   * key on Windows) or `shift`. The keys are mapped directly to the key
-   * properties of the click event argument (`event.altKey`,
-   * `event.ctrlKey`, `event.metaKey` and `event.shiftKey`).
-   *
-   * @type       {string}
-   * @since      4.0.3
-   * @product    highcharts gantt
-   * @validvalue ["alt", "ctrl", "meta", "shift"]
-   * @apioption  chart.panKey
-   */
-  /**
-   * Allow panning in a chart. Best used with [panKey](#chart.panKey)
-   * to combine zooming and panning.
-   *
-   * On touch devices, when the [tooltip.followTouchMove](
-   * #tooltip.followTouchMove) option is `true` (default), panning
-   * requires two fingers. To allow panning with one finger, set
-   * `followTouchMove` to `false`.
-   *
-   * @sample  {highcharts} highcharts/chart/pankey/ Zooming and panning
-   * @sample  {highstock} stock/chart/panning/ Zooming and xy panning
-   */
-  panning: {
-    /**
-     * Enable or disable chart panning.
-     *
-     * @type      {boolean}
-     * @default   {highcharts} false
-     * @default   {highstock|highmaps} true
-     */
-    enabled: !1,
-    /**
-     * Decides in what dimensions the user can pan the chart. Can be
-     * one of `x`, `y`, or `xy`.
-     *
-     * During panning, all axes will behave as if
-     * [`startOnTick`](#yAxis.startOnTick) and
-     * [`endOnTick`](#yAxis.endOnTick) were set to `false`. After the
-     * panning action is finished, the axes will adjust to their actual
-     * settings.
-     *
-     * **Note:** For non-cartesian series, the only supported panning type
-     * is `xy`, as zooming in a single direction is not applicable due to
-     * the radial nature of the coordinate system.
-     *
-     * @sample {highcharts} highcharts/chart/panning-type
-     *         Zooming and xy panning
-     *
-     * @declare    Highcharts.OptionsChartPanningTypeValue
-     * @type       {string}
-     * @validvalue ["x", "y", "xy"]
-     * @product    highcharts highstock gantt
-     */
-    type: "x"
-  },
-  /**
-   * Equivalent to [zoomType](#chart.zoomType), but for multitouch
-   * gestures only. By default, the `pinchType` is the same as the
-   * `zoomType` setting. However, pinching can be enabled separately in
-   * some cases, for example in stock charts where a mouse drag pans the
-   * chart, while pinching is enabled. When [tooltip.followTouchMove](
-   * #tooltip.followTouchMove) is true, pinchType only applies to
-   * two-finger touches.
-   *
-   * @type       {string}
-   * @default    {highcharts} undefined
-   * @default    {highstock} undefined
-   * @since      3.0
-   * @product    highcharts highstock gantt
-   * @deprecated
-   * @validvalue ["x", "y", "xy"]
-   * @apioption  chart.pinchType
-   */
-  /**
-   * Whether to apply styled mode. When in styled mode, no presentational
-   * attributes or CSS are applied to the chart SVG. Instead, CSS rules
-   * are required to style the chart. The default style sheet is
-   * available from `https://code.highcharts.com/css/highcharts.css`.
-   *
-   * [Read more in the docs](https://www.highcharts.com/docs/chart-design-and-style/style-by-css)
-   * on what classes and variables are available.
-   *
-   * @sample highcharts/css/colors
-   *         Color theming with CSS
-   * @sample highcharts/css/prefers-color-scheme
-   *         Dynamic theme based on system settings
-   * @type       {boolean}
-   * @default    false
-   * @since      7.0
-   * @apioption  chart.styledMode
-   */
-  styledMode: !1,
-  /**
-   * The corner radius of the outer chart border.
-   *
-   * @sample {highcharts} highcharts/chart/borderradius/
-   *         20px radius
-   * @sample {highstock} stock/chart/border/
-   *         10px radius
-   * @sample {highmaps} maps/chart/border/
-   *         Border options
-   *
-   */
-  borderRadius: 0,
-  /**
-   * In styled mode, this sets how many colors the class names
-   * should rotate between. With ten colors, series (or points) are
-   * given class names like `highcharts-color-0`, `highcharts-color-1`
-   * [...] `highcharts-color-9`. The equivalent in non-styled mode
-   * is to set colors using the [colors](#colors) setting.
-   *
-   * @since      5.0.0
-   */
-  colorCount: 10,
-  /**
-   * By default, (because of memory and performance reasons) the chart does
-   * not copy the data but keeps it as a reference. In some cases, this might
-   * result in mutating the original data source. In order to prevent that,
-   * set that property to false. Please note that changing that might decrease
-   * performance, especially with bigger sets of data.
-   *
-   * @type       {boolean}
-   * @since 10.1.0
-   */
-  allowMutatingData: !0,
-  /**
-   * If true, the axes will scale to the remaining visible series once
-   * one series is hidden. If false, hiding and showing a series will
-   * not affect the axes or the other series. For stacks, once one series
-   * within the stack is hidden, the rest of the stack will close in
-   * around it even if the axis is not affected.
-   *
-   * @sample {highcharts} highcharts/chart/ignorehiddenseries-true/
-   *         True by default
-   * @sample {highcharts} highcharts/chart/ignorehiddenseries-false/
-   *         False
-   * @sample {highcharts} highcharts/chart/ignorehiddenseries-true-stacked/
-   *         True with stack
-   * @sample {highstock} stock/chart/ignorehiddenseries-true/
-   *         True by default
-   * @sample {highstock} stock/chart/ignorehiddenseries-false/
-   *         False
-   *
-   * @since   1.2.0
-   * @product highcharts highstock gantt
-   */
-  ignoreHiddenSeries: !0,
-  /**
-   * Whether to invert the axes so that the x axis is vertical and y axis
-   * is horizontal. When `true`, the x axis is [reversed](#xAxis.reversed)
-   * by default.
-   *
-   * @productdesc {highcharts}
-   * If a bar series is present in the chart, it will be inverted
-   * automatically. Inverting the chart doesn't have an effect if there
-   * are no cartesian series in the chart.
-   *
-   * @sample {highcharts} highcharts/chart/inverted/
-   *         Inverted line
-   * @sample {highstock} stock/navigator/inverted/
-   *         Inverted stock chart
-   *
-   * @type      {boolean}
-   * @default   false
-   * @product   highcharts highstock gantt
-   * @apioption chart.inverted
-   */
-  /**
-   * The distance between the outer edge of the chart and the content,
-   * like title or legend, or axis title and labels if present. The
-   * numbers in the array designate top, right, bottom and left
-   * respectively. Use the options spacingTop, spacingRight, spacingBottom
-   * and spacingLeft options for shorthand setting of one option.
-   *
-   * @type    {Array<number>}
-   * @see     [chart.margin](#chart.margin)
-   * @default [10, 10, 15, 10]
-   * @since   3.0.6
-   */
-  spacing: [10, 10, 15, 10],
-  /**
-   * The button that appears after a selection zoom, allowing the user
-   * to reset zoom. This option is deprecated in favor of
-   * [zooming](#chart.zooming).
-   *
-   * @since      2.2
-   * @deprecated 10.2.1
-   */
-  resetZoomButton: {
-    /**
-     * What frame the button placement should be related to. Can be
-     * either `plotBox` or `spacingBox`.
-     *
-     * @sample {highcharts} highcharts/chart/resetzoombutton-relativeto/
-     *         Relative to the chart
-     * @sample {highstock} highcharts/chart/resetzoombutton-relativeto/
-     *         Relative to the chart
-     *
-     * @type      {Highcharts.ButtonRelativeToValue}
-     * @apioption chart.resetZoomButton.relativeTo
-     */
-    /**
-     * A collection of attributes for the button. The object takes SVG
-     * attributes like `fill`, `stroke`, `stroke-width` or `r`, the
-     * border radius. The theme also supports `style`, a collection of
-     * CSS properties for the text. Equivalent attributes for the hover
-     * state are given in `theme.states.hover`.
-     *
-     * @sample {highcharts} highcharts/chart/resetzoombutton-theme/
-     *         Theming the button
-     * @sample {highstock} highcharts/chart/resetzoombutton-theme/
-     *         Theming the button
-     *
-     * @type {Highcharts.SVGAttributes}
-     */
-    theme: {
-      /**
-       * The z-index of the button.
-       *
-       * @type {number}
-       * @apioption chart.resetZoomButton.theme.zIndex
-       */
-    },
-    /**
-     * The position of the button.
-     *
-     * @sample {highcharts} highcharts/chart/resetzoombutton-position/
-     *         Above the plot area
-     * @sample {highstock} highcharts/chart/resetzoombutton-position/
-     *         Above the plot area
-     * @sample {highmaps} highcharts/chart/resetzoombutton-position/
-     *         Above the plot area
-     *
-     * @type {Highcharts.AlignObject}
-     */
-    position: {
-      /**
-       * The horizontal alignment of the button.
-       *
-       * @type {number}
-       * @apioption chart.resetZoomButton.position.align
-       */
-      /**
-       * The horizontal offset of the button.
-       *
-       * @type {number}
-       * @apioption chart.resetZoomButton.position.x
-       */
-      /**
-       * The vertical alignment of the button.
-       *
-       * @type      {Highcharts.VerticalAlignValue}
-       * @apioption chart.resetZoomButton.position.verticalAlign
-       */
-      /**
-       * The vertical offset of the button.
-       *
-       * @type {number}
-       * @apioption chart.resetZoomButton.position.y
-       */
-    }
-  },
-  /**
-   * The pixel width of the plot area border.
-   *
-   * @sample {highcharts} highcharts/chart/plotborderwidth/
-   *         1px border
-   * @sample {highstock} stock/chart/plotborder/
-   *         2px border
-   * @sample {highmaps} maps/chart/plotborder/
-   *         Plot border options
-   *
-   * @type      {number}
-   * @default   0
-   * @apioption chart.plotBorderWidth
-   */
-  /**
-   * Whether to apply a drop shadow to the plot area. Requires that
-   * plotBackgroundColor be set. The shadow can be an object configuration
-   * containing `color`, `offsetX`, `offsetY`, `opacity` and `width`.
-   *
-   * @sample {highcharts} highcharts/chart/plotshadow/
-   *         Plot shadow
-   * @sample {highstock} stock/chart/plotshadow/
-   *         Plot shadow
-   * @sample {highmaps} maps/chart/plotborder/
-   *         Plot border options
-   *
-   * @type      {boolean|Highcharts.ShadowOptionsObject}
-   * @default   false
-   * @apioption chart.plotShadow
-   */
-  /**
-   * When true, cartesian charts like line, spline, area and column are
-   * transformed into the polar coordinate system. This produces _polar
-   * charts_, also known as _radar charts_.
-   *
-   * @sample {highcharts} highcharts/demo/polar/
-   *         Polar chart
-   * @sample {highcharts} highcharts/demo/polar-wind-rose/
-   *         Wind rose, stacked polar column chart
-   * @sample {highcharts} highcharts/demo/polar-spider/
-   *         Spider web chart
-   * @sample {highcharts} highcharts/parallel-coordinates/polar/
-   *         Star plot, multivariate data in a polar chart
-   *
-   * @type      {boolean}
-   * @default   false
-   * @since     2.3.0
-   * @product   highcharts
-   * @requires  highcharts-more
-   * @apioption chart.polar
-   */
-  /**
-   * Whether to reflow the chart to fit the width of the container div
-   * on resizing the window.
-   *
-   * @sample {highcharts} highcharts/chart/reflow-true/
-   *         True by default
-   * @sample {highcharts} highcharts/chart/reflow-false/
-   *         False
-   * @sample {highstock} stock/chart/reflow-true/
-   *         True by default
-   * @sample {highstock} stock/chart/reflow-false/
-   *         False
-   * @sample {highmaps} maps/chart/reflow-true/
-   *         True by default
-   * @sample {highmaps} maps/chart/reflow-false/
-   *         False
-   *
-   * @since     2.1
-   */
-  reflow: !0,
-  /**
-   * The HTML element where the chart will be rendered. If it is a string,
-   * the element by that id is used. The HTML element can also be passed
-   * by direct reference, or as the first argument of the chart
-   * constructor, in which case the option is not needed.
-   *
-   * @sample {highcharts} highcharts/chart/reflow-true/
-   *         String
-   * @sample {highcharts} highcharts/chart/renderto-object/
-   *         Object reference
-   * @sample {highstock} stock/chart/renderto-string/
-   *         String
-   * @sample {highstock} stock/chart/renderto-object/
-   *         Object reference
-   *
-   * @type      {string|Highcharts.HTMLDOMElement}
-   * @apioption chart.renderTo
-   */
-  /**
-   * The background color of the marker square when selecting (zooming
-   * in on) an area of the chart.
-   *
-   * @see In styled mode, the selection marker fill is set with the
-   *      `.highcharts-selection-marker` class.
-   *
-   * @type      {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
-   * @default   rgba(51,92,173,0.25)
-   * @since     2.1.7
-   * @apioption chart.selectionMarkerFill
-   */
-  /**
-   * Whether to apply a drop shadow to the global series group. This causes
-   * all the series to have the same shadow. Contrary to the `series.shadow`
-   * option, this prevents items from casting shadows on each other, like for
-   * others series in a stack. The shadow can be an object configuration
-   * containing `color`, `offsetX`, `offsetY`, `opacity` and `width`.
-   *
-   * @sample highcharts/chart/seriesgroupshadow/
-   *         Shadow
-   *
-   * @type      {boolean|Highcharts.ShadowOptionsObject}
-   * @default   false
-   * @apioption chart.seriesGroupShadow
-   */
-  /**
-   * Whether to apply a drop shadow to the outer chart area. Requires
-   * that backgroundColor be set. The shadow can be an object
-   * configuration containing `color`, `offsetX`, `offsetY`, `opacity` and
-   * `width`.
-   *
-   * @sample {highcharts} highcharts/chart/shadow/
-   *         Shadow
-   * @sample {highstock} stock/chart/shadow/
-   *         Shadow
-   * @sample {highmaps} maps/chart/border/
-   *         Chart border and shadow
-   *
-   * @type      {boolean|Highcharts.ShadowOptionsObject}
-   * @default   false
-   * @apioption chart.shadow
-   */
-  /**
-   * Whether to show the axes initially. This only applies to empty charts
-   * where series are added dynamically, as axes are automatically added
-   * to cartesian series.
-   *
-   * @sample {highcharts} highcharts/chart/showaxes-false/
-   *         False by default
-   * @sample {highcharts} highcharts/chart/showaxes-true/
-   *         True
-   *
-   * @type      {boolean}
-   * @since     1.2.5
-   * @product   highcharts gantt
-   * @apioption chart.showAxes
-   */
-  /**
-   * The space between the bottom edge of the chart and the content (plot
-   * area, axis title and labels, title, subtitle or legend in top
-   * position).
-   *
-   * @sample {highcharts} highcharts/chart/spacingbottom/
-   *         Spacing bottom set to 100
-   * @sample {highstock} stock/chart/spacingbottom/
-   *         Spacing bottom set to 100
-   * @sample {highmaps} maps/chart/spacing/
-   *         Spacing 100 all around
-   *
-   * @type      {number}
-   * @default   15
-   * @since     2.1
-   * @apioption chart.spacingBottom
-   */
-  /**
-   * The space between the left edge of the chart and the content (plot
-   * area, axis title and labels, title, subtitle or legend in top
-   * position).
-   *
-   * @sample {highcharts} highcharts/chart/spacingleft/
-   *         Spacing left set to 100
-   * @sample {highstock} stock/chart/spacingleft/
-   *         Spacing left set to 100
-   * @sample {highmaps} maps/chart/spacing/
-   *         Spacing 100 all around
-   *
-   * @type      {number}
-   * @default   10
-   * @since     2.1
-   * @apioption chart.spacingLeft
-   */
-  /**
-   * The space between the right edge of the chart and the content (plot
-   * area, axis title and labels, title, subtitle or legend in top
-   * position).
-   *
-   * @sample {highcharts} highcharts/chart/spacingright-100/
-   *         Spacing set to 100
-   * @sample {highcharts} highcharts/chart/spacingright-legend/
-   *         Legend in right position with default spacing
-   * @sample {highstock} stock/chart/spacingright/
-   *         Spacing set to 100
-   * @sample {highmaps} maps/chart/spacing/
-   *         Spacing 100 all around
-   *
-   * @type      {number}
-   * @default   10
-   * @since     2.1
-   * @apioption chart.spacingRight
-   */
-  /**
-   * The space between the top edge of the chart and the content (plot
-   * area, axis title and labels, title, subtitle or legend in top
-   * position).
-   *
-   * @sample {highcharts} highcharts/chart/spacingtop-100/
-   *         A top spacing of 100
-   * @sample {highcharts} highcharts/chart/spacingtop-10/
-   *         Floating chart title makes the plot area align to the default
-   *         spacingTop of 10.
-   * @sample {highstock} stock/chart/spacingtop/
-   *         A top spacing of 100
-   * @sample {highmaps} maps/chart/spacing/
-   *         Spacing 100 all around
-   *
-   * @type      {number}
-   * @default   10
-   * @since     2.1
-   * @apioption chart.spacingTop
-   */
-  /**
-   * Additional CSS styles to apply inline to the container `div` and the root
-   * SVG.
-   *
-   * According to the CSS syntax documentation, it is recommended to quote
-   * font family names that contain white space, digits, or punctuation
-   * characters other than hyphens. In such cases, wrap the fontFamily
-   * name as follows: `fontFamily: '"Font name"'`.
-   *
-   * Since v11, the root font size is 1rem by default, and all child element
-   * are given a relative `em` font size by default. This allows implementers
-   * to control all the chart's font sizes by only setting the root level.
-   *
-   * @see    In styled mode, general chart styles can be set with the
-   *         `.highcharts-root` class.
-   * @sample {highcharts} highcharts/chart/style-serif-font/
-   *         Using a serif type font
-   * @sample {highcharts} highcharts/chart/style-special-font/
-   *         Using a font with special character in name
-   * @sample {highcharts} highcharts/members/relative-font-size/
-   *         Relative font sizes
-   * @sample {highcharts} highcharts/css/em/
-   *         Styled mode with relative font sizes
-   * @sample {highstock} stock/chart/style/
-   *         Using a serif type font
-   * @sample {highmaps} maps/chart/style-serif-font/
-   *         Using a serif type font
-   *
-   * @type      {Highcharts.CSSObject}
-   * @default   {"fontFamily": "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif", "fontSize":"1rem"}
-   * @apioption chart.style
-   */
-  /**
-   * The default series type for the chart. Can be any of the chart types
-   * listed under [plotOptions](#plotOptions) and [series](#series) or can
-   * be a series provided by an additional module.
-   *
-   * In TypeScript this option has no effect in sense of typing and
-   * instead the `type` option must always be set in the series.
-   *
-   * @sample {highcharts} highcharts/chart/type-bar/
-   *         Bar
-   * @sample {highstock} stock/chart/type/
-   *         Areaspline
-   * @sample {highmaps} maps/chart/type-mapline/
-   *         Mapline
-   *
-   * @type       {string}
-   * @default    {highcharts} line
-   * @default    {highstock} line
-   * @default    {highmaps} map
-   * @since      2.1.0
-   * @apioption  chart.type
-   */
-  type: "line",
-  /**
-   * Decides in what dimensions the user can zoom by dragging the mouse.
-   * Can be one of `x`, `y` or `xy`.
-   *
-   * @see [panKey](#chart.panKey)
-   *
-   * @sample {highcharts} highcharts/chart/zoomtype-none/
-   *         None by default
-   * @sample {highcharts} highcharts/chart/zoomtype-x/
-   *         X
-   * @sample {highcharts} highcharts/chart/zoomtype-y/
-   *         Y
-   * @sample {highcharts} highcharts/chart/zoomtype-xy/
-   *         Xy
-   * @sample {highcharts} highcharts/chart/zoomtype-polar/
-   *         Zoom on polar chart
-   * @sample {highstock} stock/demo/basic-line/
-   *         None by default
-   * @sample {highstock} stock/chart/zoomtype-x/
-   *         X
-   * @sample {highstock} stock/chart/zoomtype-y/
-   *         Y
-   * @sample {highstock} stock/chart/zoomtype-xy/
-   *         Xy
-   * @sample {highmaps} maps/chart/zoomtype-xy/
-   *         Map with selection zoom
-   *
-   * @type       {string}
-   * @validvalue ["x", "y", "xy"]
-   * @deprecated
-   * @apioption  chart.zoomType
-   */
-  /**
-   * Enables zooming by a single touch, in combination with
-   * [chart.zoomType](#chart.zoomType). When enabled, two-finger pinch
-   * will still work as set up by [chart.pinchType](#chart.pinchType).
-   * However, `zoomBySingleTouch` will interfere with touch-dragging the
-   * chart to read the tooltip. And especially when vertical zooming is
-   * enabled, it will make it hard to scroll vertically on the page.
-   * @since      9.0.0
-   * @sample     highcharts/chart/zoombysingletouch
-   *             Zoom by single touch enabled, with buttons to toggle
-   * @product    highcharts highstock gantt
-   * @deprecated
-   */
-  /**
-   * Chart zooming options.
-   * @since 10.2.1
-   *
-   * @sample     highcharts/plotoptions/sankey-node-color
-   *             Zooming in sankey series
-   * @sample     highcharts/series-treegraph/link-types
-   *             Zooming in treegraph series
-   */
-  zooming: {
-    /**
-     * Equivalent to [type](#chart.zooming.type), but for multitouch
-     * gestures only. By default, the `pinchType` is the same as the
-     * `type` setting. However, pinching can be enabled separately in
-     * some cases, for example in stock charts where a mouse drag pans the
-     * chart, while pinching is enabled. When [tooltip.followTouchMove](
-     * #tooltip.followTouchMove) is true, pinchType only applies to
-     * two-finger touches.
-     *
-     * @type       {string}
-     * @default    {highcharts} undefined
-     * @default    {highstock} x
-     * @product    highcharts highstock gantt
-     * @validvalue ["x", "y", "xy"]
-     * @apioption  chart.zooming.pinchType
-     */
-    /**
-     * Decides in what dimensions the user can zoom by dragging the mouse.
-     * Can be one of `x`, `y` or `xy`.
-     *
-     * **Note:** For non-cartesian series, the only supported zooming type
-     * is `xy`, as zooming in a single direction is not applicable due to
-     * the radial nature of the coordinate system.
-     *
-     * @declare    Highcharts.OptionsChartZoomingTypeValue
-     * @type       {string}
-     * @default    {highcharts} undefined
-     * @product    highcharts highstock gantt
-     * @validvalue ["x", "y", "xy"]
-     * @apioption  chart.zooming.type
-     */
-    /**
-     * Set a key to hold when dragging to zoom the chart. This is useful to
-     * avoid zooming while moving points. Should be set different than
-     * [chart.panKey](#chart.panKey).
-     *
-     * @type       {string}
-     * @default    {highcharts} undefined
-     * @validvalue ["alt", "ctrl", "meta", "shift"]
-     * @requires   modules/draggable-points
-     * @apioption  chart.zooming.key
-     */
-    /**
-     * Enables zooming by a single touch, in combination with
-     * [chart.zooming.type](#chart.zooming.type). When enabled, two-finger
-     * pinch will still work as set up by [chart.zooming.pinchType]
-     * (#chart.zooming.pinchType). However, `singleTouch` will interfere
-     * with touch-dragging the chart to read the tooltip. And especially
-     * when vertical zooming is enabled, it will make it hard to scroll
-     * vertically on the page.
-     *
-     * @sample  highcharts/chart/zoombysingletouch
-     *          Zoom by single touch enabled, with buttons to toggle
-     *
-     * @product highcharts highstock gantt
-     */
-    singleTouch: !1,
-    /**
-     * The button that appears after a selection zoom, allowing the user
-     * to reset zoom.
-     */
-    resetButton: {
-      /**
-       * What frame the button placement should be related to. Can be
-       * either `plotBox` or `spacingBox`.
-       *
-       * @sample {highcharts} highcharts/chart/resetzoombutton-relativeto/
-       *         Relative to the chart
-       * @sample {highstock} highcharts/chart/resetzoombutton-relativeto/
-       *         Relative to the chart
-       *
-       * @type      {Highcharts.ButtonRelativeToValue}
-       * @default   plot
-       * @apioption chart.zooming.resetButton.relativeTo
-       */
-      /**
-       * A collection of attributes for the button. The object takes SVG
-       * attributes like `fill`, `stroke`, `stroke-width` or `r`, the
-       * border radius. The theme also supports `style`, a collection of
-       * CSS properties for the text. Equivalent attributes for the hover
-       * state are given in `theme.states.hover`.
-       *
-       * @sample {highcharts} highcharts/chart/resetzoombutton-theme/
-       *         Theming the button
-       * @sample {highstock} highcharts/chart/resetzoombutton-theme/
-       *         Theming the button
-       *
-       * @type  {Highcharts.SVGAttributes}
-       * @since 10.2.1
-       */
-      theme: {
-        /** @internal */
-        zIndex: 6
-      },
-      /**
-       * The position of the button.
-       *
-       * Note: Adjusting position values might cause overlap with chart
-       * elements. Ensure coordinates do not obstruct other components or
-       * data visibility.
-       *
-       * @sample {highcharts} highcharts/chart/resetzoombutton-position/
-       *         Above the plot area
-       * @sample {highstock} highcharts/chart/resetzoombutton-position/
-       *         Above the plot area
-       * @sample {highmaps} highcharts/chart/resetzoombutton-position/
-       *         Above the plot area
-       *
-       * @type  {Highcharts.AlignObject}
-       * @since 10.2.1
-       */
-      position: {
-        /**
-         * The horizontal alignment of the button.
-         */
-        align: "right",
-        /**
-         * The horizontal offset of the button.
-         */
-        x: -10,
-        /**
-         * The vertical alignment of the button.
-         *
-         * @type       {Highcharts.VerticalAlignValue}
-         * @default    top
-         * @apioption  chart.zooming.resetButton.position.verticalAlign
-         */
-        /**
-         * The vertical offset of the button.
-         */
-        y: 10
-      }
-    }
-  },
-  /**
-   * An explicit width for the chart. By default (when `null`) the width
-   * is calculated from the offset width of the containing element.
-   *
-   * @sample {highcharts} highcharts/chart/width/
-   *         800px wide
-   * @sample {highstock} stock/chart/width/
-   *         800px wide
-   * @sample {highmaps} maps/chart/size/
-   *         Chart with explicit size
-   *
-   * @type {null|number|string}
-   */
-  width: null,
-  /**
-   * An explicit height for the chart. If a _number_, the height is
-   * given in pixels. If given a _percentage string_ (for example
-   * `'56%'`), the height is given as the percentage of the actual chart
-   * width. This allows for preserving the aspect ratio across responsive
-   * sizes.
-   *
-   * By default (when `null`) the height is calculated from the offset
-   * height of the containing element, or 400 pixels if the containing
-   * element's height is 0.
-   *
-   * @sample {highcharts} highcharts/chart/height/
-   *         Forced 200px height
-   * @sample {highstock} stock/chart/height/
-   *         300px height
-   * @sample {highmaps} maps/chart/size/
-   *         Chart with explicit size
-   * @sample highcharts/chart/height-percent/
-   *         Highcharts with percentage height
-   * @sample highcharts/chart/height-inherited/
-   *         Chart with inherited height
-   *
-   * @type {null|number|string}
-   */
-  height: null,
-  /**
-   * The color of the outer chart border.
-   *
-   * @see In styled mode, the stroke is set with the
-   *      `.highcharts-background` class.
-   *
-   * @sample {highcharts} highcharts/chart/bordercolor/
-   *         Brown border
-   * @sample {highstock} stock/chart/border/
-   *         Brown border
-   * @sample {highmaps} maps/chart/border/
-   *         Border options
-   *
-   * @type {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
-   */
-  borderColor: "#334eff",
-  /**
-   * The pixel width of the outer chart border.
-   *
-   * @see In styled mode, the stroke is set with the
-   *      `.highcharts-background` class.
-   *
-   * @sample {highcharts} highcharts/chart/borderwidth/
-   *         5px border
-   * @sample {highstock} stock/chart/border/
-   *         2px border
-   * @sample {highmaps} maps/chart/border/
-   *         Border options
-   *
-   * @type      {number}
-   * @default   0
-   * @apioption chart.borderWidth
-   */
-  /**
-   * The background color or gradient for the outer chart area.
-   *
-   * @see In styled mode, the background is set with the
-   *      `.highcharts-background` class.
-   *
-   * @sample {highcharts} highcharts/chart/backgroundcolor-color/
-   *         Color
-   * @sample {highcharts} highcharts/chart/backgroundcolor-gradient/
-   *         Gradient
-   * @sample {highstock} stock/chart/backgroundcolor-color/
-   *         Color
-   * @sample {highstock} stock/chart/backgroundcolor-gradient/
-   *         Gradient
-   * @sample {highmaps} maps/chart/backgroundcolor-color/
-   *         Color
-   * @sample {highmaps} maps/chart/backgroundcolor-gradient/
-   *         Gradient
-   *
-   * @type {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
-   */
-  backgroundColor: "#ffffff",
-  /**
-   * The background color or gradient for the plot area.
-   *
-   * @see In styled mode, the plot background is set with the
-   *      `.highcharts-plot-background` class.
-   *
-   * @sample {highcharts} highcharts/chart/plotbackgroundcolor-color/
-   *         Color
-   * @sample {highcharts} highcharts/chart/plotbackgroundcolor-gradient/
-   *         Gradient
-   * @sample {highstock} stock/chart/plotbackgroundcolor-color/
-   *         Color
-   * @sample {highstock} stock/chart/plotbackgroundcolor-gradient/
-   *         Gradient
-   * @sample {highmaps} maps/chart/plotbackgroundcolor-color/
-   *         Color
-   * @sample {highmaps} maps/chart/plotbackgroundcolor-gradient/
-   *         Gradient
-   *
-   * @type      {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
-   * @apioption chart.plotBackgroundColor
-   */
-  /**
-   * The URL for an image to use as the plot background. To set an image
-   * as the background for the entire chart, set a CSS background image
-   * to the container element. Note that for the image to be applied to
-   * exported charts, its URL needs to be accessible by the export server.
-   *
-   * @see In styled mode, a plot background image can be set with the
-   *      `.highcharts-plot-background` class and a [custom pattern](
-   *      https://www.highcharts.com/docs/chart-design-and-style/gradients-shadows-and-patterns).
-   *
-   * @sample {highcharts} highcharts/chart/plotbackgroundimage/
-   *         Skies
-   * @sample {highstock} stock/chart/plotbackgroundimage/
-   *         Skies
-   *
-   * @type      {string}
-   * @apioption chart.plotBackgroundImage
-   */
-  /**
-   * The color of the inner chart or plot area border.
-   *
-   * @see In styled mode, a plot border stroke can be set with the
-   *      `.highcharts-plot-border` class.
-   *
-   * @sample {highcharts} highcharts/chart/plotbordercolor/
-   *         Blue border
-   * @sample {highstock} stock/chart/plotborder/
-   *         Blue border
-   * @sample {highmaps} maps/chart/plotborder/
-   *         Plot border options
-   *
-   * @type {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
-   */
-  plotBorderColor: "#cccccc"
-  /* Palette.neutralColor20 */
-};
-var Li;
-(function(c) {
-  c.SVG_NS = "http://www.w3.org/2000/svg", c.product = "Highcharts", c.version = "12.4.0", c.win = typeof window < "u" ? window : {}, // eslint-disable-line node/no-unsupported-features/es-builtins
-  c.doc = c.win.document, c.svg = !!c.doc?.createElementNS?.(c.SVG_NS, "svg")?.createSVGRect, c.pageLang = c.doc?.documentElement?.closest("[lang]")?.lang, c.userAgent = c.win.navigator?.userAgent || "", c.isChrome = c.win.chrome, c.isFirefox = c.userAgent.indexOf("Firefox") !== -1, c.isMS = /(edge|msie|trident)/i.test(c.userAgent) && !c.win.opera, c.isSafari = !c.isChrome && c.userAgent.indexOf("Safari") !== -1, c.isTouchDevice = /(Mobile|Android|Windows Phone)/.test(c.userAgent), c.isWebKit = c.userAgent.indexOf("AppleWebKit") !== -1, c.deg2rad = Math.PI * 2 / 360, c.marginNames = [
+var xi;
+(function(h) {
+  h.SVG_NS = "http://www.w3.org/2000/svg", h.product = "Highcharts", h.version = "12.4.0", h.win = typeof window < "u" ? window : {}, // eslint-disable-line node/no-unsupported-features/es-builtins
+  h.doc = h.win.document, h.svg = !!h.doc?.createElementNS?.(h.SVG_NS, "svg")?.createSVGRect, h.pageLang = h.doc?.documentElement?.closest("[lang]")?.lang, h.userAgent = h.win.navigator?.userAgent || "", h.isChrome = h.win.chrome, h.isFirefox = h.userAgent.indexOf("Firefox") !== -1, h.isMS = /(edge|msie|trident)/i.test(h.userAgent) && !h.win.opera, h.isSafari = !h.isChrome && h.userAgent.indexOf("Safari") !== -1, h.isTouchDevice = /(Mobile|Android|Windows Phone)/.test(h.userAgent), h.isWebKit = h.userAgent.indexOf("AppleWebKit") !== -1, h.deg2rad = Math.PI * 2 / 360, h.marginNames = [
     "plotTop",
     "marginRight",
     "marginBottom",
     "plotLeft"
-  ], c.noop = function() {
-  }, c.supportsPassiveEvents = (function() {
+  ], h.noop = function() {
+  }, h.supportsPassiveEvents = (function() {
     let t = !1;
-    if (!c.isMS) {
+    if (!h.isMS) {
       const e = Object.defineProperty({}, "passive", {
         get: function() {
           t = !0;
         }
       });
-      c.win.addEventListener && c.win.removeEventListener && (c.win.addEventListener("testPassive", c.noop, e), c.win.removeEventListener("testPassive", c.noop, e));
+      h.win.addEventListener && h.win.removeEventListener && (h.win.addEventListener("testPassive", h.noop, e), h.win.removeEventListener("testPassive", h.noop, e));
     }
     return t;
-  })(), c.charts = [], c.composed = [], c.dateFormats = {}, c.seriesTypes = {}, c.symbolSizes = {}, c.chartCount = 0;
-})(Li || (Li = {}));
-const N = Li, Dr = {
-  /**
-   * Colors for data series and points
-   */
-  colors: [
-    "#2caffe",
-    "#544fc5",
-    "#00e272",
-    "#fe6a35",
-    "#6b8abc",
-    "#d568fb",
-    "#2ee0ca",
-    "#fa4b42",
-    "#feb56a",
-    "#91e8e1"
-  ]
-}, { charts: Br, doc: Ie, win: Mt } = N;
-function Jt(c, t, e, i) {
+  })(), h.charts = [], h.composed = [], h.dateFormats = {}, h.seriesTypes = {}, h.symbolSizes = {}, h.chartCount = 0;
+})(xi || (xi = {}));
+const I = xi, { charts: ar, doc: we, win: bt } = I;
+function Yt(h, t, e, i) {
   const s = t ? "Highcharts error" : "Highcharts warning";
-  c === 32 && (c = `${s}: Deprecated member`);
-  const r = Yi(c);
-  let n = r ? `${s} #${c}: www.highcharts.com/errors/${c}/` : c.toString();
+  h === 32 && (h = `${s}: Deprecated member`);
+  const r = Li(h);
+  let n = r ? `${s} #${h}: www.highcharts.com/errors/${h}/` : h.toString();
   const o = function() {
     if (t)
       throw new Error(n);
-    Mt.console && Jt.messages.indexOf(n) === -1 && console.warn(n);
+    bt.console && Yt.messages.indexOf(n) === -1 && console.warn(n);
   };
   if (typeof i < "u") {
     let a = "";
-    r && (n += "?"), wt(i, function(l, h) {
+    r && (n += "?"), vt(i, function(l, c) {
       a += `
- - ${h}: ${l}`, r && (n += encodeURI(h) + "=" + encodeURI(l));
+ - ${c}: ${l}`, r && (n += encodeURI(c) + "=" + encodeURI(l));
     }), n += a;
   }
-  vr(N, "displayError", { chart: e, code: c, message: n, params: i }, o), Jt.messages.push(n);
+  _s(I, "displayError", { chart: e, code: h, message: n, params: i }, o), Yt.messages.push(n);
 }
-(function(c) {
-  c.messages = [];
-})(Jt || (Jt = {}));
-function Nr(c, ...t) {
-  let e, i = [c, ...t], s = {};
+(function(h) {
+  h.messages = [];
+})(Yt || (Yt = {}));
+function lr(h, ...t) {
+  let e, i = [h, ...t], s = {};
   const r = function(o, a) {
-    return typeof o != "object" && (o = {}), wt(a, function(l, h) {
-      h === "__proto__" || h === "constructor" || (zt(l, !0) && !ur(l) && !Gi(l) ? o[h] = r(o[h] || {}, l) : o[h] = a[h]);
+    return typeof o != "object" && (o = {}), vt(a, function(l, c) {
+      c === "__proto__" || c === "constructor" || (Pt(l, !0) && !Ys(l) && !Oi(l) ? o[c] = r(o[c] || {}, l) : o[c] = a[c]);
     }), o;
   };
-  c === !0 && (s = i[1], i = Array.prototype.slice.call(i, 2));
+  h === !0 && (s = i[1], i = Array.prototype.slice.call(i, 2));
   const n = i.length;
   for (e = 0; e < n; e++)
     s = r(s, i[e]);
   return s;
 }
-function zr(c, t, e) {
-  return c > t ? c < e ? c : e : t;
+function hr(h, t, e) {
+  return h > t ? h < e ? h : e : t;
 }
-function Rr(c, t = 0, e) {
+function cr(h, t = 0, e) {
   const i = t % 2 / 2, s = e ? -1 : 1;
-  return (Math.round(c * s - i) + i) * s;
+  return (Math.round(h * s - i) + i) * s;
 }
-function Wr(c, t, e, i) {
+function dr(h, t, e, i) {
   const s = {};
   function r(n, o, a, l) {
-    const h = e ? o : n;
-    wt(n, function(d, f) {
-      if (!l && i && i.indexOf(f) > -1 && o[f]) {
-        d = mr(d), a[f] = [];
-        for (let p = 0; p < Math.max(d.length, o[f].length); p++)
-          o[f][p] && (d[p] === void 0 ? a[f][p] = o[f][p] : (a[f][p] = {}, r(d[p], o[f][p], a[f][p], l + 1)));
-      } else zt(d, !0) && !d.nodeType ? (a[f] = Ne(d) ? [] : {}, r(d, o[f] || {}, a[f], l + 1), Object.keys(a[f]).length === 0 && // Except colorAxis which is a special case where the empty
+    const c = e ? o : n;
+    vt(n, function(f, d) {
+      if (!l && i && i.indexOf(d) > -1 && o[d]) {
+        f = Us(f), a[d] = [];
+        for (let p = 0; p < Math.max(f.length, o[d].length); p++)
+          o[d][p] && (f[p] === void 0 ? a[d][p] = o[d][p] : (a[d][p] = {}, r(f[p], o[d][p], a[d][p], l + 1)));
+      } else Pt(f, !0) && !f.nodeType ? (a[d] = Ce(f) ? [] : {}, r(f, o[d] || {}, a[d], l + 1), Object.keys(a[d]).length === 0 && // Except colorAxis which is a special case where the empty
       // object means it is enabled. Which is unfortunate and we
       // should try to find a better way.
-      !(f === "colorAxis" && l === 0) && delete a[f]) : (n[f] !== o[f] || // If the newer key is explicitly undefined, keep it (#10525)
-      f in n && !(f in o)) && f !== "__proto__" && f !== "constructor" && (a[f] = h[f]);
+      !(d === "colorAxis" && l === 0) && delete a[d]) : (n[d] !== o[d] || // If the newer key is explicitly undefined, keep it (#10525)
+      d in n && !(d in o)) && d !== "__proto__" && d !== "constructor" && (a[d] = c[d]);
     });
   }
-  return r(c, t, s, 0), s;
+  return r(h, t, s, 0), s;
 }
-function pr(c, t) {
-  return parseInt(c, t || 10);
+function Gs(h, t) {
+  return parseInt(h, t || 10);
 }
-function Qt(c) {
-  return typeof c == "string";
+function Vt(h) {
+  return typeof h == "string";
 }
-function Ne(c) {
-  const t = Object.prototype.toString.call(c);
+function Ce(h) {
+  const t = Object.prototype.toString.call(h);
   return t === "[object Array]" || t === "[object Array Iterator]";
 }
-function zt(c, t) {
-  return !!c && typeof c == "object" && (!t || !Ne(c));
+function Pt(h, t) {
+  return !!h && typeof h == "object" && (!t || !Ce(h));
 }
-function Gi(c) {
-  return zt(c) && typeof c.nodeType == "number";
+function Oi(h) {
+  return Pt(h) && typeof h.nodeType == "number";
 }
-function ur(c) {
-  const t = c?.constructor;
-  return !!(zt(c, !0) && !Gi(c) && t?.name && t.name !== "Object");
+function Ys(h) {
+  const t = h?.constructor;
+  return !!(Pt(h, !0) && !Oi(h) && t?.name && t.name !== "Object");
 }
-function Yi(c) {
-  return typeof c == "number" && !isNaN(c) && c < 1 / 0 && c > -1 / 0;
+function Li(h) {
+  return typeof h == "number" && !isNaN(h) && h < 1 / 0 && h > -1 / 0;
 }
-function Hr(c, t) {
-  let e = c.length;
+function fr(h, t) {
+  let e = h.length;
   for (; e--; )
-    if (c[e] === t) {
-      c.splice(e, 1);
+    if (h[e] === t) {
+      h.splice(e, 1);
       break;
     }
 }
-function Fr(c, t) {
-  const e = c.options.index, i = t.length;
+function pr(h, t) {
+  const e = h.options.index, i = t.length;
   let s;
   for (
     // Internal item (navigator) should always be pushed to the end
-    s = c.options.isInternal ? i : 0;
+    s = h.options.isInternal ? i : 0;
     s < i + 1;
     s++
   )
@@ -1420,83 +125,83 @@ function Fr(c, t) {
       // No index option, reached the end of the collection,
       // equivalent to pushing
       !t[s] || // Handle index option, the element to insert has lower index
-      Yi(e) && e < te(t[s].options.index, t[s]._i) || // Insert the new item before other internal items
+      Li(e) && e < Kt(t[s].options.index, t[s]._i) || // Insert the new item before other internal items
       // (navigator)
       t[s].options.isInternal
     ) {
-      t.splice(s, 0, c);
+      t.splice(s, 0, h);
       break;
     }
   return s;
 }
-function Xr(c, t) {
-  return c.indexOf(t) < 0 && !!c.push(t);
+function ur(h, t) {
+  return h.indexOf(t) < 0 && !!h.push(t);
 }
-function Dt(c) {
-  return typeof c < "u" && c !== null;
+function Lt(h) {
+  return typeof h < "u" && h !== null;
 }
-function gr(c, t, e) {
-  const i = Qt(t) && !Dt(e);
+function Vs(h, t, e) {
+  const i = Vt(t) && !Lt(e);
   let s;
   const r = (n, o) => {
-    Dt(n) ? c.setAttribute(o, n) : i ? (s = c.getAttribute(o), !s && o === "class" && (s = c.getAttribute(o + "Name"))) : c.removeAttribute(o);
+    Lt(n) ? h.setAttribute(o, n) : i ? (s = h.getAttribute(o), !s && o === "class" && (s = h.getAttribute(o + "Name"))) : h.removeAttribute(o);
   };
-  return Qt(t) ? r(e, t) : wt(t, r), s;
+  return Vt(t) ? r(e, t) : vt(t, r), s;
 }
-function mr(c) {
-  return Ne(c) ? c : [c];
+function Us(h) {
+  return Ce(h) ? h : [h];
 }
-function jr(c, t, e) {
-  return t > 0 ? setTimeout(c, t, e) : (c.call(0, e), -1);
+function gr(h, t, e) {
+  return t > 0 ? setTimeout(h, t, e) : (h.call(0, e), -1);
 }
-function Gr(c) {
-  Dt(c) && clearTimeout(c);
+function mr(h) {
+  Lt(h) && clearTimeout(h);
 }
-function Bt(c, t) {
+function Et(h, t) {
   let e;
-  c || (c = {});
+  h || (h = {});
   for (e in t)
-    c[e] = t[e];
-  return c;
+    h[e] = t[e];
+  return h;
 }
-function te() {
-  const c = arguments, t = c.length;
+function Kt() {
+  const h = arguments, t = h.length;
   for (let e = 0; e < t; e++) {
-    const i = c[e];
+    const i = h[e];
     if (typeof i < "u" && i !== null)
       return i;
   }
 }
-function Pi(c, t) {
-  Bt(c.style, t);
+function yi(h, t) {
+  Et(h.style, t);
 }
-function Yr(c, t, e, i, s) {
-  const r = Ie.createElement(c);
-  return t && Bt(r, t), s && Pi(r, { padding: "0", border: "none", margin: "0" }), e && Pi(r, e), i && i.appendChild(r), r;
+function xr(h, t, e, i, s) {
+  const r = we.createElement(h);
+  return t && Et(r, t), s && yi(r, { padding: "0", border: "none", margin: "0" }), e && yi(r, e), i && i.appendChild(r), r;
 }
-function Vr(c, t) {
+function yr(h, t) {
   const e = (function() {
   });
-  return e.prototype = new c(), Bt(e.prototype, t), e;
+  return e.prototype = new h(), Et(e.prototype, t), e;
 }
-function Ur(c, t, e) {
-  return new Array((t || 2) + 1 - String(c).replace("-", "").length).join(e || "0") + c;
+function br(h, t, e) {
+  return new Array((t || 2) + 1 - String(h).replace("-", "").length).join(e || "0") + h;
 }
-function Kr(c, t, e) {
-  return /%$/.test(c) ? t * parseFloat(c) / 100 + (e || 0) : parseFloat(c);
+function vr(h, t, e) {
+  return /%$/.test(h) ? t * parseFloat(h) / 100 + (e || 0) : parseFloat(h);
 }
-function qr(c, ...t) {
+function Sr(h, ...t) {
   let e, i;
   do {
-    e = c;
+    e = h;
     for (i of t)
-      c = c.replace(i[0], i[1]);
-  } while (c !== e);
-  return c;
+      h = h.replace(i[0], i[1]);
+  } while (h !== e);
+  return h;
 }
-function Zr(c, t, e) {
-  const i = c[t];
-  c[t] = function() {
+function wr(h, t, e) {
+  const i = h[t];
+  h[t] = function() {
     const s = arguments, r = this;
     return e.apply(this, [
       function() {
@@ -1505,13 +210,13 @@ function Zr(c, t, e) {
     ].concat([].slice.call(arguments)));
   };
 }
-function xr(c) {
-  return Math.pow(10, Math.floor(Math.log(c) / Math.LN10));
+function Ks(h) {
+  return Math.pow(10, Math.floor(Math.log(h) / Math.LN10));
 }
-function _r(c, t, e, i, s) {
-  let r, n = c;
-  e = te(e, xr(c));
-  const o = c / e;
+function Mr(h, t, e, i, s) {
+  let r, n = h;
+  e = Kt(e, Ks(h));
+  const o = h / e;
   for (t || (t = s ? (
     // Finer grained ticks when the tick amount is hard set, including
     // when alignTicks is true on multiple axes (#4580).
@@ -1521,44 +226,44 @@ function _r(c, t, e, i, s) {
     [1, 2, 2.5, 5, 10]
   ), i === !1 && (e === 1 ? t = t.filter(function(a) {
     return a % 1 === 0;
-  }) : e <= 0.1 && (t = [1 / e]))), r = 0; r < t.length && (n = t[r], !(s && n * e >= c || !s && o <= (t[r] + (t[r + 1] || t[r])) / 2)); r++)
+  }) : e <= 0.1 && (t = [1 / e]))), r = 0; r < t.length && (n = t[r], !(s && n * e >= h || !s && o <= (t[r] + (t[r + 1] || t[r])) / 2)); r++)
     ;
-  return n = yr(n * e, -Math.round(Math.log(1e-3) / Math.LN10)), n;
+  return n = qs(n * e, -Math.round(Math.log(1e-3) / Math.LN10)), n;
 }
-function Jr(c, t) {
-  const e = c.length;
+function kr(h, t) {
+  const e = h.length;
   let i, s;
   for (s = 0; s < e; s++)
-    c[s].safeI = s;
-  for (c.sort(function(r, n) {
+    h[s].safeI = s;
+  for (h.sort(function(r, n) {
     return i = t(r, n), i === 0 ? r.safeI - n.safeI : i;
   }), s = 0; s < e; s++)
-    delete c[s].safeI;
+    delete h[s].safeI;
 }
-function Qr(c) {
-  let t = c.length, e = c[0];
+function Ar(h) {
+  let t = h.length, e = h[0];
   for (; t--; )
-    c[t] < e && (e = c[t]);
+    h[t] < e && (e = h[t]);
   return e;
 }
-function tn(c) {
-  let t = c.length, e = c[0];
+function Cr(h) {
+  let t = h.length, e = h[0];
   for (; t--; )
-    c[t] > e && (e = c[t]);
+    h[t] > e && (e = h[t]);
   return e;
 }
-function en(c, t, e) {
-  wt(c, function(i, s) {
-    i !== t && i?.destroy && i.destroy(), (i?.destroy || !e) && delete c[s];
+function Tr(h, t, e) {
+  vt(h, function(i, s) {
+    i !== t && i?.destroy && i.destroy(), (i?.destroy || !e) && delete h[s];
   });
 }
-function sn(c) {
-  c?.parentElement?.removeChild(c);
+function Or(h) {
+  h?.parentElement?.removeChild(h);
 }
-function yr(c, t) {
-  return c > 1e14 ? c : parseFloat(c.toPrecision(t || 14));
+function qs(h, t) {
+  return h > 1e14 ? h : parseFloat(h.toPrecision(t || 14));
 }
-const rn = {
+const Lr = {
   millisecond: 1,
   second: 1e3,
   minute: 6e4,
@@ -1568,94 +273,94 @@ const rn = {
   month: 672 * 36e5,
   year: 364 * 24 * 36e5
 };
-Math.easeInOutSine = function(c) {
-  return -0.5 * (Math.cos(Math.PI * c) - 1);
+Math.easeInOutSine = function(h) {
+  return -0.5 * (Math.cos(Math.PI * h) - 1);
 };
-const nn = (c = "") => ({
+const Er = (h = "") => ({
   center: 0.5,
   right: 1,
   middle: 0.5,
   bottom: 1
-})[c] || 0;
-function on(c, t) {
+})[h] || 0;
+function Pr(h, t) {
   const e = !t;
   let i, s, r, n;
-  return c.forEach((o) => {
+  return h.forEach((o) => {
     if (o.length > 1)
       for (s = o.length - 1, n = s; n > 0; n--)
         r = o[n] - o[n - 1], r < 0 && !e ? (t?.(), t = void 0) : r && (typeof i > "u" || r < i) && (i = r);
   }), i;
 }
-function an(c, t) {
-  const e = c.split(".");
-  for (; e.length && Dt(t); ) {
+function Dr(h, t) {
+  const e = h.split(".");
+  for (; e.length && Lt(t); ) {
     const i = e.shift();
     if (typeof i > "u" || i === "__proto__")
       return;
     if (i === "this") {
       let r;
-      return zt(t) && (r = t["@this"]), r ?? t;
+      return Pt(t) && (r = t["@this"]), r ?? t;
     }
     const s = t[i.replace(/[\\'"]/g, "")];
-    if (!Dt(s) || typeof s == "function" || typeof s.nodeType == "number" || s === Mt)
+    if (!Lt(s) || typeof s == "function" || typeof s.nodeType == "number" || s === bt)
       return;
     t = s;
   }
   return t;
 }
-function Zt(c, t, e) {
+function Xt(h, t, e) {
   let i;
   if (t === "width") {
-    let r = Math.min(c.offsetWidth, c.scrollWidth);
-    const n = c.getBoundingClientRect?.().width;
+    let r = Math.min(h.offsetWidth, h.scrollWidth);
+    const n = h.getBoundingClientRect?.().width;
     return n < r && n >= r - 1 && (r = Math.floor(n)), Math.max(
       0,
       // #8377
-      r - (Zt(c, "padding-left", !0) || 0) - (Zt(c, "padding-right", !0) || 0)
+      r - (Xt(h, "padding-left", !0) || 0) - (Xt(h, "padding-right", !0) || 0)
     );
   }
   if (t === "height")
     return Math.max(
       0,
       // #8377
-      Math.min(c.offsetHeight, c.scrollHeight) - (Zt(c, "padding-top", !0) || 0) - (Zt(c, "padding-bottom", !0) || 0)
+      Math.min(h.offsetHeight, h.scrollHeight) - (Xt(h, "padding-top", !0) || 0) - (Xt(h, "padding-bottom", !0) || 0)
     );
-  const s = Mt.getComputedStyle(c, void 0);
-  return s && (i = s.getPropertyValue(t), te(e, t !== "opacity") && (i = pr(i))), i;
+  const s = bt.getComputedStyle(h, void 0);
+  return s && (i = s.getPropertyValue(t), Kt(e, t !== "opacity") && (i = Gs(i))), i;
 }
-const ln = Array.prototype.find ? function(c, t) {
-  return c.find(t);
+const $r = Array.prototype.find ? function(h, t) {
+  return h.find(t);
 } : (
   // Legacy implementation. PhantomJS, IE <= 11 etc. #7223.
-  function(c, t) {
+  function(h, t) {
     let e;
-    const i = c.length;
+    const i = h.length;
     for (e = 0; e < i; e++)
-      if (t(c[e], e))
-        return c[e];
+      if (t(h[e], e))
+        return h[e];
   }
 );
-function hn(c) {
-  const t = Ie.documentElement, e = c.parentElement || c.parentNode ? c.getBoundingClientRect() : { top: 0, left: 0, width: 0, height: 0 };
+function Ir(h) {
+  const t = we.documentElement, e = h.parentElement || h.parentNode ? h.getBoundingClientRect() : { top: 0, left: 0, width: 0, height: 0 };
   return {
-    top: e.top + (Mt.pageYOffset || t.scrollTop) - (t.clientTop || 0),
-    left: e.left + (Mt.pageXOffset || t.scrollLeft) - (t.clientLeft || 0),
+    top: e.top + (bt.pageYOffset || t.scrollTop) - (t.clientTop || 0),
+    left: e.left + (bt.pageXOffset || t.scrollLeft) - (t.clientLeft || 0),
     width: e.width,
     height: e.height
   };
 }
-function wt(c, t, e) {
-  for (const i in c)
-    Object.hasOwnProperty.call(c, i) && t.call(e || c[i], c[i], i, c);
+function vt(h, t, e) {
+  for (const i in h)
+    Object.hasOwnProperty.call(h, i) && t.call(e || h[i], h[i], i, h);
 }
-function cn(c, t, e, i = {}) {
-  const s = typeof c == "function" && c.prototype || c;
+function Br(h, t, e, i = {}) {
+  const s = typeof h == "function" && h.prototype || h;
   Object.hasOwnProperty.call(s, "hcEvents") || (s.hcEvents = {});
   const r = s.hcEvents;
-  N.Point && // Without H a dependency loop occurs
-  c instanceof N.Point && c.series && c.series.chart && (c.series.chart.runTrackerClick = !0);
-  const n = c.addEventListener;
-  n && n.call(c, t, e, N.supportsPassiveEvents ? {
+  I.Point && // Without H a dependency loop occurs
+  h instanceof I.Point && h.series && h.series.chart && (h.series.chart.runTrackerClick = !0);
+  const n = h.addEventListener;
+  n && n.call(h, t, e, I.supportsPassiveEvents ? {
     passive: i.passive === void 0 ? t.indexOf("touch") !== -1 : i.passive,
     capture: !1
   } : !1), r[t] || (r[t] = []);
@@ -1664,23 +369,23 @@ function cn(c, t, e, i = {}) {
     order: typeof i.order == "number" ? i.order : 1 / 0
   };
   return r[t].push(o), r[t].sort((a, l) => a.order - l.order), function() {
-    br(c, t, e);
+    Zs(h, t, e);
   };
 }
-function br(c, t, e) {
+function Zs(h, t, e) {
   function i(n, o) {
-    const a = c.removeEventListener;
-    a && a.call(c, n, o, !1);
+    const a = h.removeEventListener;
+    a && a.call(h, n, o, !1);
   }
   function s(n) {
     let o, a;
-    c.nodeName && (t ? (o = {}, o[t] = !0) : o = n, wt(o, function(l, h) {
-      if (n[h])
-        for (a = n[h].length; a--; )
-          i(h, n[h][a].fn);
+    h.nodeName && (t ? (o = {}, o[t] = !0) : o = n, vt(o, function(l, c) {
+      if (n[c])
+        for (a = n[c].length; a--; )
+          i(c, n[c][a].fn);
     }));
   }
-  const r = typeof c == "function" && c.prototype || c;
+  const r = typeof h == "function" && h.prototype || h;
   if (Object.hasOwnProperty.call(r, "hcEvents")) {
     const n = r.hcEvents;
     if (t) {
@@ -1692,13 +397,13 @@ function br(c, t, e) {
       s(n), delete r.hcEvents;
   }
 }
-function vr(c, t, e, i) {
-  if (e = e || {}, Ie?.createEvent && (c.dispatchEvent || c.fireEvent && // Enable firing events on Highcharts instance.
-  c !== N)) {
-    const s = Ie.createEvent("Events");
-    s.initEvent(t, !0, !0), e = Bt(s, e), c.dispatchEvent ? c.dispatchEvent(e) : c.fireEvent(t, e);
-  } else if (c.hcEvents) {
-    e.target || Bt(e, {
+function _s(h, t, e, i) {
+  if (e = e || {}, we?.createEvent && (h.dispatchEvent || h.fireEvent && // Enable firing events on Highcharts instance.
+  h !== I)) {
+    const s = we.createEvent("Events");
+    s.initEvent(t, !0, !0), e = Et(s, e), h.dispatchEvent ? h.dispatchEvent(e) : h.fireEvent(t, e);
+  } else if (h.hcEvents) {
+    e.target || Et(e, {
       // Attach a simple preventDefault function to skip
       // default handler if called. The built-in
       // defaultPrevented property is not overwritable (#5112)
@@ -1707,3365 +412,102 @@ function vr(c, t, e, i) {
       },
       // Setting target to native events fails with clicking
       // the zoom-out button in Chrome.
-      target: c,
+      target: h,
       // If the type is not set, we're running a custom event
       // (#2297). If it is set, we're running a browser event.
       type: t
     });
     const s = [];
-    let r = c, n = !1;
+    let r = h, n = !1;
     for (; r.hcEvents; )
       Object.hasOwnProperty.call(r, "hcEvents") && r.hcEvents[t] && (s.length && (n = !0), s.unshift.apply(s, r.hcEvents[t])), r = Object.getPrototypeOf(r);
     n && s.sort((o, a) => o.order - a.order), s.forEach((o) => {
-      o.fn.call(c, e) === !1 && e.preventDefault();
+      o.fn.call(h, e) === !1 && e.preventDefault();
     });
   }
-  i && !e.defaultPrevented && i.call(c, e);
+  i && !e.defaultPrevented && i.call(h, e);
 }
-let Ei;
-const dn = (function() {
-  const c = Math.random().toString(36).substring(2, 9) + "-";
+let bi;
+const Nr = (function() {
+  const h = Math.random().toString(36).substring(2, 9) + "-";
   let t = 0;
   return function() {
-    return "highcharts-" + (Ei ? "" : c) + t++;
+    return "highcharts-" + (bi ? "" : h) + t++;
   };
 })();
-function fn(c) {
-  return Ei = te(c, Ei);
+function Rr(h) {
+  return bi = Kt(h, bi);
 }
-function pn(c) {
-  return typeof c == "function";
+function zr(h) {
+  return typeof h == "function";
 }
-function un(c) {
-  return Qt(c) ? c.substring(0, 1).toUpperCase() + c.substring(1) : String(c);
+function Wr(h) {
+  return Vt(h) ? h.substring(0, 1).toUpperCase() + h.substring(1) : String(h);
 }
-Mt.jQuery && (Mt.jQuery.fn.highcharts = function() {
-  const c = [].slice.call(arguments);
+bt.jQuery && (bt.jQuery.fn.highcharts = function() {
+  const h = [].slice.call(arguments);
   if (this[0])
-    return c[0] ? (new N[
+    return h[0] ? (new I[
       // eslint-disable-line computed-property-spacing, no-new
       // Constructor defaults to Chart
-      Qt(c[0]) ? c.shift() : "Chart"
-    ](this[0], c[0], c[1]), this) : Br[gr(this[0], "data-highcharts-chart")];
+      Vt(h[0]) ? h.shift() : "Chart"
+    ](this[0], h[0], h[1]), this) : ar[Vs(this[0], "data-highcharts-chart")];
 });
-const R = {
-  addEvent: cn,
-  arrayMax: tn,
-  arrayMin: Qr,
-  attr: gr,
-  clamp: zr,
-  clearTimeout: Gr,
-  correctFloat: yr,
-  createElement: Yr,
-  crisp: Rr,
-  css: Pi,
-  defined: Dt,
-  destroyObjectProperties: en,
-  diffObjects: Wr,
-  discardElement: sn,
-  erase: Hr,
-  error: Jt,
-  extend: Bt,
-  extendClass: Vr,
-  find: ln,
-  fireEvent: vr,
-  getAlignFactor: nn,
-  getClosestDistance: on,
-  getMagnitude: xr,
-  getNestedProperty: an,
-  getStyle: Zt,
-  insertItem: Fr,
-  isArray: Ne,
-  isClass: ur,
-  isDOMElement: Gi,
-  isFunction: pn,
-  isNumber: Yi,
-  isObject: zt,
-  isString: Qt,
-  merge: Nr,
-  normalizeTickInterval: _r,
-  objectEach: wt,
-  offset: hn,
-  pad: Ur,
-  pick: te,
-  pInt: pr,
-  pushUnique: Xr,
-  relativeLength: Kr,
-  removeEvent: br,
-  replaceNested: qr,
-  splat: mr,
-  stableSort: Jr,
-  syncTimeout: jr,
-  timeUnits: rn,
-  ucfirst: un,
-  uniqueKey: dn,
-  useSerialIds: fn,
-  wrap: Zr
-}, { pageLang: gn, win: $e } = N, { defined: es, error: is, extend: Ge, isNumber: ss, isObject: Ye, isString: Rt, merge: mn, objectEach: xn, pad: ft, splat: yn, timeUnits: Ve, ucfirst: bn } = R, vn = N.isSafari && $e.Intl && !$e.Intl.DateTimeFormat.prototype.formatRange, kn = (c) => c.main === void 0;
-class Sn {
-  /* *
-   *
-   *  Constructors
-   *
-   * */
-  constructor(t, e) {
-    this.options = {
-      timezone: "UTC"
-    }, this.variableTimezone = !1, this.Date = $e.Date, this.update(t), this.lang = e;
-  }
-  /* *
-   *
-   *  Functions
-   *
-   * */
-  /**
-   * Update the Time object with current options. It is called internally on
-   * initializing Highcharts, after running `Highcharts.setOptions` and on
-   * `Chart.update`.
-   *
-   * @private
-   * @function Highcharts.Time#update
-   *
-   * @param {Highcharts.TimeOptions} [options]
-   *
-   */
-  update(t = {}) {
-    this.dTLCache = {}, this.options = t = mn(!0, this.options, t);
-    const { timezoneOffset: e, useUTC: i, locale: s } = t;
-    this.Date = t.Date || $e.Date || Date;
-    let r = t.timezone;
-    es(i) && (r = i ? "UTC" : void 0), e && e % 60 === 0 && (r = "Etc/GMT" + (e > 0 ? "+" : "") + e / 60), this.variableTimezone = r !== "UTC" && r?.indexOf("Etc/GMT") !== 0, this.timezone = r, this.lang && s && (this.lang.locale = s), ["months", "shortMonths", "weekdays", "shortWeekdays"].forEach((n) => {
-      const o = /months/i.test(n), a = /short/.test(n), l = {
-        timeZone: "UTC"
-      };
-      l[o ? "month" : "weekday"] = a ? "short" : "long", this[n] = (o ? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11] : [3, 4, 5, 6, 7, 8, 9]).map((h) => this.dateFormat(l, (o ? 31 : 1) * 24 * 36e5 * h));
-    });
-  }
-  /**
-   * Get a date in terms of numbers (year, month, day etc) for further
-   * processing. Takes the current `timezone` setting into account. Inverse of
-   * `makeTime` and the native `Date` constructor and `Date.UTC`.
-   *
-   * The date is returned in array format with the following indices:
-   *
-   * 0: year,
-   * 1: month (zero based),
-   * 2: day,
-   * 3: hours,
-   * 4: minutes,
-   * 5: seconds,
-   * 6: milliseconds,
-   * 7: weekday (Sunday as 0)
-   *
-   * @function Highcharts.Time#toParts
-   *
-   * @param {number|Date} [timestamp]
-   *                 The timestamp in milliseconds since January 1st 1970.
-   *                 A Date object is also accepted.
-   *
-   * @return {Array<number>} The date parts in array format.
-   */
-  toParts(t) {
-    const [e, i, s, r, n, o, a] = this.dateTimeFormat({
-      weekday: "narrow",
-      day: "numeric",
-      month: "numeric",
-      year: "numeric",
-      hour: "numeric",
-      minute: "numeric",
-      second: "numeric"
-    }, t, "es").split(/(?:, | |\/|:)/g);
-    return [
-      r,
-      +s - 1,
-      i,
-      n,
-      o,
-      a,
-      // Milliseconds
-      Math.floor(Number(t) || 0) % 1e3,
-      // Spanish weekday index
-      "DLMXJVS".indexOf(e)
-    ].map(Number);
-  }
-  /**
-   * Shorthand to get a cached `Intl.DateTimeFormat` instance.
-   */
-  dateTimeFormat(t, e, i = this.options.locale || gn) {
-    const s = JSON.stringify(t) + i;
-    Rt(t) && (t = this.str2dtf(t));
-    let r = this.dTLCache[s];
-    if (!r) {
-      t.timeZone ?? (t.timeZone = this.timezone);
-      try {
-        r = new Intl.DateTimeFormat(i, t);
-      } catch (n) {
-        /Invalid time zone/i.test(n.message) ? (is(34), t.timeZone = "UTC", r = new Intl.DateTimeFormat(i, t)) : is(n.message, !1);
-      }
-    }
-    return this.dTLCache[s] = r, r?.format(e) || "";
-  }
-  /**
-   * Take a locale-aware string format and return a full DateTimeFormat in
-   * object form.
-   */
-  str2dtf(t, e = {}) {
-    const i = {
-      L: { fractionalSecondDigits: 3 },
-      S: { second: "2-digit" },
-      M: { minute: "numeric" },
-      H: { hour: "2-digit" },
-      k: { hour: "numeric" },
-      E: { weekday: "narrow" },
-      a: { weekday: "short" },
-      A: { weekday: "long" },
-      d: { day: "2-digit" },
-      e: { day: "numeric" },
-      b: { month: "short" },
-      B: { month: "long" },
-      m: { month: "2-digit" },
-      o: { month: "numeric" },
-      y: { year: "2-digit" },
-      Y: { year: "numeric" }
-    };
-    return Object.keys(i).forEach((s) => {
-      t.indexOf(s) !== -1 && Ge(e, i[s]);
-    }), e;
-  }
-  /**
-   * Make a time and returns milliseconds. Similar to `Date.UTC`, but takes
-   * the current `timezone` setting into account.
-   *
-   * @function Highcharts.Time#makeTime
-   *
-   * @param {number} year
-   *        The year
-   *
-   * @param {number} month
-   *        The month. Zero-based, so January is 0.
-   *
-   * @param {number} [date=1]
-   *        The day of the month
-   *
-   * @param {number} [hours=0]
-   *        The hour of the day, 0-23.
-   *
-   * @param {number} [minutes=0]
-   *        The minutes
-   *
-   * @param {number} [seconds=0]
-   *        The seconds
-   *
-   * @return {number}
-   *         The time in milliseconds since January 1st 1970.
-   */
-  makeTime(t, e, i = 1, s = 0, r, n, o) {
-    let a = this.Date.UTC(t, e, i, s, r || 0, n || 0, o || 0);
-    if (this.timezone !== "UTC") {
-      const l = this.getTimezoneOffset(a);
-      if (a += l, // Optimize for speed by limiting the number of calls to
-      // `getTimezoneOffset`. According to
-      // https://en.wikipedia.org/wiki/Daylight_saving_time_by_country,
-      // DST change may only occur in these months.
-      [2, 3, 8, 9, 10, 11].indexOf(e) !== -1 && // DST transitions occur only in the night-time
-      (s < 5 || s > 20)) {
-        const h = this.getTimezoneOffset(a);
-        l !== h ? a += h - l : l - 36e5 === this.getTimezoneOffset(a - 36e5) && !vn && (a -= 36e5);
-      }
-    }
-    return a;
-  }
-  /**
-   * Parse a datetime string. Unless the string contains time zone
-   * information, apply the current `timezone` from options. If the argument
-   * is a number, return it.
-   *
-   * @function Highcharts.Time#parse
-   * @param    {string|number|undefined} s The datetime string to parse
-   * @return   {number|undefined}          Parsed JavaScript timestamp
-   */
-  parse(t) {
-    if (!Rt(t))
-      return t ?? void 0;
-    t = t.replace(/\//g, "-").replace(/(GMT|UTC)/, "");
-    const e = t.indexOf("Z") > -1 || /([+-][0-9]{2}):?[0-9]{2}$/.test(t), i = /^[0-9]{4}-[0-9]{2}(-[0-9]{2}|)$/.test(t);
-    !e && !i && (t += "Z");
-    const s = Date.parse(t);
-    if (ss(s))
-      return s + (!e || i ? this.getTimezoneOffset(s) : 0);
-  }
-  /**
-   * Get the time zone offset based on the current timezone information as
-   * set in the global options.
-   *
-   * @function Highcharts.Time#getTimezoneOffset
-   *
-   * @param {number} timestamp
-   *        The JavaScript timestamp to inspect.
-   *
-   * @return {number}
-   *         The timezone offset in minutes compared to UTC.
-   */
-  getTimezoneOffset(t) {
-    if (this.timezone !== "UTC") {
-      const [e, i, s, r, n = 0] = this.dateTimeFormat({ timeZoneName: "shortOffset" }, t, "en").split(/(GMT|:)/).map(Number), o = -(s + n / 60) * 60 * 6e4;
-      if (ss(o))
-        return o;
-    }
-    return 0;
-  }
-  /**
-   * Formats a JavaScript date timestamp (milliseconds since January 1 1970)
-   * into a human readable date string.
-   *
-   * The `format` parameter accepts two types of values:
-   * - An object containing settings that are passed directly on to
-   *   [Intl.DateTimeFormat.prototype.format](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/format).
-   * - A format string containing either individual or locale-aware format
-   *   keys. **Individual keys**, for example `%Y-%m-%d`, are listed below.
-   *   **Locale-aware keys** are grouped by square brackets, for example
-   *   `%[Ymd]`. The order of keys within the square bracket doesn't affect
-   *   the output, which is determined by the locale. See example below.
-   *   Internally, the locale-aware format keys are just a shorthand for the
-   *   full object formats, but are particularly practical in
-   *   [templating](https://www.highcharts.com/docs/chart-concepts/templating)
-   *   where full object definitions are not an option.
-   *
-   * The available string format keys are listed below. Additional formats can
-   * be given in the {@link Highcharts.dateFormats} hook.
-   *
-   * Supported format keys:
-   * | Key  | Description                     | Notes on locale-aware format |
-   * -------|----------------------------------------------|-------|
-   * | `%A` | Long weekday, like 'Monday'                  |       |
-   * | `%a` | Short weekday, like 'Mon'                    |       |
-   * | `%E` | Narrow weekday, single character             |       |
-   * | `%d` | Two digit day of the month, 01 to 31         |       |
-   * | `%e` | Day of the month, 1 through 31               |       |
-   * | `%w` | Day of the week, 0 through 6                 | N/A   |
-   * | `%v` | The prefix "week from", read from `lang.weekFrom` | N/A |
-   * | `%b` | Short month, like 'Jan'                      |       |
-   * | `%B` | Long month, like 'January'                   |       |
-   * | `%m` | Two digit month number, 01 through 12        |       |
-   * | `%o` | Month number, 1 through 12                   |       |
-   * | `%y` | Two digits year, like 24 for 2024            |       |
-   * | `%Y` | Four digits year, like 2024                  |       |
-   * | `%H` | Two digits hours in 24h format, 00 through 23 | Depending on the locale, 12h format may be instered. |
-   * | `%k` | Hours in 24h format, 0 through 23            | Depending on the locale, 12h format may be instered. |
-   * | `%I` | Two digits hours in 12h format, 00 through 11 | N/A. The locale determines the hour format. |
-   * | `%l` | Hours in 12h format, 1 through 12            | N/A. The locale determines the hour format. |
-   * | `%M` | Two digits minutes, 00 through 59            |       |
-   * | `%p` | Upper case AM or PM                          | N/A. The locale determines whether to add AM and PM. |
-   * | `%P` | Lower case AM or PM                          | N/A. The locale determines whether to add AM and PM. |
-   * | `%S` | Two digits seconds, 00 through 59            |       |
-   * | `%L` | Milliseconds (naming from Ruby)              |       |
-   *
-   * @example
-   * // Object format, US English
-   * const time1 = new Highcharts.Time({ locale: 'en-US' });
-   * console.log(
-   *     time1.dateFormat({
-   *         day: 'numeric',
-   *         month: 'short',
-   *         year: 'numeric',
-   *         hour: 'numeric',
-   *         minute: 'numeric'
-   *     }, Date.UTC(2024, 11, 31))
-   * ); // => Dec 31, 2024, 12:00 AM
-   *
-   * // Object format, British English
-   * const time2 = new Highcharts.Time({ locale: 'en-GB' });
-   * console.log(
-   *     time2.dateFormat({
-   *         day: 'numeric',
-   *         month: 'short',
-   *         year: 'numeric',
-   *         hour: 'numeric',
-   *         minute: 'numeric'
-   *     }, Date.UTC(2024, 11, 31))
-   * ); // => 31 Dec 2024, 00:00
-   *
-   * // Individual key string replacement
-   * const time3 = new Highcharts.Time();
-   * console.log(
-   *     time3.dateFormat('%Y-%m-%d %H:%M:%S', Date.UTC(2024, 11, 31))
-   * ); // => 2024-12-31 00:00:00
-   *
-   * // Locale-aware keys, US English
-   * const time4 = new Highcharts.Time({ locale: 'en-US' });
-   * console.log(
-   *     time4.dateFormat('%[YebHM]', Date.UTC(2024, 11, 31))
-   * ); // => Dec 31, 2024, 12:00 AM
-   *
-   * // Locale-aware keys, British English
-   * const time5 = new Highcharts.Time({ locale: 'en-GB' });
-   * console.log(
-   *     time5.dateFormat('%[YebHM]', Date.UTC(2024, 11, 31))
-   * ); // => 31 Dec 2024, 00:00
-   *
-   * // Mixed locale-aware and individual keys
-   * console.log(
-   *     time5.dateFormat('%[Yeb], %H:%M', Date.UTC(2024, 11, 31))
-   * ); // => 31 Dec 2024, 00:00
-   *
-   * @function Highcharts.Time#dateFormat
-   *
-   * @param {string|Highcharts.DateTimeFormatOptions} format
-   *        The desired string format where various time representations are
-   *        prefixed with %, or an object representing the locale-aware format
-   *        options.
-   *
-   * @param {number} [timestamp]
-   *        The JavaScript timestamp.
-   *
-   * @param {boolean} [upperCaseFirst=false]
-   *        Upper case first letter in the return.
-   *
-   * @return {string}
-   *         The formatted date.
-   */
-  dateFormat(t, e, i) {
-    const s = this.lang;
-    if (!es(e) || isNaN(e))
-      return s?.invalidDate || "";
-    if (t = t ?? "%Y-%m-%d %H:%M:%S", Rt(t)) {
-      const r = /%\[([a-zA-Z]+)\]/g;
-      let n;
-      for (; n = r.exec(t); )
-        t = t.replace(n[0], this.dateTimeFormat(n[1], e, s?.locale));
-    }
-    if (Rt(t) && t.indexOf("%") !== -1) {
-      const r = this, [n, o, a, l, h, d, f, p] = this.toParts(e), u = s?.weekdays || this.weekdays, g = s?.shortWeekdays || this.shortWeekdays, x = s?.months || this.months, m = s?.shortMonths || this.shortMonths, b = Ge({
-        // Day
-        // Short weekday, like 'Mon'
-        a: g ? g[p] : u[p].substr(0, 3),
-        // Long weekday, like 'Monday'
-        A: u[p],
-        // Two digit day of the month, 01 to 31
-        d: ft(a),
-        // Day of the month, 1 through 31
-        e: ft(a, 2, " "),
-        // Day of the week, 0 through 6
-        w: p,
-        // Week (none implemented)
-        // 'W': weekNumber(),
-        v: s?.weekFrom ?? "",
-        // Month
-        // Short month, like 'Jan'
-        b: m[o],
-        // Long month, like 'January'
-        B: x[o],
-        // Two digit month number, 01 through 12
-        m: ft(o + 1),
-        // Month number, 1 through 12 (#8150)
-        o: o + 1,
-        // Year
-        // Two digits year, like 09 for 2009
-        y: n.toString().substr(2, 2),
-        // Four digits year, like 2009
-        Y: n,
-        // Time
-        // Two digits hours in 24h format, 00 through 23
-        H: ft(l),
-        // Hours in 24h format, 0 through 23
-        k: l,
-        // Two digits hours in 12h format, 00 through 11
-        I: ft(l % 12 || 12),
-        // Hours in 12h format, 1 through 12
-        l: l % 12 || 12,
-        // Two digits minutes, 00 through 59
-        M: ft(h),
-        // Upper case AM or PM
-        p: l < 12 ? "AM" : "PM",
-        // Lower case AM or PM
-        P: l < 12 ? "am" : "pm",
-        // Two digits seconds, 00 through 59
-        S: ft(d),
-        // Milliseconds (naming from Ruby)
-        L: ft(f, 3)
-      }, N.dateFormats);
-      xn(b, function(y, v) {
-        if (Rt(t))
-          for (; t.indexOf("%" + v) !== -1; )
-            t = t.replace("%" + v, typeof y == "function" ? y.call(r, e) : y);
-      });
-    } else if (Ye(t)) {
-      const r = (this.getTimezoneOffset(e) || 0) / 36e5, n = this.timezone || "Etc/GMT" + (r >= 0 ? "+" : "") + r, { prefix: o = "", suffix: a = "" } = t;
-      t = o + this.dateTimeFormat(Ge({ timeZone: n }, t), e) + a;
-    }
-    return i ? bn(t) : t;
-  }
-  /**
-   * Resolve legacy formats of dateTimeLabelFormats (strings and arrays) into
-   * an object.
-   * @private
-   * @param {string|Array<T>|Highcharts.Dictionary<T>} f
-   * General format description
-   * @return {Highcharts.Dictionary<T>}
-   * The object definition
-   */
-  resolveDTLFormat(t) {
-    return Ye(t, !0) ? Ye(t, !0) && kn(t) ? { main: t } : t : (t = yn(t), {
-      main: t[0],
-      from: t[1],
-      to: t[2]
-    });
-  }
-  /**
-   * Get the optimal date format for a point, based on a range.
-   *
-   * @private
-   * @function Highcharts.Time#getDateFormat
-   *
-   * @param {number} range
-   *        The time range
-   *
-   * @param {number} timestamp
-   *        The timestamp of the date
-   *
-   * @param {number} startOfWeek
-   *        An integer representing the first day of the week, where 0 is
-   *        Sunday.
-   *
-   * @param {Highcharts.Dictionary<string>} dateTimeLabelFormats
-   *        A map of time units to formats.
-   *
-   * @return {string}
-   *         The optimal date format for a point.
-   */
-  getDateFormat(t, e, i, s) {
-    const r = this.dateFormat("%m-%d %H:%M:%S.%L", e), n = "01-01 00:00:00.000", o = {
-      millisecond: 15,
-      second: 12,
-      minute: 9,
-      hour: 6,
-      day: 3
-    };
-    let a = "millisecond", l = a;
-    for (a in Ve) {
-      if (t && t === Ve.week && +this.dateFormat("%w", e) === i && r.substr(6) === n.substr(6)) {
-        a = "week";
-        break;
-      }
-      if (t && Ve[a] > t) {
-        a = l;
-        break;
-      }
-      if (o[a] && r.substr(o[a]) !== n.substr(o[a]))
-        break;
-      a !== "week" && (l = a);
-    }
-    return this.resolveDTLFormat(s[a]).main;
-  }
-}
-const { defined: rs, extend: Mn, timeUnits: Y } = R;
-class kr extends Sn {
-  /**
-   * Return an array with time positions distributed on round time values
-   * right and right after min and max. Used in datetime axes as well as for
-   * grouping data on a datetime axis.
-   *
-   * @function Highcharts.Time#getTimeTicks
-   *
-   * @param {Highcharts.TimeNormalizedObject} normalizedInterval
-   *        The interval in axis values (ms) and the count
-   *
-   * @param {number} [min]
-   *        The minimum in axis values
-   *
-   * @param {number} [max]
-   *        The maximum in axis values
-   *
-   * @param {number} [startOfWeek=1]
-   *
-   * @return {Highcharts.AxisTickPositionsArray}
-   * Time positions
-   */
-  getTimeTicks(t, e, i, s) {
-    const r = this, n = [], o = {}, { count: a = 1, unitRange: l } = t;
-    let [h, d, f, p, u, g] = r.toParts(e), x = (e || 0) % 1e3, m;
-    if (s ?? (s = 1), rs(e)) {
-      if (x = l >= Y.second ? 0 : (
-        // #3935
-        a * Math.floor(x / a)
-      ), l >= Y.second && (g = l >= Y.minute ? 0 : (
-        // #3935
-        a * Math.floor(g / a)
-      )), l >= Y.minute && (u = l >= Y.hour ? 0 : a * Math.floor(u / a)), l >= Y.hour && (p = l >= Y.day ? 0 : a * Math.floor(p / a)), l >= Y.day && (f = l >= Y.month ? 1 : Math.max(1, a * Math.floor(f / a))), l >= Y.month && (d = l >= Y.year ? 0 : a * Math.floor(d / a)), l >= Y.year && (h -= h % a), l === Y.week) {
-        a && (e = r.makeTime(h, d, f, p, u, g, x));
-        const v = this.dateTimeFormat({
-          timeZone: this.timezone,
-          weekday: "narrow"
-        }, e, "es"), S = "DLMXJVS".indexOf(v);
-        f += -S + s + // We don't want to skip days that are before
-        // startOfWeek (#7051)
-        (S < s ? -7 : 0);
-      }
-      e = r.makeTime(h, d, f, p, u, g, x), r.variableTimezone && rs(i) && (m = // Long range, assume we're crossing over.
-      i - e > 4 * Y.month || // Short range, check if min and max are in different time
-      // zones.
-      r.getTimezoneOffset(e) !== r.getTimezoneOffset(i));
-      let b = e, y = 1;
-      for (; b < i; )
-        n.push(b), l === Y.year ? b = r.makeTime(h + y * a, 0) : l === Y.month ? b = r.makeTime(h, d + y * a) : m && (l === Y.day || l === Y.week) ? b = r.makeTime(h, d, f + y * a * (l === Y.day ? 1 : 7)) : m && l === Y.hour && a > 1 ? b = r.makeTime(h, d, f, p + y * a) : b += l * a, y++;
-      n.push(b), l <= Y.hour && n.length < 1e4 && n.forEach((v) => {
-        // Speed optimization, no need to run dateFormat unless
-        // we're on a full or half hour
-        v % 18e5 === 0 && // Check for local or global midnight
-        r.dateFormat("%H%M%S%L", v) === "000000000" && (o[v] = "day");
-      });
-    }
-    return n.info = Mn(t, {
-      higherRanks: o,
-      totalRange: l * a
-    }), n;
-  }
-}
-const { isTouchDevice: wn } = N, Ii = {
-  /**
-   * An array containing the default colors for the chart's series. When
-   * all colors are used, new colors are pulled from the start again.
-   *
-   * Default colors can also be set on a series or series.type basis,
-   * see [column.colors](#plotOptions.column.colors),
-   * [pie.colors](#plotOptions.pie.colors).
-   *
-   * In styled mode, the colors option doesn't exist. Instead, colors
-   * are defined in CSS and applied either through series or point class
-   * names, or through the [chart.colorCount](#chart.colorCount) option.
-   *
-   * @sample {highcharts} highcharts/chart/colors/
-   *         Assign a global color theme
-   * @sample highcharts/members/theme-v10/
-   *         Latest release styled like version 10
-   *
-   * @type    {Array<(Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject)>}
-   * @default [
-   *     "#2caffe",
-   *     "#544fc5",
-   *     "#00e272",
-   *     "#fe6a35",
-   *     "#6b8abc",
-   *     "#d568fb",
-   *     "#2ee0ca",
-   *     "#fa4b42",
-   *     "#feb56a",
-   *     "#91e8e1"
-   * ]
-   */
-  colors: Dr.colors,
-  /**
-   * Styled mode only. Configuration object for adding SVG definitions for
-   * reusable elements. See [gradients, shadows and
-   * patterns](https://www.highcharts.com/docs/chart-design-and-style/gradients-shadows-and-patterns)
-   * for more information and code examples.
-   *
-   * @type      {*}
-   * @since     5.0.0
-   * @apioption defs
-   */
-  /**
-   * @ignore-option
-   */
-  symbols: ["circle", "diamond", "square", "triangle", "triangle-down"],
-  /**
-   * An object containing language-related strings and settings. A typical
-   * setup uses `Highcharts.setOptions` to make the options apply to all
-   * charts in the same page.
-   *
-   * Some language options, like `months` and `weekdays`, are only used
-   * with non-locale-aware date formats.
-   *
-   * ```js
-   * Highcharts.setOptions({
-   *     lang: {
-   *         locale: 'fr'
-   *     }
-   * });
-   * ```
-   *
-   * @optionparent lang
-   */
-  lang: {
-    weekFrom: "week from",
-    /**
-     * The default chart title.
-     *
-     * @since 12.2.0
-     */
-    chartTitle: "Chart title",
-    /**
-     * The browser locale to use for date and number formatting. The actual
-     * locale used for each chart is determined in three steps:
-     * 1. If this `lang.locale` option is specified, it is used.
-     * 2. Else, look for the closest ancestor HTML element with a `lang`
-     *    attribute, typically the `<html>` element.
-     * 3. If no 'lang' attribute is found, use the default browser locale.
-     *
-     * Use `en-GB`, British English, for approximate consistency with
-     * Highcharts v < 12.
-     *
-     * @sample highcharts/lang/locale/
-     *         Set the locale using the `lang.locale` option
-     * @sample highcharts/lang/locale-attribute/
-     *         Pick up the locale from the HTML `lang` attribute
-     * @sample highcharts/members/highcharts-numberformat
-     *         Arabic locale with digits and dates         *
-     *
-     * @since 12.0.0
-     * @type {string|Array<string>}
-     */
-    locale: void 0,
-    /**
-     * The loading text that appears when the chart is set into the loading
-     * state following a call to `chart.showLoading`.
-     */
-    loading: "Loading...",
-    /**
-     * An array containing the months names. Corresponds to the `%B` format
-     * in `Highcharts.dateFormat()`. Defaults to 'undefined',
-     * meaning the default month names are used according to the
-     * `lang.locale` or browser settings.
-     *
-     * @type    {Array<string>}
-     */
-    months: void 0,
-    /**
-     * [Format string](https://www.highcharts.com/docs/chart-concepts/templating) for the default series name.
-     *
-     * @since 12.2.0
-     */
-    seriesName: "Series {add index 1}",
-    /**
-     * An array containing the months names in abbreviated form. Corresponds
-     * to the `%b` format in `Highcharts.dateFormat()`. Defaults to
-     * 'undefined', meaning the default short month names are used according
-     * to the `lang.locale` or browser settings.
-     *
-     * @type    {Array<string>}
-     */
-    shortMonths: void 0,
-    /**
-     * An array containing the weekday names. Corresponds
-     * to the `%A` format in `Highcharts.dateFormat()`. Defaults to
-     * 'undefined', meaning the default weekday names are used according to
-     * the `lang.locale` or browser settings.
-     *
-     * @type    {Array<string>}
-     */
-    weekdays: void 0,
-    /**
-     * Short week days, starting Sunday. Corresponds to the `%a` format in
-     * `Highcharts.dateFormat()`. Defaults to 'undefined', meaning
-     * the default short weekday names are used according to the
-     * `lang.locale` or browser settings.
-     *
-     * @sample highcharts/lang/shortweekdays/
-     *         Finnish two-letter abbreviations
-     *
-     * @type      {Array<string>}
-     * @since     4.2.4
-     * @apioption lang.shortWeekdays
-     */
-    /**
-     * What to show in a date field for invalid dates. Defaults to an empty
-     * string.
-     *
-     * @type      {string}
-     * @since     4.1.8
-     * @product   highcharts highstock
-     * @apioption lang.invalidDate
-     */
-    /**
-     * The title appearing on hovering the zoom in button. The text itself
-     * defaults to "+" and can be changed in the button options.
-     *
-     * @type      {string}
-     * @default   Zoom in
-     * @product   highmaps
-     * @apioption lang.zoomIn
-     */
-    /**
-     * The title appearing on hovering the zoom out button. The text itself
-     * defaults to "-" and can be changed in the button options.
-     *
-     * @type      {string}
-     * @default   Zoom out
-     * @product   highmaps
-     * @apioption lang.zoomOut
-     */
-    /**
-     * The default decimal point used in the `Highcharts.numberFormat`
-     * method unless otherwise specified in the function arguments. Defaults
-     * to the locale decimal point as determined by `lang.locale`.
-     *
-     * @type      {string}
-     * @default   undefined
-     * @since     1.2.2
-     * @apioption lang.decimalPoint
-     */
-    /**
-     * [Metric prefixes](https://en.wikipedia.org/wiki/Metric_prefix) used
-     * to shorten high numbers in axis labels. Replacing any of the
-     * positions with `null` causes the full number to be written. Setting
-     * `numericSymbols` to `undefined` disables shortening altogether.
-     *
-     * @sample {highcharts} highcharts/lang/numericsymbols/
-     *         Replacing the symbols with text
-     * @sample {highstock} highcharts/lang/numericsymbols/
-     *         Replacing the symbols with text
-     *
-     * @type    {Array<string>}
-     * @default ["k", "M", "G", "T", "P", "E"]
-     * @since   2.3.0
-     */
-    numericSymbols: ["k", "M", "G", "T", "P", "E"],
-    /**
-     * The default name for a pie slice (point).
-     * @since 12.2.0
-     */
-    pieSliceName: "Slice",
-    /**
-     * The magnitude of [numericSymbols](#lang.numericSymbol) replacements.
-     * Use 10000 for Japanese, Korean and various Chinese locales, which
-     * use symbols for 10^4, 10^8 and 10^12.
-     *
-     * @sample highcharts/lang/numericsymbolmagnitude/
-     *         10000 magnitude for Japanese
-     *
-     * @type      {number}
-     * @default   1000
-     * @since     5.0.3
-     * @apioption lang.numericSymbolMagnitude
-     */
-    /**
-     * The default thousands separator used in the `Highcharts.numberFormat`
-     * method unless otherwise specified in the function arguments. Defaults
-     * to the locale thousands separator as determined by `lang.locale`.
-     *
-     * @type      {string}
-     * @default   undefined
-     * @since     1.2.2
-     * @apioption lang.thousandsSep
-     */
-    /**
-     * The text for the label appearing when a chart is zoomed.
-     *
-     * @since 1.2.4
-     */
-    resetZoom: "Reset zoom",
-    /**
-     * The tooltip title for the label appearing when a chart is zoomed.
-     *
-     * @since 1.2.4
-     */
-    /**
-     * The default title of the Y axis
-     *
-     * @since 12.2.0
-     */
-    yAxisTitle: "Values",
-    resetZoomTitle: "Reset zoom level 1:1"
-  },
-  /**
-   * Global options that don't apply to each chart. These options must be set
-   * using the `Highcharts.setOptions` method.
-   *
-   * ```js
-   * Highcharts.setOptions({
-   *     global: {
-   *         buttonTheme: {
-   *             fill: '#d0d0d0'
-   *         }
-   *     }
-   * });
-   * ```
-   */
-  global: {
-    /**
-     * General theme for buttons. This applies to the zoom button, exporting
-     * context menu, map navigation, range selector buttons and custom
-     * buttons generated using the `SVGRenderer.button` function. However,
-     * each of these may be overridden with more specific options.
-     *
-     * @sample highcharts/global/buttontheme
-     *         General button theme
-     * @since 11.4.2
-     */
-    buttonTheme: {
-      /**
-       * The fill color for buttons
-       */
-      fill: "#f7f7f7",
-      /**
-       * The padding of buttons
-       */
-      padding: 8,
-      /**
-       * The border radius for buttons
-       */
-      r: 2,
-      /**
-       * The stroke color for buttons
-       */
-      stroke: "#cccccc",
-      /**
-       * The stroke width for buttons
-       */
-      "stroke-width": 1,
-      /**
-       * CSS styling for the buttons' text
-       */
-      style: {
-        color: "#333333",
-        cursor: "pointer",
-        fontSize: "0.8em",
-        fontWeight: "normal"
-      },
-      /**
-       * State overrides for the buttons
-       */
-      states: {
-        /**
-         * Hover state overrides for the buttons are applied in addition
-         * to the normal state options
-         */
-        hover: {
-          fill: "#e6e6e6"
-          /* Palette.neutralColor10 */
-        },
-        /**
-         * Select state overrides for the buttons are applied in
-         * addition to the normal state options
-         */
-        select: {
-          fill: "#e6e9ff",
-          style: {
-            color: "#000000",
-            fontWeight: "bold"
-          }
-        },
-        /**
-         * Disabled state overrides for the buttons are applied in
-         * addition to the normal state options
-         */
-        disabled: {
-          /**
-           * Disabled state CSS style overrides for the buttons' text
-           */
-          style: {
-            color: "#cccccc"
-            /* Palette.neutralColor20 */
-          }
-        }
-      }
-    }
-  },
-  /**
-   * Time options that can apply globally or to individual charts. These
-   * settings affect how `datetime` axes are laid out, how tooltips are
-   * formatted, how series
-   * [pointIntervalUnit](#plotOptions.series.pointIntervalUnit) works and how
-   * the Highcharts Stock range selector handles time.
-   *
-   * The common use case is that all charts in the same Highcharts object
-   * share the same time settings, in which case the global settings are set
-   * using `setOptions`.
-   *
-   * ```js
-   * // Apply time settings globally
-   * Highcharts.setOptions({
-   *     time: {
-   *         timezone: 'Europe/London'
-   *     }
-   * });
-   * // Apply time settings by instance
-   * const chart = Highcharts.chart('container', {
-   *     time: {
-   *         timezone: 'America/New_York'
-   *     },
-   *     series: [{
-   *         data: [1, 4, 3, 5]
-   *     }]
-   * });
-   *
-   * // Use the Time object
-   * console.log(
-   *        'Current time in New York',
-   *        chart.time.dateFormat('%Y-%m-%d %H:%M:%S', Date.now())
-   * );
-   * ```
-   *
-   * Since v6.0.5, the time options were moved from the `global` object to the
-   * `time` object, and time options can be set on each individual chart.
-   *
-   * @sample {highcharts|highstock}
-   *         highcharts/time/timezone/
-   *         Set the timezone globally
-   * @sample {highcharts}
-   *         highcharts/time/individual/
-   *         Set the timezone per chart instance
-   * @sample {highstock}
-   *         stock/time/individual/
-   *         Set the timezone per chart instance
-   *
-   * @since     6.0.5
-   * @optionparent time
-   */
-  time: {
-    /**
-     * A custom `Date` class for advanced date handling. For example,
-     * [JDate](https://github.com/tahajahangir/jdate) can be hooked in to
-     * handle Jalali dates.
-     *
-     * @type      {*}
-     * @since     4.0.4
-     * @product   highcharts highstock gantt
-     */
-    Date: void 0,
-    /**
-     * A named time zone. Supported time zone names rely on the browser
-     * implementations, as described in the [mdn
-     * docs](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/DateTimeFormat#timezone).
-     * If the given time zone is not recognized by the browser, Highcharts
-     * provides a warning and falls back to returning a 0 offset,
-     * corresponding to the UTC time zone.
-     *
-     * The time zone affects axis scaling, tickmark placement and
-     * time display in `Highcharts.dateFormat`.
-     *
-     * Setting `timezone` to `undefined` falls back to the default browser
-     * timezone setting.
-     *
-     * Until v11.2.0, this option depended on moment.js.
-     *
-     * @sample {highcharts|highstock} highcharts/time/timezone/ Europe/Oslo
-     *
-     * @type      {string}
-     * @since     5.0.7
-     * @product   highcharts highstock gantt
-     */
-    timezone: "UTC",
-    /**
-     * The timezone offset in minutes. Positive values are west, negative
-     * values are east of UTC, as in the ECMAScript
-     * [getTimezoneOffset](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/getTimezoneOffset)
-     * method. Use this to display UTC based data in a predefined time zone.
-     *
-     * This option is deprecated as of v11.4.1 and will be removed in a
-     * future release. Use the [time.timezone](#time.timezone) option
-     * instead.
-     *
-     * @see [time.getTimezoneOffset](#time.getTimezoneOffset)
-     *
-     * @sample {highcharts|highstock} highcharts/time/timezoneoffset/
-     *         Timezone offset
-     *
-     * @since     3.0.8
-     * @deprecated 11.4.2
-     * @product   highcharts highstock gantt
-     */
-    timezoneOffset: 0,
-    /**
-     * Whether to use UTC time for axis scaling, tickmark placement and
-     * time display in `Highcharts.dateFormat`. Advantages of using UTC
-     * is that the time displays equally regardless of the user agent's
-     * time zone settings. Local time can be used when the data is loaded
-     * in real time or when correct Daylight Saving Time transitions are
-     * required.
-     *
-     * Setting `useUTC` to true is equivalent to setting `time.timezone` to
-     * `"UTC"`. Setting `useUTC` to false is equivalent to setting
-     * `time.timezone` to `undefined`.
-     *
-     * @see [time.timezone](#timezone)
-     *
-     * @sample {highcharts} highcharts/time/useutc-true/
-     *         True by default
-     * @sample {highcharts} highcharts/time/useutc-false/
-     *         False
-     *
-     * @deprecated
-     */
-    useUTC: void 0
-  },
-  chart: $r,
-  /**
-   * The chart's main title.
-   *
-   * @sample {highmaps} maps/title/title/
-   *         Title options demonstrated
-   * @sample {highcharts} highcharts/title/align-auto/
-   *         Default title alignment
-   */
-  title: {
-    /**
-     * When the title is floating, the plot area will not move to make space
-     * for it.
-     *
-     * @sample {highcharts} highcharts/chart/zoomtype-none/
-     *         False by default
-     * @sample {highcharts} highcharts/title/floating/
-     *         True - title on top of the plot area
-     * @sample {highstock} stock/chart/title-floating/
-     *         True - title on top of the plot area
-     *
-     * @type      {boolean}
-     * @default   false
-     * @since     2.1
-     * @apioption title.floating
-     */
-    /**
-     * Whether to
-     * [use HTML](https://www.highcharts.com/docs/chart-concepts/labels-and-string-formatting#html)
-     * to render the text.
-     *
-     * @type      {boolean}
-     * @default   false
-     * @apioption title.useHTML
-     */
-    /**
-     * The vertical alignment of the title. Can be one of `"top"`,
-     * `"middle"` and `"bottom"`. When a value is given, the title behaves
-     * as if [floating](#title.floating) were `true`.
-     *
-     * @sample {highcharts} highcharts/title/verticalalign/
-     *         Chart title in bottom right corner
-     * @sample {highstock} stock/chart/title-verticalalign/
-     *         Chart title in bottom right corner
-     *
-     * @type      {Highcharts.VerticalAlignValue}
-     * @since     2.1
-     * @apioption title.verticalAlign
-     */
-    /**
-     * The x position of the title relative to the alignment within
-     * `chart.spacingLeft` and `chart.spacingRight`.
-     *
-     * @sample {highcharts} highcharts/title/align/
-     *         Aligned to the plot area (x = 70px = margin left - spacing
-     *         left)
-     * @sample {highstock} stock/chart/title-align/
-     *         Aligned to the plot area (x = 50px = margin left - spacing
-     *         left)
-     *
-     * @type      {number}
-     * @default   0
-     * @since     2.0
-     * @apioption title.x
-     */
-    /**
-     * The y position of the title relative to the alignment within
-     * [chart.spacingTop](#chart.spacingTop) and [chart.spacingBottom](
-     * #chart.spacingBottom). By default it depends on the font size.
-     *
-     * @sample {highcharts} highcharts/title/y/
-     *         Title inside the plot area
-     * @sample {highstock} stock/chart/title-verticalalign/
-     *         Chart title in bottom right corner
-     *
-     * @type      {number}
-     * @since     2.0
-     * @apioption title.y
-     */
-    /**
-     * CSS styles for the title. Use this for font styling, but use `align`,
-     * `x` and `y` for text alignment.
-     *
-     * Note that the default [title.minScale](#title.minScale) option also
-     * affects the rendered font size. In order to keep the font size fixed
-     * regardless of title length, set `minScale` to 1.
-     *
-     * In styled mode, the title style is given in the `.highcharts-title`
-     * class.
-     *
-     * @sample {highcharts} highcharts/title/style/
-     *         Custom color and weight
-     * @sample {highstock} stock/chart/title-style/
-     *         Custom color and weight
-     * @sample highcharts/css/titles/
-     *         Styled mode
-     *
-     * @type      {Highcharts.CSSObject}
-     * @default   {highcharts|highmaps} { "color": "#333333", "fontSize": "18px" }
-     * @default   {highstock} { "color": "#333333", "fontSize": "16px" }
-     */
-    style: {
-      color: "#333333",
-      fontWeight: "bold"
-    },
-    /**
-     * The title of the chart. To disable the title, set the `text` to
-     * `undefined`.
-     *
-     * @sample {highcharts} highcharts/title/text/
-     *         Custom title
-     * @sample {highstock} stock/chart/title-text/
-     *         Custom title
-     *
-     * @default {highcharts|highmaps} Chart title
-     * @default {highstock} undefined
-     */
-    text: "Chart title",
-    /**
-     * The horizontal alignment of the title. Can be one of "left", "center"
-     * and "right".
-     *
-     * Since v12 it defaults to `undefined`, meaning the alignment is
-     * computed for best fit. If the text fits in one line, it aligned to
-     * the center, but if it is wrapped into multiple lines, it is aligned
-     * to the left.
-     *
-     * @sample {highcharts} highcharts/title/align-auto/
-     *         Default alignment, dynamic
-     * @sample {highcharts} highcharts/title/align/
-     *         Aligned to the plot area (x = 70px = margin left - spacing
-     *         left)
-     * @sample {highstock} stock/chart/title-align/
-     *         Aligned to the plot area (x = 50px = margin left - spacing
-     *         left)
-     *
-     * @type      {Highcharts.AlignValue}
-     * @default   undefined
-     * @since     2.0
-     * @apioption title.align
-     */
-    /**
-     * The margin between the title and the plot area, or if a subtitle
-     * is present, the margin between the subtitle and the plot area.
-     *
-     * @sample {highcharts} highcharts/title/margin-50/
-     *         A chart title margin of 50
-     * @sample {highcharts} highcharts/title/margin-subtitle/
-     *         The same margin applied with a subtitle
-     * @sample {highstock} stock/chart/title-margin/
-     *         A chart title margin of 50
-     *
-     * @since 2.1
-     */
-    margin: 15,
-    /**
-     * When the title is too wide to fit in the chart, the default behavior
-     * is to scale it down to fit, or apply word wrap if it is scaled down
-     * to `minScale` and still doesn't fit.
-     *
-     * The default value reflects the scale, when using default font sizes,
-     * when the title font size matches that of the subtitle. The title
-     * still stands out as it is bold by default.
-     *
-     * Set `minScale` to 1 to avoid downscaling.
-     *
-     * @sample {highcharts} highcharts/title/align-auto/
-     *         Downscaling demonstrated
-     *
-     * @since 12.0.0
-     */
-    minScale: 0.67
-  },
-  /**
-   * The chart's subtitle. This can be used both to display a subtitle below
-   * the main title, and to display random text anywhere in the chart. The
-   * subtitle can be updated after chart initialization through the
-   * `Chart.setTitle` method.
-   *
-   * @sample {highcharts} highcharts/title/align-auto/
-   *         Default title alignment
-   * @sample {highmaps} maps/title/subtitle/
-   *         Subtitle options demonstrated
-   */
-  subtitle: {
-    /**
-     * The horizontal alignment of the subtitle. Can be one of "left",
-     * "center" and "right". Since v12, it defaults to `undefined`, meaning
-     * the actual alignment is inherited from the alignment of the main
-     * title.
-     *
-     * @sample {highcharts} highcharts/title/align-auto/
-     *         Default title and subtitle alignment, dynamic
-     * @sample {highcharts} highcharts/subtitle/align/
-     *         Footnote at right of plot area
-     * @sample {highstock} stock/chart/subtitle-footnote
-     *         Footnote at bottom right of plot area
-     *
-     * @type  {Highcharts.AlignValue}
-     * @default undefined
-     * @since 2.0
-     * @apioption subtitle.align
-     */
-    /**
-     * When the subtitle is floating, the plot area will not move to make
-     * space for it.
-     *
-     * @sample {highcharts} highcharts/subtitle/floating/
-     *         Floating title and subtitle
-     * @sample {highstock} stock/chart/subtitle-footnote
-     *         Footnote floating at bottom right of plot area
-     *
-     * @type      {boolean}
-     * @default   false
-     * @since     2.1
-     * @apioption subtitle.floating
-     */
-    /**
-     * CSS styles for the title.
-     *
-     * In styled mode, the subtitle style is given in the
-     * `.highcharts-subtitle` class.
-     *
-     * @sample {highcharts} highcharts/subtitle/style/
-     *         Custom color and weight
-     * @sample {highcharts} highcharts/css/titles/
-     *         Styled mode
-     * @sample {highstock} stock/chart/subtitle-style
-     *         Custom color and weight
-     * @sample {highstock} highcharts/css/titles/
-     *         Styled mode
-     * @sample {highmaps} highcharts/css/titles/
-     *         Styled mode
-     *
-     * @type      {Highcharts.CSSObject}
-     * @default   {"color": "#666666"}
-     * @apioption subtitle.style
-     */
-    /**
-     * Whether to
-     * [use HTML](https://www.highcharts.com/docs/chart-concepts/labels-and-string-formatting#html)
-     * to render the text.
-     *
-     * @type      {boolean}
-     * @default   false
-     * @apioption subtitle.useHTML
-     */
-    /**
-     * The vertical alignment of the title. Can be one of `"top"`,
-     * `"middle"` and `"bottom"`. When middle, the subtitle behaves as
-     * floating.
-     *
-     * @sample {highcharts} highcharts/subtitle/verticalalign/
-     *         Footnote at the bottom right of plot area
-     * @sample {highstock} stock/chart/subtitle-footnote
-     *         Footnote at the bottom right of plot area
-     *
-     * @type      {Highcharts.VerticalAlignValue}
-     * @since     2.1
-     * @apioption subtitle.verticalAlign
-     */
-    /**
-     * The x position of the subtitle relative to the alignment within
-     * `chart.spacingLeft` and `chart.spacingRight`.
-     *
-     * @sample {highcharts} highcharts/subtitle/align/
-     *         Footnote at right of plot area
-     * @sample {highstock} stock/chart/subtitle-footnote
-     *         Footnote at the bottom right of plot area
-     *
-     * @type      {number}
-     * @default   0
-     * @since     2.0
-     * @apioption subtitle.x
-     */
-    /**
-     * The y position of the subtitle relative to the alignment within
-     * `chart.spacingTop` and `chart.spacingBottom`. By default the subtitle
-     * is laid out below the title unless the title is floating.
-     *
-     * @sample {highcharts} highcharts/subtitle/verticalalign/
-     *         Footnote at the bottom right of plot area
-     * @sample {highstock} stock/chart/subtitle-footnote
-     *         Footnote at the bottom right of plot area
-     *
-     * @type      {number}
-     * @since     2.0
-     * @apioption subtitle.y
-     */
-    /**
-     * CSS styles for the title.
-     *
-     * In styled mode, the subtitle style is given in the
-     * `.highcharts-subtitle` class.
-     *
-     * @sample {highcharts} highcharts/subtitle/style/
-     *         Custom color and weight
-     * @sample {highcharts} highcharts/css/titles/
-     *         Styled mode
-     * @sample {highstock} stock/chart/subtitle-style
-     *         Custom color and weight
-     * @sample {highstock} highcharts/css/titles/
-     *         Styled mode
-     * @sample {highmaps} highcharts/css/titles/
-     *         Styled mode
-     *
-     * @type      {Highcharts.CSSObject}
-     * @default   {"color": "#666666"}
-     */
-    style: {
-      color: "#666666",
-      /**
-       * @type {number|string}
-       */
-      fontSize: "0.8em"
-    },
-    /**
-     * The subtitle of the chart.
-     *
-     * @sample {highcharts|highstock} highcharts/subtitle/text/
-     *         Custom subtitle
-     * @sample {highcharts|highstock} highcharts/subtitle/text-formatted/
-     *         Formatted and linked text.
-     */
-    text: ""
-  },
-  /**
-   * The chart's caption, which will render below the chart and will be part
-   * of exported charts. The caption can be updated after chart initialization
-   * through the `Chart.update` or `Chart.caption.update` methods.
-   *
-   * @sample highcharts/caption/text/
-   *         A chart with a caption
-   * @since  7.2.0
-   */
-  caption: {
-    /**
-     * When the caption is floating, the plot area will not move to make
-     * space for it.
-     *
-     * @type      {boolean}
-     * @default   false
-     * @apioption caption.floating
-     */
-    /**
-     * The margin between the caption and the plot area.
-     */
-    margin: 15,
-    /**
-     * Whether to
-     * [use HTML](https://www.highcharts.com/docs/chart-concepts/labels-and-string-formatting#html)
-     * to render the text.
-     *
-     * @type      {boolean}
-     * @default   false
-     * @apioption caption.useHTML
-     */
-    /**
-     * The x position of the caption relative to the alignment within
-     * `chart.spacingLeft` and `chart.spacingRight`.
-     *
-     * @type      {number}
-     * @default   0
-     * @apioption caption.x
-     */
-    /**
-     * The y position of the caption relative to the alignment within
-     * `chart.spacingTop` and `chart.spacingBottom`.
-     *
-     * @type      {number}
-     * @apioption caption.y
-     */
-    /**
-     * CSS styles for the caption.
-     *
-     * In styled mode, the caption style is given in the
-     * `.highcharts-caption` class.
-     *
-     * @sample {highcharts} highcharts/css/titles/
-     *         Styled mode
-     *
-     * @type      {Highcharts.CSSObject}
-     * @default   {"color": "#666666"}
-     */
-    style: {
-      color: "#666666",
-      /**
-       * @type {number|string}
-       */
-      fontSize: "0.8em"
-    },
-    /**
-     * The caption text of the chart.
-     *
-     * @sample {highcharts} highcharts/caption/text/
-     *         Custom caption
-     */
-    text: "",
-    /**
-     * The horizontal alignment of the caption. Can be one of "left",
-     *  "center" and "right".
-     *
-     * @type  {Highcharts.AlignValue}
-     */
-    align: "left",
-    /**
-     * The vertical alignment of the caption. Can be one of `"top"`,
-     * `"middle"` and `"bottom"`. When middle, the caption behaves as
-     * floating.
-     *
-     * @type      {Highcharts.VerticalAlignValue}
-     */
-    verticalAlign: "bottom"
-  },
-  /**
-   * The plotOptions is a wrapper object for config objects for each series
-   * type. The config objects for each series can also be overridden for
-   * each series item as given in the series array.
-   *
-   * Configuration options for the series are given in three levels. Options
-   * for all series in a chart are given in the [plotOptions.series](
-   * #plotOptions.series) object. Then options for all series of a specific
-   * type are given in the plotOptions of that type, for example
-   * `plotOptions.line`. Next, options for one single series are given in
-   * [the series array](#series).
-   */
-  plotOptions: {},
-  /**
-   * The legend is a box containing a symbol and name for each series
-   * item or point item in the chart. Each series (or points in case
-   * of pie charts) is represented by a symbol and its name in the legend.
-   *
-   * It is possible to override the symbol creator function and create
-   * [custom legend symbols](https://jsfiddle.net/gh/get/library/pure/highcharts/highcharts/tree/master/samples/highcharts/studies/legend-custom-symbol/).
-   *
-   * @productdesc {highmaps}
-   * A Highmaps legend by default contains one legend item per series, but if
-   * a `colorAxis` is defined, the axis will be displayed in the legend.
-   * Either as a gradient, or as multiple legend items for `dataClasses`.
-   */
-  legend: {
-    /**
-     * The background color of the legend.
-     *
-     * @see In styled mode, the legend background fill can be applied with
-     *      the `.highcharts-legend-box` class.
-     *
-     * @sample {highcharts} highcharts/legend/backgroundcolor/
-     *         Yellowish background
-     * @sample {highstock} stock/legend/align/
-     *         Various legend options
-     * @sample {highmaps} maps/legend/border-background/
-     *         Border and background options
-     *
-     * @type      {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
-     * @apioption legend.backgroundColor
-     */
-    /**
-     * The width of the drawn border around the legend.
-     *
-     * @see In styled mode, the legend border stroke width can be applied
-     *      with the `.highcharts-legend-box` class.
-     *
-     * @sample {highcharts} highcharts/legend/borderwidth/
-     *         2px border width
-     * @sample {highstock} stock/legend/align/
-     *         Various legend options
-     * @sample {highmaps} maps/legend/border-background/
-     *         Border and background options
-     *
-     * @type      {number}
-     * @default   0
-     * @apioption legend.borderWidth
-     */
-    /**
-     * Enable or disable the legend. There is also a series-specific option,
-     * [showInLegend](#plotOptions.series.showInLegend), that can hide the
-     * series from the legend. In some series types this is `false` by
-     * default, so it must set to `true` in order to show the legend for the
-     * series.
-     *
-     * @sample {highcharts} highcharts/legend/enabled-false/ Legend disabled
-     * @sample {highstock} stock/legend/align/ Various legend options
-     * @sample {highmaps} maps/legend/enabled-false/ Legend disabled
-     *
-     * @default {highstock} false
-     * @default {highmaps} true
-     * @default {gantt} false
-     */
-    enabled: !0,
-    /**
-     * The horizontal alignment of the legend box within the chart area.
-     * Valid values are `left`, `center` and `right`.
-     *
-     * In the case that the legend is aligned in a corner position, the
-     * `layout` option will determine whether to place it above/below
-     * or on the side of the plot area.
-     *
-     * @sample {highcharts} highcharts/legend/align/
-     *         Legend at the right of the chart
-     * @sample {highstock} stock/legend/align/
-     *         Various legend options
-     * @sample {highmaps} maps/legend/alignment/
-     *         Legend alignment
-     *
-     * @type  {Highcharts.AlignValue}
-     * @since 2.0
-     */
-    align: "center",
-    /**
-     * If the [layout](legend.layout) is `horizontal` and the legend items
-     * span over two lines or more, whether to align the items into vertical
-     * columns. Setting this to `false` makes room for more items, but will
-     * look more messy.
-     *
-     * @since 6.1.0
-     */
-    alignColumns: !0,
-    /**
-     * A CSS class name to apply to the legend group.
-     */
-    className: "highcharts-no-tooltip",
-    /**
-     * General event handlers for the legend. These event hooks can
-     * also be attached to the legend at run time using the
-     * `Highcharts.addEvent` function.
-     *
-     * @declare Highcharts.LegendEventsOptionsObject
-     *
-     * @private
-     */
-    events: {},
-    /**
-     * Fires when the legend item belonging to the series is clicked. One
-     * parameter, `event`, is passed to the function. The default action
-     * is to toggle the visibility of the series, point or data class. This
-     * can be prevented by returning `false` or calling
-     * `event.preventDefault()`.
-     *
-     * @sample {highcharts} highcharts/legend/itemclick/
-     *         Confirm hiding and showing
-     * @sample {highcharts} highcharts/legend/pie-legend-itemclick/
-     *         Confirm toggle visibility of pie slices
-     *
-     * @type      {Highcharts.LegendItemClickCallbackFunction}
-     * @context   Highcharts.Legend
-     * @apioption legend.events.itemClick
-     */
-    /**
-     * When the legend is floating, the plot area ignores it and is allowed
-     * to be placed below it.
-     *
-     * @sample {highcharts} highcharts/legend/floating-false/
-     *         False by default
-     * @sample {highcharts} highcharts/legend/floating-true/
-     *         True
-     * @sample {highmaps} maps/legend/alignment/
-     *         Floating legend
-     *
-     * @type      {boolean}
-     * @default   false
-     * @since     2.1
-     * @apioption legend.floating
-     */
-    /**
-     * The layout of the legend items. Can be one of `horizontal` or
-     * `vertical` or `proximate`. When `proximate`, the legend items will be
-     * placed as close as possible to the graphs they're representing,
-     * except in inverted charts or when the legend position doesn't allow
-     * it.
-     *
-     * @sample {highcharts} highcharts/legend/layout-horizontal/
-     *         Horizontal by default
-     * @sample {highcharts} highcharts/legend/layout-vertical/
-     *         Vertical
-     * @sample highcharts/legend/layout-proximate
-     *         Labels proximate to the data
-     * @sample {highstock} stock/legend/layout-horizontal/
-     *         Horizontal by default
-     * @sample {highmaps} maps/legend/padding-itemmargin/
-     *         Vertical with data classes
-     * @sample {highmaps} maps/legend/layout-vertical/
-     *         Vertical with color axis gradient
-     *
-     * @validvalue ["horizontal", "vertical", "proximate"]
-     */
-    layout: "horizontal",
-    /**
-     * In a legend with horizontal layout, the itemDistance defines the
-     * pixel distance between each item.
-     *
-     * @sample {highcharts} highcharts/legend/layout-horizontal/
-     *         50px item distance
-     * @sample {highstock} highcharts/legend/layout-horizontal/
-     *         50px item distance
-     *
-     * @type      {number}
-     * @default   {highcharts} 20
-     * @default   {highstock} 20
-     * @default   {highmaps} 8
-     * @since     3.0.3
-     * @apioption legend.itemDistance
-     */
-    /**
-     * The pixel bottom margin for each legend item.
-     *
-     * @sample {highcharts|highstock} highcharts/legend/padding-itemmargin/
-     *         Padding and item margins demonstrated
-     * @sample {highmaps} maps/legend/padding-itemmargin/
-     *         Padding and item margins demonstrated
-     *
-     * @since     2.2.0
-     */
-    itemMarginBottom: 2,
-    /**
-     * The pixel top margin for each legend item.
-     *
-     * @sample {highcharts|highstock} highcharts/legend/padding-itemmargin/
-     *         Padding and item margins demonstrated
-     * @sample {highmaps} maps/legend/padding-itemmargin/
-     *         Padding and item margins demonstrated
-     *
-     * @since     2.2.0
-     */
-    itemMarginTop: 2,
-    /**
-     * The width for each legend item. By default the items are laid out
-     * successively. In a [horizontal layout](legend.layout), if the items
-     * are laid out across two rows or more, they will be vertically aligned
-     * depending on the [legend.alignColumns](legend.alignColumns) option.
-     *
-     * @sample {highcharts} highcharts/legend/itemwidth-default/
-     *         Undefined by default
-     * @sample {highcharts} highcharts/legend/itemwidth-80/
-     *         80 for aligned legend items
-     *
-     * @type      {number}
-     * @since     2.0
-     * @apioption legend.itemWidth
-     */
-    /**
-     * A [format string](https://www.highcharts.com/docs/chart-concepts/labels-and-string-formatting)
-     * for each legend label. Available variables relates to properties on
-     * the series, or the point in case of pies.
-     *
-     * @type      {string}
-     * @default   {name}
-     * @since     1.3
-     * @apioption legend.labelFormat
-     */
-    /* eslint-disable valid-jsdoc */
-    /**
-     * Callback function to format each of the series' labels. The `this`
-     * keyword refers to the series object, or the point object in case of
-     * pie charts. By default the series or point name is printed.
-     *
-     * @productdesc {highmaps}
-     * In Highmaps the context can also be a data class in case of a
-     * `colorAxis`.
-     *
-     * @sample {highcharts} highcharts/legend/labelformatter/
-     *         Add text
-     * @sample {highmaps} maps/legend/labelformatter/
-     *         Data classes with label formatter
-     *
-     * @type {Highcharts.FormatterCallbackFunction<Point|Series>}
-     */
-    labelFormatter: function() {
-      return this.name;
-    },
-    /**
-     * Line height for the legend items. Deprecated as of 2.1\. Instead,
-     * the line height for each item can be set using
-     * `itemStyle.lineHeight`, and the padding between items using
-     * `itemMarginTop` and `itemMarginBottom`.
-     *
-     * @sample {highcharts} highcharts/legend/lineheight/
-     *         Setting padding
-     *
-     * @deprecated
-     *
-     * @type      {number}
-     * @default   16
-     * @since     2.0
-     * @product   highcharts gantt
-     * @apioption legend.lineHeight
-     */
-    /**
-     * If the plot area sized is calculated automatically and the legend is
-     * not floating, the legend margin is the space between the legend and
-     * the axis labels or plot area.
-     *
-     * @sample {highcharts} highcharts/legend/margin-default/
-     *         12 pixels by default
-     * @sample {highcharts} highcharts/legend/margin-30/
-     *         30 pixels
-     *
-     * @type      {number}
-     * @default   12
-     * @since     2.1
-     * @apioption legend.margin
-     */
-    /**
-     * Maximum pixel height for the legend. When the maximum height is
-     * extended, navigation will show.
-     *
-     * @type      {number}
-     * @since     2.3.0
-     * @apioption legend.maxHeight
-     */
-    /**
-     * The color of the drawn border around the legend.
-     *
-     * @see In styled mode, the legend border stroke can be applied with the
-     *      `.highcharts-legend-box` class.
-     *
-     * @sample {highcharts} highcharts/legend/bordercolor/
-     *         Brown border
-     * @sample {highstock} stock/legend/align/
-     *         Various legend options
-     * @sample {highmaps} maps/legend/border-background/
-     *         Border and background options
-     *
-     * @type {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
-     */
-    borderColor: "#999999",
-    /**
-     * The border corner radius of the legend.
-     *
-     * @sample {highcharts} highcharts/legend/borderradius-default/
-     *         Square by default
-     * @sample {highcharts} highcharts/legend/borderradius-round/
-     *         5px rounded
-     * @sample {highmaps} maps/legend/border-background/
-     *         Border and background options
-     */
-    borderRadius: 0,
-    /**
-     * Options for the paging or navigation appearing when the legend is
-     * overflown. Navigation works well on screen, but not in static
-     * exported images. One way of working around that is to
-     * [increase the chart height in
-     * export](https://jsfiddle.net/gh/get/library/pure/highcharts/highcharts/tree/master/samples/highcharts/legend/navigation-enabled-false/).
-     *
-     * @sample highcharts/legend/scrollable-vertical/
-     *         Legend with vertical scrollable extension
-     * @sample highcharts/legend/scrollable-horizontal/
-     *         Legend with horizontal scrollable extension
-     *
-     */
-    navigation: {
-      /**
-       * How to animate the pages when navigating up or down. A value of
-       * `true` applies the default navigation given in the
-       * `chart.animation` option. Additional options can be given as an
-       * object containing values for easing and duration.
-       *
-       * @sample {highcharts} highcharts/legend/navigation/
-       *         Legend page navigation demonstrated
-       * @sample {highstock} highcharts/legend/navigation/
-       *         Legend page navigation demonstrated
-       *
-       * @type      {boolean|Partial<Highcharts.AnimationOptionsObject>}
-       * @default   true
-       * @since     2.2.4
-       * @apioption legend.navigation.animation
-       */
-      /**
-       * The pixel size of the up and down arrows in the legend paging
-       * navigation.
-       *
-       * @sample {highcharts} highcharts/legend/navigation/
-       *         Legend page navigation demonstrated
-       * @sample {highstock} highcharts/legend/navigation/
-       *         Legend page navigation demonstrated
-       *
-       * @type      {number}
-       * @default   12
-       * @since     2.2.4
-       * @apioption legend.navigation.arrowSize
-       */
-      /**
-       * Whether to enable the legend navigation. In most cases, disabling
-       * the navigation results in an unwanted overflow.
-       *
-       * See also the
-       * [adapt chart to legend](https://github.com/highcharts/adapt-chart-to-legend)
-       * plugin for a solution to extend the chart height to make room for
-       * the legend, optionally in exported charts only.
-       *
-       * @type      {boolean}
-       * @default   true
-       * @since     4.2.4
-       * @apioption legend.navigation.enabled
-       */
-      /**
-       * Text styles for the legend page navigation.
-       *
-       * @see In styled mode, the navigation items are styled with the
-       *      `.highcharts-legend-navigation` class.
-       *
-       * @sample {highcharts} highcharts/legend/navigation/
-       *         Legend page navigation demonstrated
-       * @sample {highstock} highcharts/legend/navigation/
-       *         Legend page navigation demonstrated
-       *
-       * @type      {Highcharts.CSSObject}
-       * @since     2.2.4
-       * @apioption legend.navigation.style
-       */
-      style: {
-        /**
-         * @type {number|string}
-         */
-        fontSize: "0.8em"
-      },
-      /**
-       * The color for the active up or down arrow in the legend page
-       * navigation.
-       *
-       * @see In styled mode, the active arrow be styled with the
-       *      `.highcharts-legend-nav-active` class.
-       *
-       * @sample  {highcharts} highcharts/legend/navigation/
-       *          Legend page navigation demonstrated
-       * @sample  {highstock} highcharts/legend/navigation/
-       *          Legend page navigation demonstrated
-       *
-       * @type  {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
-       * @since 2.2.4
-       */
-      activeColor: "#0022ff",
-      /**
-       * The color of the inactive up or down arrow in the legend page
-       * navigation. .
-       *
-       * @see In styled mode, the inactive arrow be styled with the
-       *      `.highcharts-legend-nav-inactive` class.
-       *
-       * @sample {highcharts} highcharts/legend/navigation/
-       *         Legend page navigation demonstrated
-       * @sample {highstock} highcharts/legend/navigation/
-       *         Legend page navigation demonstrated
-       *
-       * @type  {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
-       * @since 2.2.4
-       */
-      inactiveColor: "#cccccc"
-      /* Palette.neutralColor20 */
-    },
-    /**
-     * The inner padding of the legend box.
-     *
-     * @sample {highcharts|highstock} highcharts/legend/padding-itemmargin/
-     *         Padding and item margins demonstrated
-     * @sample {highmaps} maps/legend/padding-itemmargin/
-     *         Padding and item margins demonstrated
-     *
-     * @type      {number}
-     * @default   8
-     * @since     2.2.0
-     * @apioption legend.padding
-     */
-    /**
-     * Whether to reverse the order of the legend items compared to the
-     * order of the series or points as defined in the configuration object.
-     *
-     * @see [yAxis.reversedStacks](#yAxis.reversedStacks),
-     *      [series.legendIndex](#series.legendIndex)
-     *
-     * @sample {highcharts} highcharts/legend/reversed/
-     *         Stacked bar with reversed legend
-     *
-     * @type      {boolean}
-     * @default   false
-     * @since     1.2.5
-     * @apioption legend.reversed
-     */
-    /**
-     * Whether to show the symbol on the right side of the text rather than
-     * the left side. This is common in Arabic and Hebrew.
-     *
-     * @sample {highcharts} highcharts/legend/rtl/
-     *         Symbol to the right
-     *
-     * @type      {boolean}
-     * @default   false
-     * @since     2.2
-     * @apioption legend.rtl
-     */
-    /**
-     * CSS styles for the legend area. In the 1.x versions the position
-     * of the legend area was determined by CSS. In 2.x, the position is
-     * determined by properties like `align`, `verticalAlign`, `x` and `y`,
-     * but the styles are still parsed for backwards compatibility.
-     *
-     * @deprecated
-     *
-     * @type      {Highcharts.CSSObject}
-     * @product   highcharts highstock
-     * @apioption legend.style
-     */
-    /**
-     * CSS styles for each legend item. Only a subset of CSS is supported,
-     * notably those options related to text. The default `textOverflow`
-     * property makes long texts truncate. Set it to `undefined` to wrap
-     * text instead. A `width` property can be added to control the text
-     * width.
-     *
-     * @see In styled mode, the legend items can be styled with the
-     *      `.highcharts-legend-item` class.
-     *
-     * @sample {highcharts} highcharts/legend/itemstyle/
-     *         Bold black text
-     * @sample {highmaps} maps/legend/itemstyle/
-     *         Item text styles
-     *
-     * @type    {Highcharts.CSSObject}
-     * @default {"color": "#333333", "cursor": "pointer", "fontSize": "0.8em", "fontWeight": "bold", "textOverflow": "ellipsis"}
-     */
-    itemStyle: {
-      /**
-       * @ignore
-       */
-      color: "#333333",
-      /**
-       * @ignore
-       */
-      cursor: "pointer",
-      /**
-       * @ignore
-       */
-      fontSize: "0.8em",
-      /**
-       * @ignore
-       */
-      textDecoration: "none",
-      /**
-       * @ignore
-       */
-      textOverflow: "ellipsis"
-    },
-    /**
-     * CSS styles for each legend item in hover mode. Only a subset of
-     * CSS is supported, notably those options related to text. Properties
-     * are inherited from `style` unless overridden here.
-     *
-     * @see In styled mode, the hovered legend items can be styled with
-     *      the `.highcharts-legend-item:hover` pseudo-class.
-     *
-     * @sample {highcharts} highcharts/legend/itemhoverstyle/
-     *         Red on hover
-     * @sample {highmaps} maps/legend/itemstyle/
-     *         Item text styles
-     *
-     * @type    {Highcharts.CSSObject}
-     * @default {"color": "#000000"}
-     */
-    itemHoverStyle: {
-      /**
-       * @ignore
-       */
-      color: "#000000"
-      /* Palette.neutralColor100 */
-    },
-    /**
-     * CSS styles for each legend item when the corresponding series or
-     * point is hidden. Only a subset of CSS is supported, notably those
-     * options related to text. Properties are inherited from `style`
-     * unless overridden here.
-     *
-     * @see In styled mode, the hidden legend items can be styled with
-     *      the `.highcharts-legend-item-hidden` class.
-     *
-     * @sample {highcharts} highcharts/legend/itemhiddenstyle/
-     *         Darker gray color
-     *
-     * @type    {Highcharts.CSSObject}
-     * @default {"color": "#cccccc"}
-     */
-    itemHiddenStyle: {
-      /**
-       * @ignore
-       */
-      color: "#666666",
-      /**
-       * @ignore
-       */
-      textDecoration: "line-through"
-    },
-    /**
-     * Whether to apply a drop shadow to the legend. A `backgroundColor`
-     * also needs to be applied for this to take effect. The shadow can be
-     * an object configuration containing `color`, `offsetX`, `offsetY`,
-     * `opacity` and `width`.
-     *
-     * @sample {highcharts} highcharts/legend/shadow/
-     *         White background and drop shadow
-     * @sample {highstock} stock/legend/align/
-     *         Various legend options
-     * @sample {highmaps} maps/legend/border-background/
-     *         Border and background options
-     *
-     * @type {boolean|Highcharts.CSSObject}
-     */
-    shadow: !1,
-    /**
-     * Default styling for the checkbox next to a legend item when
-     * `showCheckbox` is true.
-     *
-     * @type {Highcharts.CSSObject}
-     * @default {"width": "13px", "height": "13px", "position":"absolute"}
-     */
-    itemCheckboxStyle: {
-      /**
-       * @ignore
-       */
-      position: "absolute",
-      /**
-       * @ignore
-       */
-      width: "13px",
-      // For IE precision
-      /**
-       * @ignore
-       */
-      height: "13px"
-    },
-    /// itemWidth: undefined,
-    /**
-     * When this is true, the legend symbol width will be the same as
-     * the symbol height, which in turn defaults to the font size of the
-     * legend items.
-     *
-     * @since 5.0.0
-     */
-    squareSymbol: !0,
-    /**
-     * The pixel height of the symbol for series types that use a rectangle
-     * in the legend. Defaults to the font size of legend items.
-     *
-     * Note: This option is a default source of color axis height, if the
-     * [colorAxis.height](https://api.highcharts.com/highcharts/colorAxis.height)
-     * option is not set.
-     *
-     * @productdesc {highmaps}
-     * In Highmaps, when the symbol is the gradient of a vertical color
-     * axis, the height defaults to 200.
-     *
-     * @sample {highmaps} maps/legend/layout-vertical-sized/
-     *         Sized vertical gradient
-     * @sample {highmaps} maps/legend/padding-itemmargin/
-     *         No distance between data classes
-     *
-     * @type      {number}
-     * @since     3.0.8
-     * @apioption legend.symbolHeight
-     */
-    /**
-     * The border radius of the symbol for series types that use a rectangle
-     * in the legend. Defaults to half the `symbolHeight`, effectively
-     * creating a circle.
-     *
-     * For color axis scales, it defaults to 3.
-     *
-     * @sample {highcharts} highcharts/legend/symbolradius/
-     *         Round symbols
-     * @sample {highstock} highcharts/legend/symbolradius/
-     *         Round symbols
-     * @sample {highmaps} highcharts/legend/symbolradius/
-     *         Round symbols
-     *
-     * @type      {number}
-     * @since     3.0.8
-     * @apioption legend.symbolRadius
-     */
-    /**
-     * The pixel width of the legend item symbol. When the `squareSymbol`
-     * option is set, this defaults to the `symbolHeight`, otherwise 16.
-     *
-     * Note: This option is a default source of color axis width, if the
-     * [colorAxis.width](https://api.highcharts.com/highcharts/colorAxis.width)
-     * option is not set.
-     *
-     * @productdesc {highmaps}
-     * In Highmaps, when the symbol is the gradient of a horizontal color
-     * axis, the width defaults to 200.
-     *
-     * @sample {highcharts} highcharts/legend/symbolwidth/
-     *         Greater symbol width and padding
-     * @sample {highmaps} maps/legend/padding-itemmargin/
-     *         Padding and item margins demonstrated
-     * @sample {highmaps} maps/legend/layout-vertical-sized/
-     *         Sized vertical gradient
-     *
-     * @type      {number}
-     * @apioption legend.symbolWidth
-     */
-    /**
-     * Whether to [use HTML](https://www.highcharts.com/docs/chart-concepts/labels-and-string-formatting#html)
-     * to render the legend item texts.
-     *
-     * Prior to 4.1.7, when using HTML, [legend.navigation](
-     * #legend.navigation) was disabled.
-     *
-     * @sample highcharts/legend/scrollable-vertical/
-     *         Legend with vertical scrollable extension
-     * @sample highcharts/legend/scrollable-horizontal/
-     *         Legend with horizontal scrollable extension
-     *
-     * @type      {boolean}
-     * @default   false
-     * @apioption legend.useHTML
-     */
-    /**
-     * For a color axis with data classes, how many decimals to render in
-     * the legend. The default preserves the decimals of the range numbers.
-     *
-     * @type      {number}
-     * @default   -1
-     * @product   highcharts highmaps
-     * @apioption legend.valueDecimals
-     */
-    /**
-     * For a color axis with data classes, a suffix for the range numbers in
-     * the legend.
-     *
-     * @type      {string}
-     * @default   ''
-     * @product   highcharts highmaps
-     * @apioption legend.valueSuffix
-     */
-    /**
-     * The width of the legend box. If a number is set, it translates to
-     * pixels. Since v7.0.2 it allows setting a percent string of the full
-     * chart width, for example `40%`.
-     *
-     * Defaults to the full chart width for legends below or above the
-     * chart, half the chart width for legends to the left and right.
-     *
-     * @sample {highcharts} highcharts/legend/width/
-     *         Aligned to the plot area
-     * @sample {highcharts} highcharts/legend/width-percent/
-     *         A percent of the chart width
-     *
-     * @type      {number|string}
-     * @since     2.0
-     * @apioption legend.width
-     */
-    /**
-     * The pixel padding between the legend item symbol and the legend
-     * item text.
-     *
-     * @sample {highcharts} highcharts/legend/symbolpadding/
-     *         Greater symbol width and padding
-     */
-    symbolPadding: 5,
-    /**
-     * The vertical alignment of the legend box. Can be one of `top`,
-     * `middle` or `bottom`. Vertical position can be further determined
-     * by the `y` option.
-     *
-     * In the case that the legend is aligned in a corner position, the
-     * `layout` option will determine whether to place it above/below
-     * or on the side of the plot area.
-     *
-     * When the [layout](#legend.layout) option is `proximate`, the
-     * `verticalAlign` option doesn't apply.
-     *
-     * @sample {highcharts} highcharts/legend/verticalalign/
-     *         Legend 100px from the top of the chart
-     * @sample {highstock} stock/legend/align/
-     *         Various legend options
-     * @sample {highmaps} maps/legend/alignment/
-     *         Legend alignment
-     *
-     * @type  {Highcharts.VerticalAlignValue}
-     * @since 2.0
-     */
-    verticalAlign: "bottom",
-    // Width: undefined,
-    /**
-     * The x offset of the legend relative to its horizontal alignment
-     * `align` within chart.spacingLeft and chart.spacingRight. Negative
-     * x moves it to the left, positive x moves it to the right.
-     *
-     * @sample {highcharts} highcharts/legend/width/
-     *         Aligned to the plot area
-     *
-     * @since 2.0
-     */
-    x: 0,
-    /**
-     * The vertical offset of the legend relative to it's vertical alignment
-     * `verticalAlign` within chart.spacingTop and chart.spacingBottom.
-     *  Negative y moves it up, positive y moves it down.
-     *
-     * @sample {highcharts} highcharts/legend/verticalalign/
-     *         Legend 100px from the top of the chart
-     * @sample {highstock} stock/legend/align/
-     *         Various legend options
-     * @sample {highmaps} maps/legend/alignment/
-     *         Legend alignment
-     *
-     * @since 2.0
-     */
-    y: 0,
-    /**
-     * A title to be added on top of the legend.
-     *
-     * @sample {highcharts} highcharts/legend/title/
-     *         Legend title
-     * @sample {highmaps} maps/legend/alignment/
-     *         Legend with title
-     *
-     * @since 3.0
-     */
-    title: {
-      /**
-       * A text or HTML string for the title.
-       *
-       * @type      {string}
-       * @since     3.0
-       * @apioption legend.title.text
-       */
-      /**
-       * Generic CSS styles for the legend title.
-       *
-       * @see In styled mode, the legend title is styled with the
-       *      `.highcharts-legend-title` class.
-       *
-       * @type    {Highcharts.CSSObject}
-       * @default {"fontSize": "0.8em", "fontWeight": "bold"}
-       * @since   3.0
-       */
-      style: {
-        /**
-         * @ignore
-         */
-        color: "#333333",
-        /**
-         * @ignore
-         */
-        fontSize: "0.8em",
-        /**
-         * @ignore
-         */
-        fontWeight: "bold"
-      }
-    }
-  },
-  /**
-   * The loading options control the appearance of the loading screen
-   * that covers the plot area on chart operations. This screen only
-   * appears after an explicit call to `chart.showLoading()`. It is a
-   * utility for developers to communicate to the end user that something
-   * is going on, for example while retrieving new data via an XHR connection.
-   * The "Loading..." text itself is not part of this configuration
-   * object, but part of the `lang` object.
-   */
-  loading: {
-    /**
-     * The duration in milliseconds of the fade out effect.
-     *
-     * @sample highcharts/loading/hideduration/
-     *         Fade in and out over a second
-     *
-     * @type      {number}
-     * @default   100
-     * @since     1.2.0
-     * @apioption loading.hideDuration
-     */
-    /**
-     * The duration in milliseconds of the fade in effect.
-     *
-     * @sample highcharts/loading/hideduration/
-     *         Fade in and out over a second
-     *
-     * @type      {number}
-     * @default   100
-     * @since     1.2.0
-     * @apioption loading.showDuration
-     */
-    /**
-     * CSS styles for the loading label `span`.
-     *
-     * @see In styled mode, the loading label is styled with the
-     *      `.highcharts-loading-inner` class.
-     *
-     * @sample {highcharts|highmaps} highcharts/loading/labelstyle/
-     *         Vertically centered
-     * @sample {highstock} stock/loading/general/
-     *         Label styles
-     *
-     * @type    {Highcharts.CSSObject}
-     * @default {"fontWeight": "bold", "position": "relative", "top": "45%"}
-     * @since   1.2.0
-     */
-    labelStyle: {
-      /**
-       * @ignore
-       */
-      fontWeight: "bold",
-      /**
-       * @ignore
-       */
-      position: "relative",
-      /**
-       * @ignore
-       */
-      top: "45%"
-    },
-    /**
-     * CSS styles for the loading screen that covers the plot area.
-     *
-     * In styled mode, the loading label is styled with the
-     * `.highcharts-loading` class.
-     *
-     * @sample  {highcharts|highmaps} highcharts/loading/style/
-     *          Gray plot area, white text
-     * @sample  {highstock} stock/loading/general/
-     *          Gray plot area, white text
-     *
-     * @type    {Highcharts.CSSObject}
-     * @default {"position": "absolute", "backgroundColor": "#ffffff", "opacity": 0.5, "textAlign": "center"}
-     * @since   1.2.0
-     */
-    style: {
-      /**
-       * @ignore
-       */
-      position: "absolute",
-      /**
-       * @ignore
-       */
-      backgroundColor: "#ffffff",
-      /**
-       * @ignore
-       */
-      opacity: 0.5,
-      /**
-       * @ignore
-       */
-      textAlign: "center"
-    }
-  },
-  /**
-   * Options for the tooltip that appears when the user hovers over a
-   * series or point.
-   *
-   * @declare Highcharts.TooltipOptions
-   */
-  tooltip: {
-    /**
-     * The color of the tooltip border. When `undefined`, the border takes
-     * the color of the corresponding series or point.
-     *
-     * Note that the [borderWidth](#tooltip.borderWidth) is usually 0 by
-     * default, so the border color may not be visible until a border width
-     * is set.
-     *
-     * @sample {highcharts} highcharts/tooltip/bordercolor-default/ Follow
-     *         series by default
-     * @sample {highcharts} highcharts/tooltip/bordercolor-black/ Black
-     *         border
-     * @sample {highstock} stock/tooltip/general/ Styled tooltip
-     * @sample {highmaps} maps/tooltip/background-border/ Background and
-     *         border demo
-     *
-     * @type {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
-     * @apioption tooltip.borderColor
-     */
-    /**
-     * A CSS class name to apply to the tooltip's container div,
-     * allowing unique CSS styling for each chart.
-     *
-     * @type      {string}
-     * @apioption tooltip.className
-     */
-    /**
-     * Since 4.1, the crosshair definitions are moved to the Axis object
-     * in order for a better separation from the tooltip. See
-     * [xAxis.crosshair](#xAxis.crosshair).
-     *
-     * @sample {highcharts} highcharts/tooltip/crosshairs-x/
-     *         Enable a crosshair for the x value
-     *
-     * @deprecated
-     *
-     * @type      {*}
-     * @default   true
-     * @apioption tooltip.crosshairs
-     */
-    /**
-     * Distance from point to tooltip in pixels.
-     *
-     * @type      {number}
-     * @default   16
-     * @apioption tooltip.distance
-     */
-    /**
-     * Whether the tooltip should be fixed to one position in the chart, or
-     * located next to the point or mouse. When the tooltip is fixed, the
-     * position can be further specified with the
-     * [tooltip.position](#tooltip.position) options set.
-     *
-     * @sample    highcharts/tooltip/fixed/
-     *            Fixed tooltip and position options
-     * @sample    {highstock} stock/tooltip/fixed/
-     *            Stock chart with fixed tooltip
-     * @sample    {highmaps} maps/tooltip/fixed/
-     *            Map with fixed tooltip
-     *
-     * @type      {boolean}
-     * @default   false
-     * @since 12.2.0
-     * @apioption tooltip.fixed
-     */
-    /**
-     * Whether the tooltip should follow the mouse as it moves across
-     * columns, pie slices and other point types with an extent.
-     * By default it behaves this way for pie, polygon, map, sankey
-     * and wordcloud series by override in the `plotOptions`
-     * for those series types.
-     *
-     * Does not apply if [split](#tooltip.split) is `true`.
-     *
-     * For touch moves to behave the same way, [followTouchMove](
-     * #tooltip.followTouchMove) must be `true` also.
-     *
-     * @sample highcharts/tooltip/followpointer/
-     *         Tooltip follow pointer comparison
-     *
-     * @type      {boolean}
-     * @default   {highcharts} false
-     * @default   {highstock} false
-     * @default   {highmaps} true
-     * @since     3.0
-     * @apioption tooltip.followPointer
-     */
-    /**
-     * Whether the tooltip should update as the finger moves on a touch
-     * device. If this is `true` and [chart.panning](#chart.panning) is
-     * set,`followTouchMove` will take over one-finger touches, so the user
-     * needs to use two fingers for zooming and panning.
-     *
-     * Note the difference to [followPointer](#tooltip.followPointer) that
-     * only defines the _position_ of the tooltip. If `followPointer` is
-     * false in for example a column series, the tooltip will show above or
-     * below the column, but as `followTouchMove` is true, the tooltip will
-     * jump from column to column as the user swipes across the plot area.
-     *
-     * @type      {boolean}
-     * @default   {highcharts} true
-     * @default   {highstock} true
-     * @default   {highmaps} false
-     * @since     3.0.1
-     * @apioption tooltip.followTouchMove
-     */
-    /**
-     * A [format string](https://www.highcharts.com/docs/chart-concepts/labels-and-string-formatting)
-     * for the whole shared tooltip. When format strings are a requirement,
-     * it is usually more convenient to use `headerFormat`, `pointFormat`
-     * and `footerFormat`, but the `format` option allows combining them
-     * into one setting.
-     *
-     * The context of the format string is the same as that of the
-     * `tooltip.formatter` callback.
-     *
-     * @sample {highcharts} highcharts/tooltip/format-shared/
-     *         Format for shared tooltip
-     *
-     * @type      {string}
-     * @default   undefined
-     * @since     11.1.0
-     * @apioption tooltip.format
-     */
-    /**
-     * Callback function to format the text of the tooltip from scratch. In
-     * case of single or [shared](#tooltip.shared) tooltips, a string should
-     * be returned. In case of [split](#tooltip.split) tooltips, it should
-     * return an array where the first item is the header, and subsequent
-     * items are mapped to the points. Return `false` to disable tooltip for
-     * a specific point on series.
-     *
-     * A subset of HTML is supported. Unless `useHTML` is true, the HTML of
-     * the tooltip is parsed and converted to SVG, therefore this isn't a
-     * complete HTML renderer. The following HTML tags are supported: `b`,
-     * `br`, `em`, `i`, `span`, `strong`. Spans can be styled with a `style`
-     * attribute, but only text-related CSS, that is shared with SVG, is
-     * handled.
-     *
-     * The context of the formatter (since v12) is the
-     * [Point](https://api.highcharts.com/class-reference/Highcharts.Point)
-     * instance. If the tooltip is shared or split, an array `this.points`
-     * contains all points of the hovered x-value.
-     *
-     * Common properties from the Point to use in the formatter include:
-     *
-     * - **Point.percentage**:
-     *   Stacked series and pies only. The point's percentage of the total.
-     *
-     * - **Point.points**:
-     *   In a shared or split tooltip, this is an array containing all the
-     *   hovered points.
-     *
-     * - **this.series**:
-     *   The series object. The series name is available through
-     *   `this.series.name`.
-     *
-     * - **this.total**:
-     *   The total value at this point's x value in a stacked series, or the
-     *   sum of all slices in a pie series.
-     *
-     * - **this.x**:
-     *   The x value.
-     *
-     * - **this.y**:
-     *   The y value.
-     *
-     * @sample {highcharts} highcharts/tooltip/formatter-simple/
-     *         Simple string formatting
-     * @sample {highcharts} highcharts/tooltip/formatter-shared/
-     *         Formatting with shared tooltip
-     * @sample {highcharts|highstock} highcharts/tooltip/formatter-split/
-     *         Formatting with split tooltip
-     * @sample highcharts/tooltip/formatter-conditional-default/
-     *         Extending default formatter
-     * @sample {highstock} stock/tooltip/formatter/
-     *         Formatting with shared tooltip
-     * @sample {highmaps} maps/tooltip/formatter/
-     *         String formatting
-     *
-     * @type      {Highcharts.TooltipFormatterCallbackFunction}
-     * @apioption tooltip.formatter
-     */
-    /**
-     * Callback function to format the text of the tooltip for
-     * visible null points.
-     * Works analogously to [formatter](#tooltip.formatter).
-     *
-     * @sample highcharts/plotoptions/series-nullformat
-     *         Format data label and tooltip for null point.
-     *
-     * @type      {Highcharts.TooltipFormatterCallbackFunction}
-     * @apioption tooltip.nullFormatter
-     */
-    /**
-     * Whether to allow the tooltip to render outside the chart's SVG
-     * element box. By default (`false`), the tooltip is rendered within the
-     * chart's SVG element, which results in the tooltip being aligned
-     * inside the chart area. For small charts, this may result in clipping
-     * or overlapping. When `true`, a separate SVG element is created and
-     * overlaid on the page, allowing the tooltip to be aligned inside the
-     * page itself. Beware that with this option active, CSS classes on the
-     * chart's target container, with classnames matching the pattern
-     * 'highcharts-*', will be set on the tooltip as well. This is done to
-     * support theming for tooltips with this option.
-     *
-     * Defaults to `true` if `chart.scrollablePlotArea` is activated,
-     * otherwise `false`.
-     *
-     * @sample highcharts/tooltip/outside
-     *         Small charts with tooltips outside
-     *
-     * @type      {boolean|undefined}
-     * @default   undefined
-     * @since     6.1.1
-     * @apioption tooltip.outside
-     */
-    /**
-     * A callback function for formatting the HTML output for a single point
-     * in the tooltip. Like the `pointFormat` string, but with more
-     * flexibility.
-     *
-     * @type      {Highcharts.FormatterCallbackFunction<Highcharts.Point>}
-     * @since     4.1.0
-     * @context   Highcharts.Point
-     * @apioption tooltip.pointFormatter
-     */
-    /**
-     * A callback function to place the tooltip in a custom position. The
-     * callback receives three parameters: `labelWidth`, `labelHeight` and
-     * `point`, where point contains values for `plotX` and `plotY` telling
-     * where the reference point is in the plot area. Add `chart.plotLeft`
-     * and `chart.plotTop` to get the full coordinates.
-     *
-     * To find the actual hovered `Point` instance, use
-     * `this.chart.hoverPoint`. For shared or split tooltips, all the hover
-     * points are available in `this.chart.hoverPoints`.
-     *
-     * Since v7, when [tooltip.split](#tooltip.split) option is enabled,
-     * positioner is called for each of the boxes separately, including
-     * xAxis header. xAxis header is not a point, instead `point` argument
-     * contains info: `{ plotX: Number, plotY: Number, isHeader: Boolean }`
-     *
-     * Since v12.2, the [tooltip.fixed](#tooltip.fixed) option combined with
-     * [tooltip.position](#tooltip.position) covers most of the use cases
-     * for custom tooltip positioning.
-     *
-     * The return should be an object containing x and y values, for example
-     * `{ x: 100, y: 100 }`.
-     *
-     * @sample {highcharts} highcharts/tooltip/positioner/
-     *         A fixed tooltip position
-     * @sample {highstock} stock/tooltip/positioner/
-     *         A fixed tooltip position on top of the chart
-     * @sample {highmaps} maps/tooltip/positioner/
-     *         A fixed tooltip position
-     * @sample {highstock} stock/tooltip/split-positioner/
-     *         Split tooltip with fixed positions
-     * @sample {highstock} stock/tooltip/positioner-scrollable-plotarea/
-     *         Scrollable plot area combined with tooltip positioner
-     *
-     * @see [position](#tooltip.position)
-     *
-     * @type      {Highcharts.TooltipPositionerCallbackFunction}
-     * @since     2.2.4
-     * @apioption tooltip.positioner
-     */
-    /**
-     * Shows tooltip for all points with the same X value. Splits the
-     * tooltip into one label per series, with the header close to the axis.
-     * This is recommended over [shared](#tooltip.shared)
-     * tooltips for charts with multiple line series, generally making them
-     * easier to read. This option takes precedence over `tooltip.shared`.
-     *
-     * Not supported for [polar](#chart.polar) and [inverted](#chart.inverted) charts.
-     *
-     * @productdesc {highstock} In Highcharts Stock, tooltips are split
-     * by default since v6.0.0. Stock charts typically contain
-     * multi-dimension points and multiple panes, making split tooltips
-     * the preferred layout over
-     * the previous `shared` tooltip.
-     *
-     * @sample highcharts/tooltip/split/
-     *         Split tooltip
-     * @sample {highcharts|highstock} highcharts/tooltip/formatter-split/
-     *         Split tooltip and custom formatter callback
-     *
-     * @type      {boolean}
-     * @default   {highcharts} false
-     * @default   {highstock} true
-     * @since     5.0.0
-     * @product   highcharts highstock
-     * @apioption tooltip.split
-     */
-    /**
-     * Prevents the tooltip from switching or closing, when touched or
-     * pointed.
-     *
-     * @sample highcharts/tooltip/stickoncontact/
-     *         Tooltip sticks on pointer contact
-     *
-     * @type      {boolean}
-     * @since     8.0.1
-     * @apioption tooltip.stickOnContact
-     */
-    /**
-     * Use HTML to render the contents of the tooltip instead of SVG. Using
-     * HTML allows advanced formatting like tables and images in the
-     * tooltip. It is also recommended for rtl languages as it works around
-     * rtl bugs in early Firefox.
-     *
-     * @sample {highcharts|highstock} highcharts/tooltip/footerformat/
-     *         A table for value alignment
-     * @sample {highcharts|highstock} highcharts/tooltip/fullhtml/
-     *         Full HTML tooltip
-     * @sample {highmaps} maps/tooltip/usehtml/
-     *         Pure HTML tooltip
-     *
-     * @type      {boolean}
-     * @default   false
-     * @since     2.2
-     * @apioption tooltip.useHTML
-     */
-    /**
-     * How many decimals to show in each series' y value. This is
-     * overridable in each series' tooltip options object. The default is to
-     * preserve all decimals.
-     *
-     * @sample {highcharts|highstock} highcharts/tooltip/valuedecimals/
-     *         Set decimals, prefix and suffix for the value
-     * @sample {highmaps} maps/tooltip/valuedecimals/
-     *         Set decimals, prefix and suffix for the value
-     *
-     * @type      {number|undefined}
-     * @since     2.2
-     * @apioption tooltip.valueDecimals
-     */
-    /**
-     * A string to prepend to each series' y value. Overridable in each
-     * series' tooltip options object.
-     *
-     * @sample {highcharts|highstock} highcharts/tooltip/valuedecimals/
-     *         Set decimals, prefix and suffix for the value
-     * @sample {highmaps} maps/tooltip/valuedecimals/
-     *         Set decimals, prefix and suffix for the value
-     *
-     * @type      {string}
-     * @since     2.2
-     * @apioption tooltip.valuePrefix
-     */
-    /**
-     * A string to append to each series' y value. Overridable in each
-     * series' tooltip options object.
-     *
-     * @sample {highcharts|highstock} highcharts/tooltip/valuedecimals/
-     *         Set decimals, prefix and suffix for the value
-     * @sample {highmaps} maps/tooltip/valuedecimals/
-     *         Set decimals, prefix and suffix for the value
-     *
-     * @type      {string}
-     * @since     2.2
-     * @apioption tooltip.valueSuffix
-     */
-    /**
-     * The format for the date in the tooltip header if the X axis is a
-     * datetime axis. The default is a best guess based on the smallest
-     * distance between points in the chart.
-     *
-     * @sample {highcharts} highcharts/tooltip/xdateformat/
-     *         A different format
-     *
-     * @type      {string|Highcharts.DateTimeFormatOptions}
-     * @product   highcharts highstock gantt
-     * @apioption tooltip.xDateFormat
-     */
-    /**
-     * How many decimals to show for the `point.change`
-     * or the `point.cumulativeSum` value when the `series.compare`
-     * or the `series.cumulative` option is set.
-     * This is overridable in each series' tooltip options object.
-     *
-     * @type      {number}
-     * @default   2
-     * @since     1.0.1
-     * @product   highstock
-     * @apioption tooltip.changeDecimals
-     */
-    /**
-     * Enable or disable the tooltip.
-     *
-     * @sample {highcharts} highcharts/tooltip/enabled/
-     *         Disabled
-     * @sample {highcharts} highcharts/plotoptions/series-point-events-mouseover/
-     *         Disable tooltip and show values on chart instead
-     */
-    enabled: !0,
-    /**
-     * Enable or disable animation of the tooltip.
-     *
-     * @type       {boolean|Partial<Highcharts.AnimationOptionsObject>}
-     * @since      2.3.0
-     */
-    animation: {
-      duration: 300,
-      // EaseOutCirc
-      easing: (c) => Math.sqrt(1 - Math.pow(c - 1, 2))
-    },
-    /**
-     * The radius of the rounded border corners.
-     *
-     * @sample {highcharts} highcharts/tooltip/bordercolor-default/
-     *         Default border radius
-     * @sample {highcharts} highcharts/tooltip/borderradius-0/
-     *         Square borders
-     * @sample {highmaps} maps/tooltip/background-border/
-     *         Background and border demo
-     */
-    borderRadius: 3,
-    /**
-     * For series on datetime axes, the date format in the tooltip's
-     * header will by default be guessed based on the closest data points.
-     * This member gives the default string representations used for
-     * each unit. For an overview of the string or object configuration, see
-     * [dateFormat](/class-reference/Highcharts.Time#dateFormat).
-     *
-     * @see [xAxis.dateTimeLabelFormats](#xAxis.dateTimeLabelFormats)
-     *
-     * @type    {Highcharts.Dictionary<string|Highcharts.DateTimeFormatOptions>}
-     * @product highcharts highstock gantt
-     */
-    dateTimeLabelFormats: {
-      /** @internal */
-      millisecond: "%[AebHMSL]",
-      /** @internal */
-      second: "%[AebHMS]",
-      /** @internal */
-      minute: "%[AebHM]",
-      /** @internal */
-      hour: "%[AebHM]",
-      /** @internal */
-      day: "%[AebY]",
-      /** @internal */
-      week: "%v %[AebY]",
-      /** @internal */
-      month: "%[BY]",
-      /** @internal */
-      year: "%Y"
-    },
-    /**
-     * A string to append to the tooltip format.
-     *
-     * @sample {highcharts} highcharts/tooltip/footerformat/
-     *         A table for value alignment
-     * @sample {highmaps} maps/tooltip/format/
-     *         Format demo
-     *
-     * @since 2.2
-     */
-    footerFormat: "",
-    /**
-     * The name of a symbol to use for the border around the tooltip
-     * header. Applies only when [tooltip.split](#tooltip.split) is
-     * enabled.
-     *
-     * Custom callbacks for symbol path generation can also be added to
-     * `Highcharts.SVGRenderer.prototype.symbols` the same way as for
-     * [series.marker.symbol](plotOptions.line.marker.symbol).
-     *
-     * @see [tooltip.shape](#tooltip.shape)
-     *
-     * @sample {highstock} stock/tooltip/split-positioner/
-     *         Different shapes for header and split boxes
-     *
-     * @type       {Highcharts.TooltipShapeValue}
-     * @validvalue ["callout", "rect"]
-     * @since      7.0
-     */
-    headerShape: "callout",
-    /**
-     * The number of milliseconds to wait until the tooltip is hidden when
-     * mouse out from a point or chart.
-     *
-     * @since 3.0
-     */
-    hideDelay: 500,
-    /**
-     * Padding inside the tooltip, in pixels.
-     *
-     * @since 5.0.0
-     */
-    padding: 8,
-    /**
-     * Positioning options for fixed tooltip, taking effect only when
-     * [tooltip.fixed](#tooltip.fixed) is `true`.
-     *
-     * @sample {highcharts} highcharts/tooltip/fixed/
-     *         Fixed tooltip and position options
-     * @sample {highstock} stock/tooltip/fixed/
-     *         Stock chart with fixed tooltip
-     * @sample {highmaps} maps/tooltip/fixed/
-     *         Map with fixed tooltip
-     *
-     * @since 12.2.0
-     */
-    position: {
-      /**
-       * The horizontal alignment of the fixed tooltip.
-       *
-       * @sample highcharts/tooltip/fixed/
-       *         Fixed tooltip
-       * @sample {highstock} stock/tooltip/fixed/
-       *         Stock chart with fixed tooltip
-       *
-       * @type {Highcharts.AlignValue}
-       * @default left
-       * @apioption tooltip.position.align
-       */
-      /**
-       * The vertical alignment of the fixed tooltip.
-       *
-       * @sample highcharts/tooltip/fixed/
-       *         Fixed tooltip
-       * @sample {highstock} stock/tooltip/fixed/
-       *         Stock chart with fixed tooltip
-       *
-       * @type {Highcharts.VerticalAlignValue}
-       * @default top
-       * @apioption tooltip.position.verticalAlign
-       */
-      /**
-       * What the fixed tooltip alignment should be relative to.
-       *
-       * The default, `pane`, means that it is aligned within the plot
-       * area for that given series. If the tooltip is split (as default
-       * in Stock charts), each partial tooltip is aligned within the
-       * series' pane.
-       *
-       * @sample highcharts/tooltip/fixed/
-       *         Fixed tooltip
-       * @sample {highstock} stock/tooltip/fixed/
-       *         Stock chart with fixed tooltip
-       *
-       * @type {string}
-       * @default pane
-       * @validvalue ["pane", "chart", "plotBox", "spacingBox"]
-       * @apioption tooltip.position.relativeTo
-       */
-      /**
-       * X pixel offset from the given position. Can be used to shy away
-       * from axis lines, grid lines etc to avoid the tooltip overlapping
-       * other elements.
-       *
-       * @sample highcharts/tooltip/fixed/
-       *         Fixed tooltip
-       * @sample {highstock} stock/tooltip/fixed/
-       *         Stock chart with fixed tooltip
-       */
-      x: 0,
-      /**
-       * Y pixel offset from the given position. Can be used to shy away
-       * from axis lines, grid lines etc to avoid the tooltip overlapping
-       * other elements.
-       *
-       * @sample highcharts/tooltip/fixed/
-       *         Fixed tooltip
-       * @sample {highstock} stock/tooltip/fixed/
-       *         Stock chart with fixed tooltip
-       */
-      y: 3
-    },
-    /**
-     * The name of a symbol to use for the border around the tooltip. Can
-     * be one of: `"callout"`, `"circle"` or `"rect"`. When
-     * [tooltip.split](#tooltip.split)
-     * option is enabled, shape is applied to all boxes except header, which
-     * is controlled by
-     * [tooltip.headerShape](#tooltip.headerShape).
-     *
-     * Custom callbacks for symbol path generation can also be added to
-     * `Highcharts.SVGRenderer.prototype.symbols` the same way as for
-     * [series.marker.symbol](plotOptions.line.marker.symbol).
-     *
-     * Defaults to `callout` for floating tooltip, `rect` for
-     * [fixed](#tooltip.fixed) tooltip.
-     *
-     * @type  {Highcharts.TooltipShapeValue}
-     * @since 4.0
-     * @default undefined
-     * @apioption tooltip.shape
-     */
-    /**
-     * Shows information in the tooltip for all points with the same X
-     * value. When the tooltip is shared, the entire plot area will capture
-     * mouse movement or touch events. Tooltip texts for series types with
-     * ordered data (not pie, scatter, flags etc) will be shown in a single
-     * bubble. This is recommended for single series charts and for
-     * tablet/mobile optimized charts.
-     *
-     * See also [tooltip.split](#tooltip.split), that is better suited for
-     * charts with many series, especially line-type series. The
-     * `tooltip.split` option takes precedence over `tooltip.shared`.
-     *
-     * @sample {highcharts} highcharts/tooltip/shared-false/
-     *         False by default
-     * @sample {highcharts} highcharts/tooltip/shared-true/
-     *         True
-     * @sample {highcharts} highcharts/tooltip/shared-x-crosshair/
-     *         True with x axis crosshair
-     * @sample {highcharts} highcharts/tooltip/shared-true-mixed-types/
-     *         True with mixed series types
-     *
-     * @since   2.1
-     * @product highcharts highstock
-     */
-    shared: !1,
-    /**
-     * Proximity snap for graphs or single points. It defaults to 10 for
-     * mouse-powered devices and 25 for touch devices.
-     *
-     * Note that in most cases the whole plot area captures the mouse
-     * movement, and in these cases `tooltip.snap` doesn't make sense. This
-     * applies when [stickyTracking](#plotOptions.series.stickyTracking)
-     * is `true` (default) and when the tooltip is [shared](#tooltip.shared)
-     * or [split](#tooltip.split).
-     *
-     * @sample {highcharts} highcharts/tooltip/bordercolor-default/
-     *         10 px by default
-     * @sample {highcharts} highcharts/tooltip/snap-50/
-     *         50 px on graph
-     *
-     * @type    {number}
-     * @default 10/25
-     * @since   1.2.0
-     * @product highcharts highstock
-     */
-    snap: wn ? 25 : 10,
-    /**
-     * The HTML of the tooltip header line. The context is the
-     * [Point class](https://api.highcharts.com/class-reference/Highcharts.Point).
-     * Variables are enclosed in curly brackets. Examples of common
-     * variables to include are `x`, `y`, `series.name` and `series.color`
-     * and other properties on the same form. The `point.key` variable
-     * contains the category name, x value or datetime string depending on
-     * the type of axis. For datetime axes, the `point.key` date format can
-     * be set using `tooltip.xDateFormat`.
-     *
-     * @sample {highcharts} highcharts/tooltip/footerformat/
-     *         An HTML table in the tooltip
-     * @sample {highstock} highcharts/tooltip/footerformat/
-     *         An HTML table in the tooltip
-     * @sample {highmaps} maps/tooltip/format/
-     *         Format demo
-     *
-     * @type      {string}
-     * @apioption tooltip.headerFormat
-     */
-    headerFormat: '<span style="font-size: 0.8em">{ucfirst point.key}</span><br/>',
-    /**
-     * The HTML of the null point's line in the tooltip. Works analogously
-     * to [pointFormat](#tooltip.pointFormat).
-     *
-     * @sample {highcharts} highcharts/series/null-interaction
-     *         Line chart with null interaction
-     * @sample {highcharts} highcharts/plotoptions/series-nullformat
-     *         Heatmap with null interaction
-     *
-     * @type      {string}
-     * @apioption tooltip.nullFormat
-     */
-    /**
-     * The HTML of the point's line in the tooltip. The context is the
-     * [Point class](https://api.highcharts.com/class-reference/Highcharts.Point).
-     * Variables are enclosed in curly brackets. Examples of common
-     * variables to include are `x`, `y`, `series.name` and `series.color`
-     * and other properties on the same form. Furthermore, `y` can be
-     * extended by the `tooltip.valuePrefix` and `tooltip.valueSuffix`
-     * variables. This can also be overridden for each series, which makes
-     * it a good hook for displaying units.
-     *
-     * In styled mode, the dot is colored by a class name rather than the
-     * point color.
-     *
-     * @sample {highcharts} highcharts/tooltip/pointformat/
-     *         A different point format with value suffix
-     * @sample {highcharts|highstock} highcharts/tooltip/pointformat-extra-information/
-     *         Show extra information about points in the tooltip
-     * @sample {highmaps} maps/tooltip/format/
-     *         Format demo
-     *
-     * @type       {string}
-     * @since      2.2
-     * @apioption  tooltip.pointFormat
-     */
-    pointFormat: '<span style="color:{point.color}">●</span> {series.name}: <b>{point.y}</b><br/>',
-    /**
-     * The background color or gradient for the tooltip.
-     *
-     * In styled mode, the stroke width is set in the
-     * `.highcharts-tooltip-box` class.
-     *
-     * @sample {highcharts} highcharts/tooltip/backgroundcolor-solid/
-     *         Yellowish background
-     * @sample {highcharts} highcharts/tooltip/backgroundcolor-gradient/
-     *         Gradient
-     * @sample {highcharts} highcharts/css/tooltip-border-background/
-     *         Tooltip in styled mode
-     * @sample {highstock} stock/tooltip/general/
-     *         Custom tooltip
-     * @sample {highstock} highcharts/css/tooltip-border-background/
-     *         Tooltip in styled mode
-     * @sample {highmaps} maps/tooltip/background-border/
-     *         Background and border demo
-     * @sample {highmaps} highcharts/css/tooltip-border-background/
-     *         Tooltip in styled mode
-     *
-     * @type {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
-     */
-    backgroundColor: "#ffffff",
-    /**
-     * The pixel width of the tooltip border. Defaults to 0 for single
-     * tooltips and fixed tooltips, otherwise 1 for split tooltips.
-     *
-     * In styled mode, the stroke width is set in the
-     * `.highcharts-tooltip-box` class.
-     *
-     * @sample {highcharts} highcharts/tooltip/bordercolor-default/
-     *         2 pixels
-     * @sample {highcharts} highcharts/tooltip/borderwidth/
-     *         No border (shadow only)
-     * @sample {highcharts} highcharts/css/tooltip-border-background/
-     *         Tooltip in styled mode
-     * @sample {highstock} stock/tooltip/general/
-     *         Custom tooltip
-     * @sample {highstock} highcharts/css/tooltip-border-background/
-     *         Tooltip in styled mode
-     * @sample {highmaps} maps/tooltip/background-border/
-     *         Background and border demo
-     * @sample {highmaps} highcharts/css/tooltip-border-background/
-     *         Tooltip in styled mode
-     *
-     * @type {number}
-     */
-    borderWidth: void 0,
-    /**
-     * Whether to apply a drop shadow to the tooltip. Defaults to true,
-     * unless the tooltip is [fixed](#tooltip.fixed).
-     *
-     * @sample {highcharts} highcharts/tooltip/bordercolor-default/
-     *         True by default
-     * @sample {highcharts} highcharts/tooltip/shadow/
-     *         False
-     * @sample {highmaps} maps/tooltip/positioner/
-     *         Fixed tooltip position, border and shadow disabled
-     *
-     * @type {boolean|Highcharts.ShadowOptionsObject}
-     * @default undefined
-     * @apioption tooltip.shadow
-     */
-    /**
-     * Prevents the tooltip from switching or closing when touched or
-     * pointed.
-     *
-     * @sample highcharts/tooltip/stickoncontact/
-     *         Tooltip sticks on pointer contact
-     *
-     * @since 8.0.1
-     */
-    stickOnContact: !1,
-    /**
-     * CSS styles for the tooltip. The tooltip can also be styled through
-     * the CSS class `.highcharts-tooltip`.
-     *
-     * Note that the default `pointerEvents` style makes the tooltip ignore
-     * mouse events, so in order to use clickable tooltips, this value must
-     * be set to `auto`.
-     *
-     * @sample {highcharts} highcharts/tooltip/style/
-     *         Greater padding, bold text
-     *
-     * @type {Highcharts.CSSObject}
-     */
-    style: {
-      /** @internal */
-      color: "#333333",
-      /** @internal */
-      cursor: "default",
-      /**
-       * @type {number|string}
-       */
-      fontSize: "0.8em"
-    },
-    /**
-     * Use HTML to render the contents of the tooltip instead of SVG. Using
-     * HTML allows advanced formatting like tables and images in the
-     * tooltip. It is also recommended for rtl languages as it works around
-     * rtl bugs in early Firefox.
-     *
-     * @sample {highcharts|highstock} highcharts/tooltip/footerformat/
-     *         A table for value alignment
-     * @sample {highcharts|highstock} highcharts/tooltip/fullhtml/
-     *         Full HTML tooltip
-     * @sample {highmaps} maps/tooltip/usehtml/
-     *         Pure HTML tooltip
-     *
-     * @since 2.2
-     */
-    useHTML: !1
-  },
-  /**
-   * Highchart by default puts a credits label in the lower right corner
-   * of the chart. This can be changed using these options.
-   */
-  credits: {
-    /**
-     * Credits for map source to be concatenated with conventional credit
-     * text. By default this is a format string that collects copyright
-     * information from the map if available.
-     *
-     * @see [mapTextFull](#credits.mapTextFull)
-     * @see [text](#credits.text)
-     *
-     * @type      {string}
-     * @default   \u00a9 <a href="{geojson.copyrightUrl}">{geojson.copyrightShort}</a>
-     * @since     4.2.2
-     * @product   highmaps
-     * @apioption credits.mapText
-     */
-    /**
-     * Detailed credits for map source to be displayed on hover of credits
-     * text. By default this is a format string that collects copyright
-     * information from the map if available.
-     *
-     * @see [mapText](#credits.mapText)
-     * @see [text](#credits.text)
-     *
-     * @type      {string}
-     * @default   {geojson.copyright}
-     * @since     4.2.2
-     * @product   highmaps
-     * @apioption credits.mapTextFull
-     */
-    /**
-     * Whether to show the credits text.
-     *
-     * @sample {highcharts} highcharts/credits/enabled-false/
-     *         Credits disabled
-     * @sample {highstock} stock/credits/enabled/
-     *         Credits disabled
-     * @sample {highmaps} maps/credits/enabled-false/
-     *         Credits disabled
-     */
-    enabled: !0,
-    /**
-     * The URL for the credits label.
-     *
-     * @sample {highcharts} highcharts/credits/href/
-     *         Custom URL and text
-     * @sample {highmaps} maps/credits/customized/
-     *         Custom URL and text
-     */
-    href: "https://www.highcharts.com?credits",
-    /**
-     * Position configuration for the credits label.
-     *
-     * @sample {highcharts} highcharts/credits/position-left/
-     *         Left aligned
-     * @sample {highcharts} highcharts/credits/position-left/
-     *         Left aligned
-     * @sample {highmaps} maps/credits/customized/
-     *         Left aligned
-     * @sample {highmaps} maps/credits/customized/
-     *         Left aligned
-     *
-     * @type    {Highcharts.AlignObject}
-     * @since   2.1
-     */
-    position: {
-      /** @internal */
-      align: "right",
-      /** @internal */
-      x: -10,
-      /** @internal */
-      verticalAlign: "bottom",
-      /** @internal */
-      y: -5
-    },
-    /**
-     * CSS styles for the credits label.
-     *
-     * @see In styled mode, credits styles can be set with the
-     *      `.highcharts-credits` class.
-     *
-     * @type {Highcharts.CSSObject}
-     */
-    style: {
-      /** @internal */
-      cursor: "pointer",
-      /** @internal */
-      color: "#999999",
-      /**
-       * @type {number|string}
-       */
-      fontSize: "0.6em"
-    },
-    /**
-     * The text for the credits label.
-     *
-     * @productdesc {highmaps}
-     * If a map is loaded as GeoJSON, the text defaults to
-     * `Highcharts @ {map-credits}`. Otherwise, it defaults to
-     * `Highcharts.com`.
-     *
-     * @sample {highcharts} highcharts/credits/href/
-     *         Custom URL and text
-     * @sample {highmaps} maps/credits/customized/
-     *         Custom URL and text
-     */
-    text: "Highcharts.com"
-  }
-}, Cn = new kr(Ii.time, Ii.lang), Ct = {
-  defaultOptions: Ii,
-  defaultTime: Cn
-}, { win: An } = N, { isNumber: Wt, isString: Tn, merge: On, pInt: J, defined: ns } = R, os = (c, t, e) => `color-mix(in srgb,${c},${t} ${e * 100}%)`, Ue = (c) => Tn(c) && !!c && c !== "none";
-class V {
+const G = {
+  addEvent: Br,
+  arrayMax: Cr,
+  arrayMin: Ar,
+  attr: Vs,
+  clamp: hr,
+  clearTimeout: mr,
+  correctFloat: qs,
+  createElement: xr,
+  crisp: cr,
+  css: yi,
+  defined: Lt,
+  destroyObjectProperties: Tr,
+  diffObjects: dr,
+  discardElement: Or,
+  erase: fr,
+  error: Yt,
+  extend: Et,
+  extendClass: yr,
+  find: $r,
+  fireEvent: _s,
+  getAlignFactor: Er,
+  getClosestDistance: Pr,
+  getMagnitude: Ks,
+  getNestedProperty: Dr,
+  getStyle: Xt,
+  insertItem: pr,
+  isArray: Ce,
+  isClass: Ys,
+  isDOMElement: Oi,
+  isFunction: zr,
+  isNumber: Li,
+  isObject: Pt,
+  isString: Vt,
+  merge: lr,
+  normalizeTickInterval: Mr,
+  objectEach: vt,
+  offset: Ir,
+  pad: br,
+  pick: Kt,
+  pInt: Gs,
+  pushUnique: ur,
+  relativeLength: vr,
+  removeEvent: Zs,
+  replaceNested: Sr,
+  splat: Us,
+  stableSort: kr,
+  syncTimeout: gr,
+  timeUnits: Lr,
+  ucfirst: Wr,
+  uniqueKey: Nr,
+  useSerialIds: Rr,
+  wrap: wr
+}, { win: Fr } = I, { isNumber: Dt, isString: jr, merge: Hr, pInt: _, defined: zi } = G, Wi = (h, t, e) => `color-mix(in srgb,${h},${t} ${e * 100}%)`, Ie = (h) => jr(h) && !!h && h !== "none";
+class U {
   /* *
    *
    *  Static Functions
@@ -5083,7 +525,7 @@ class V {
    * Color instance.
    */
   static parse(t) {
-    return t ? new V(t) : V.None;
+    return t ? new U(t) : U.None;
   }
   /* *
    *
@@ -5092,15 +534,15 @@ class V {
    * */
   constructor(t) {
     this.rgba = [NaN, NaN, NaN, NaN], this.input = t;
-    const e = N.Color;
-    if (e && e !== V)
+    const e = I.Color;
+    if (e && e !== U)
       return new e(t);
     let i, s, r, n;
     if (typeof t == "object" && typeof t.stops < "u")
-      this.stops = t.stops.map((o) => new V(o[1]));
+      this.stops = t.stops.map((o) => new U(o[1]));
     else if (typeof t == "string")
-      for (this.input = t = V.names[t.toLowerCase()] || t, r = V.parsers.length; r-- && !s; )
-        n = V.parsers[r], i = n.regex.exec(t), i && (s = n.parse(i));
+      for (this.input = t = U.names[t.toLowerCase()] || t, r = U.parsers.length; r-- && !s; )
+        n = U.parsers[r], i = n.regex.exec(t), i && (s = n.parse(i));
     s && (this.rgba = s);
   }
   /* *
@@ -5124,7 +566,7 @@ class V {
     if (this.output)
       return this.output;
     if (typeof e == "object" && typeof this.stops < "u") {
-      const s = On(e);
+      const s = Hr(e);
       return s.stops = [].slice.call(s.stops), this.stops.forEach((r, n) => {
         s.stops[n] = [
           s.stops[n][0],
@@ -5132,7 +574,7 @@ class V {
         ];
       }), s;
     }
-    return i && Wt(i[0]) ? t === "rgb" || !t && i[3] === 1 ? "rgb(" + i[0] + "," + i[1] + "," + i[2] + ")" : t === "a" ? `${i[3]}` : "rgba(" + i.join(",") + ")" : e;
+    return i && Dt(i[0]) ? t === "rgb" || !t && i[3] === 1 ? "rgb(" + i[0] + "," + i[1] + "," + i[2] + ")" : t === "a" ? `${i[3]}` : "rgba(" + i.join(",") + ")" : e;
   }
   /**
    * Brighten the color instance.
@@ -5151,11 +593,11 @@ class V {
       this.stops.forEach(function(i) {
         i.brighten(t);
       });
-    else if (Wt(t) && t !== 0)
-      if (Wt(e[0]))
+    else if (Dt(t) && t !== 0)
+      if (Dt(e[0]))
         for (let i = 0; i < 3; i++)
-          e[i] += J(t * 255), e[i] < 0 && (e[i] = 0), e[i] > 255 && (e[i] = 255);
-      else V.useColorMix && Ue(this.input) && (this.output = os(this.input, t > 0 ? "white" : "black", Math.abs(t)));
+          e[i] += _(t * 255), e[i] < 0 && (e[i] = 0), e[i] > 255 && (e[i] = 255);
+      else U.useColorMix && Ie(this.input) && (this.output = Wi(this.input, t > 0 ? "white" : "black", Math.abs(t)));
     return this;
   }
   /**
@@ -5189,61 +631,61 @@ class V {
    */
   tweenTo(t, e) {
     const i = this.rgba, s = t.rgba;
-    if (!Wt(i[0]) || !Wt(s[0]))
-      return V.useColorMix && Ue(this.input) && Ue(t.input) && e < 0.99 ? os(this.input, t.input, e) : t.input || "none";
+    if (!Dt(i[0]) || !Dt(s[0]))
+      return U.useColorMix && Ie(this.input) && Ie(t.input) && e < 0.99 ? Wi(this.input, t.input, e) : t.input || "none";
     const r = s[3] !== 1 || i[3] !== 1, n = (a, l) => a + (i[l] - a) * (1 - e), o = s.slice(0, 3).map(n).map(Math.round);
     return r && o.push(n(s[3], 3)), (r ? "rgba(" : "rgb(") + o.join(",") + ")";
   }
 }
-V.names = {
+U.names = {
   white: "#ffffff",
   black: "#000000"
 };
-V.parsers = [{
+U.parsers = [{
   // RGBA color
   // eslint-disable-next-line max-len
   regex: /rgba\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d?(?:\.\d+)?)\s*\)/,
-  parse: function(c) {
+  parse: function(h) {
     return [
-      J(c[1]),
-      J(c[2]),
-      J(c[3]),
-      parseFloat(c[4], 10)
+      _(h[1]),
+      _(h[2]),
+      _(h[3]),
+      parseFloat(h[4], 10)
     ];
   }
 }, {
   // RGB color
   regex: /rgb\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*\)/,
-  parse: function(c) {
-    return [J(c[1]), J(c[2]), J(c[3]), 1];
+  parse: function(h) {
+    return [_(h[1]), _(h[2]), _(h[3]), 1];
   }
 }, {
   // RGBA 3 & 4 digit hex color, e.g. #F0F, #F0FA
   regex: /^#([a-f0-9])([a-f0-9])([a-f0-9])([a-f0-9])?$/i,
-  parse: function(c) {
+  parse: function(h) {
     return [
-      J(c[1] + c[1], 16),
-      J(c[2] + c[2], 16),
-      J(c[3] + c[3], 16),
-      ns(c[4]) ? J(c[4] + c[4], 16) / 255 : 1
+      _(h[1] + h[1], 16),
+      _(h[2] + h[2], 16),
+      _(h[3] + h[3], 16),
+      zi(h[4]) ? _(h[4] + h[4], 16) / 255 : 1
     ];
   }
 }, {
   // RGBA 6 & 8 digit hex color, e.g. #FFCC00, #FFCC00FF
   regex: /^#([a-f0-9]{2})([a-f0-9]{2})([a-f0-9]{2})([a-f0-9]{2})?$/i,
-  parse: function(c) {
+  parse: function(h) {
     return [
-      J(c[1], 16),
-      J(c[2], 16),
-      J(c[3], 16),
-      ns(c[4]) ? J(c[4], 16) / 255 : 1
+      _(h[1], 16),
+      _(h[2], 16),
+      _(h[3], 16),
+      zi(h[4]) ? _(h[4], 16) / 255 : 1
     ];
   }
 }];
-V.useColorMix = An.CSS?.supports("color", "color-mix(in srgb,red,blue 9%)");
-V.None = new V("");
-const { parse: as } = V, { win: Ln } = N, { isNumber: Ke, objectEach: Pn } = R;
-class tt {
+U.useColorMix = Fr.CSS?.supports("color", "color-mix(in srgb,red,blue 9%)");
+U.None = new U("");
+const { parse: Fi } = U, { win: Xr } = I, { isNumber: Be, objectEach: Gr } = G;
+class J {
   /* *
    *
    *  Constructors
@@ -5271,10 +713,10 @@ class tt {
     else if (e.length === i.length && s < 1)
       for (let n = 0; n < i.length; n++) {
         const o = e[n], a = i[n], l = [];
-        for (let h = 0; h < a.length; h++) {
-          const d = o[h], f = a[h];
-          Ke(d) && Ke(f) && // Arc boolean flags
-          !(a[0] === "A" && (h === 4 || h === 5)) ? l[h] = d + s * (f - d) : l[h] = f;
+        for (let c = 0; c < a.length; c++) {
+          const f = o[c], d = a[c];
+          Be(f) && Be(d) && // Arc boolean flags
+          !(a[0] === "A" && (c === 4 || c === 5)) ? l[c] = f + s * (d - f) : l[c] = d;
         }
         r.push(l);
       }
@@ -5310,14 +752,14 @@ class tt {
   run(t, e, i) {
     const s = this, r = s.options, n = function(l) {
       return n.stopped ? !1 : s.step(l);
-    }, o = Ln.requestAnimationFrame || function(l) {
+    }, o = Xr.requestAnimationFrame || function(l) {
       setTimeout(l, 13);
     }, a = function() {
-      for (let l = 0; l < tt.timers.length; l++)
-        tt.timers[l]() || tt.timers.splice(l--, 1);
-      tt.timers.length && o(a);
+      for (let l = 0; l < J.timers.length; l++)
+        J.timers[l]() || J.timers.splice(l--, 1);
+      J.timers.length && o(a);
     };
-    t === e && !this.elem["forceAnimate:" + this.prop] ? (delete r.curAnim[this.prop], r.complete && Object.keys(r.curAnim).length === 0 && r.complete.call(this.elem)) : (this.startTime = +/* @__PURE__ */ new Date(), this.start = t, this.end = e, this.unit = i, this.now = this.start, this.pos = 0, n.elem = this.elem, n.prop = this.prop, n() && tt.timers.push(n) === 1 && o(a));
+    t === e && !this.elem["forceAnimate:" + this.prop] ? (delete r.curAnim[this.prop], r.complete && Object.keys(r.curAnim).length === 0 && r.complete.call(this.elem)) : (this.startTime = +/* @__PURE__ */ new Date(), this.start = t, this.end = e, this.unit = i, this.now = this.start, this.pos = 0, n.elem = this.elem, n.prop = this.prop, n() && J.timers.push(n) === 1 && o(a));
   }
   /**
    * Run a single step in the animation.
@@ -5333,8 +775,8 @@ class tt {
   step(t) {
     const e = +/* @__PURE__ */ new Date(), i = this.options, s = this.elem, r = i.complete, n = i.duration, o = i.curAnim;
     let a, l;
-    return s.attr && !s.element ? a = !1 : t || e >= n + this.startTime ? (this.now = this.end, this.pos = 1, this.update(), o[this.prop] = !0, l = !0, Pn(o, function(h) {
-      h !== !0 && (l = !1);
+    return s.attr && !s.element ? a = !1 : t || e >= n + this.startTime ? (this.now = this.end, this.pos = 1, this.update(), o[this.prop] = !0, l = !0, Gr(o, function(c) {
+      c !== !0 && (l = !1);
     }), l && r && r.call(s), a = !1) : (this.pos = i.easing((e - this.startTime) / n), this.now = this.start + (this.end - this.start) * this.pos, this.update(), a = !0), a;
   }
   /**
@@ -5357,12 +799,12 @@ class tt {
    */
   initPath(t, e, i) {
     const s = t.startX, r = t.endX, n = i.slice(), o = t.isArea, a = o ? 2 : 1, l = e && i.length > e.length && i.hasStackedCliffs;
-    let h, d, f, p, u = e?.slice();
+    let c, f, d, p, u = e?.slice();
     if (!u || l)
       return [n, n];
     function g(m, b) {
-      for (; m.length < d; ) {
-        const y = m[0], v = b[d - m.length];
+      for (; m.length < f; ) {
+        const y = m[0], v = b[f - m.length];
         if (v && y[0] === "M" && (v[0] === "C" ? m[0] = [
           "C",
           y[1],
@@ -5372,13 +814,13 @@ class tt {
           y[1],
           y[2]
         ] : m[0] = ["L", y[1], y[2]]), m.unshift(y), o) {
-          const S = m.pop();
-          m.push(m[m.length - 1], S);
+          const w = m.pop();
+          m.push(m[m.length - 1], w);
         }
       }
     }
     function x(m) {
-      for (; m.length < d; ) {
+      for (; m.length < f; ) {
         const b = m[Math.floor(m.length / a) - 1].slice();
         if (b[0] === "C" && (b[1] = b[5], b[2] = b[6]), !o)
           m.push(b);
@@ -5389,20 +831,20 @@ class tt {
       }
     }
     if (s && r && r.length) {
-      for (f = 0; f < s.length; f++)
-        if (s[f] === r[0]) {
-          h = f;
+      for (d = 0; d < s.length; d++)
+        if (s[d] === r[0]) {
+          c = d;
           break;
-        } else if (s[0] === r[r.length - s.length + f]) {
-          h = f, p = !0;
+        } else if (s[0] === r[r.length - s.length + d]) {
+          c = d, p = !0;
           break;
-        } else if (s[s.length - 1] === r[r.length - s.length + f]) {
-          h = s.length - f;
+        } else if (s[s.length - 1] === r[r.length - s.length + d]) {
+          c = s.length - d;
           break;
         }
-      typeof h > "u" && (u = []);
+      typeof c > "u" && (u = []);
     }
-    return u.length && Ke(h) && (d = n.length + h * a, p ? (g(u, n), x(n)) : (g(n, u), x(u))), [u, n];
+    return u.length && Be(c) && (f = n.length + c * a, p ? (g(u, n), x(n)) : (g(n, u), x(u))), [u, n];
   }
   /**
    * Handle animation of the color attributes directly.
@@ -5411,7 +853,7 @@ class tt {
    *
    */
   fillSetter() {
-    tt.prototype.strokeSetter.apply(this, arguments);
+    J.prototype.strokeSetter.apply(this, arguments);
   }
   /**
    * Handle animation of the color attributes directly.
@@ -5420,41 +862,41 @@ class tt {
    *
    */
   strokeSetter() {
-    this.elem.attr(this.prop, as(this.start).tweenTo(as(this.end), this.pos), void 0, !0);
+    this.elem.attr(this.prop, Fi(this.start).tweenTo(Fi(this.end), this.pos), void 0, !0);
   }
 }
-tt.timers = [];
-const { getStyle: En, isArray: In, isNumber: $n, isObject: Sr, merge: Mr, objectEach: Dn, pick: Bn } = R;
-function Nn(c, t) {
-  t.renderer.globalAnimation = Bn(c, t.options.chart.animation, !0);
+J.timers = [];
+const { getStyle: Yr, isArray: Vr, isNumber: Ur, isObject: Qs, merge: Js, objectEach: Kr, pick: qr } = G;
+function Zr(h, t) {
+  t.renderer.globalAnimation = qr(h, t.options.chart.animation, !0);
 }
-function zn(c) {
-  return Sr(c) ? Mr({ duration: 500, defer: 0 }, c) : { duration: c ? 500 : 0, defer: 0 };
+function _r(h) {
+  return Qs(h) ? Js({ duration: 500, defer: 0 }, h) : { duration: h ? 500 : 0, defer: 0 };
 }
-function Rn(c, t, e) {
+function Qr(h, t, e) {
   let i, s = "", r, n, o;
-  Sr(e) || (o = arguments, e = {
+  Qs(e) || (o = arguments, e = {
     duration: o[2],
     easing: o[3],
     complete: o[4]
-  }), $n(e.duration) || (e.duration = 400), e.easing = typeof e.easing == "function" ? e.easing : Math[e.easing] || Math.easeInOutSine, e.curAnim = Mr(t), Dn(t, function(a, l) {
-    wr(c, l), n = new tt(c, e, l), r = void 0, l === "d" && In(t.d) ? (n.paths = n.initPath(c, c.pathArray, t.d), n.toD = t.d, i = 0, r = 1) : c.attr ? i = c.attr(l) : (i = parseFloat(En(c, l)) || 0, l !== "opacity" && (s = "px")), r || (r = a), typeof r == "string" && r.match("px") && (r = r.replace(/px/g, "")), n.run(i, r, s);
+  }), Ur(e.duration) || (e.duration = 400), e.easing = typeof e.easing == "function" ? e.easing : Math[e.easing] || Math.easeInOutSine, e.curAnim = Js(t), Kr(t, function(a, l) {
+    tr(h, l), n = new J(h, e, l), r = void 0, l === "d" && Vr(t.d) ? (n.paths = n.initPath(h, h.pathArray, t.d), n.toD = t.d, i = 0, r = 1) : h.attr ? i = h.attr(l) : (i = parseFloat(Yr(h, l)) || 0, l !== "opacity" && (s = "px")), r || (r = a), typeof r == "string" && r.match("px") && (r = r.replace(/px/g, "")), n.run(i, r, s);
   });
 }
-function wr(c, t) {
-  let e = tt.timers.length;
+function tr(h, t) {
+  let e = J.timers.length;
   for (; e--; )
-    tt.timers[e].elem === c && (!t || t === tt.timers[e].prop) && (tt.timers[e].stopped = !0);
+    J.timers[e].elem === h && (!t || t === J.timers[e].prop) && (J.timers[e].stopped = !0);
 }
-const At = {
-  animate: Rn,
-  animObject: zn,
-  setAnimation: Nn,
-  stop: wr
+const qt = {
+  animate: Qr,
+  animObject: _r,
+  setAnimation: Zr,
+  stop: tr
 };
-var $i;
-(function(c) {
-  c.xAxis = {
+var vi;
+(function(h) {
+  h.xAxis = {
     /**
      * When using multiple axis, the ticks of two or more opposite axes
      * will automatically be aligned by adding ticks to the axis or axes
@@ -7640,7 +3082,7 @@ var $i;
     tickColor: "#333333"
     /* Palette.neutralColor80 */
     // `tickWidth: 1`
-  }, c.yAxis = {
+  }, h.yAxis = {
     /**
      * The type of axis. Can be one of `linear`, `logarithmic`, `datetime`,
      * `category` or `treegrid`. Defaults to `treegrid` for Gantt charts,
@@ -8422,75 +3864,4632 @@ var $i;
     gridLineWidth: 1,
     lineWidth: 0
   };
-})($i || ($i = {}));
-const Wn = $i, { addEvent: Hn, isFunction: Fn, objectEach: Xn, removeEvent: jn } = R;
-var Di;
-(function(c) {
+})(vi || (vi = {}));
+const Jr = vi, tn = {
+  /**
+   * Default `mapData` for all series, in terms of a GeoJSON or TopoJSON
+   * object. If set to a string, it functions as an index into the
+   * `Highcharts.maps` array.
+   *
+   * For picking out individual shapes and geometries to use for each series
+   * of the map, see [series.mapData](#series.map.mapData).
+   *
+   * @sample    maps/demo/geojson
+   *            Loading GeoJSON data
+   * @sample    maps/chart/topojson
+   *            Loading TopoJSON data
+   *
+   * @type      {string|Array<*>|Highcharts.GeoJSON|Highcharts.TopoJSON}
+   * @since     5.0.0
+   * @product   highmaps
+   * @apioption chart.map
+   */
+  /**
+   * Set lat/lon transformation definitions for the chart. If not defined,
+   * these are extracted from the map data.
+   *
+   * @type      {*}
+   * @since     5.0.0
+   * @product   highmaps
+   * @apioption chart.mapTransforms
+   */
+  /**
+   * When using multiple axes, the ticks of two or more opposite axes
+   * will automatically be aligned by adding ticks to the axis or axes
+   * with the least ticks, as if `tickAmount` were specified.
+   *
+   * This can be prevented by setting `alignTicks` to false. If the grid
+   * lines look messy, it's a good idea to hide them for the secondary
+   * axis by setting `gridLineWidth` to 0.
+   *
+   * If `startOnTick` or `endOnTick` in the axis options are set to false,
+   * then the `alignTicks ` will be disabled for the axis.
+   *
+   * Disabled for logarithmic axes.
+   *
+   * @sample {highcharts} highcharts/chart/alignticks-true/
+   *         True by default
+   * @sample {highcharts} highcharts/chart/alignticks-false/
+   *         False
+   * @sample {highstock} stock/chart/alignticks-true/
+   *         True by default
+   * @sample {highstock} stock/chart/alignticks-false/
+   *         False
+   *
+   * @type      {boolean}
+   * @default   true
+   * @product   highcharts highstock gantt
+   * @apioption chart.alignTicks
+   */
+  /**
+   * When using multiple axes, align the thresholds. When this is true, other
+   * ticks will also be aligned.
+   *
+   * Note that for line series and some other series types, the `threshold`
+   * option is set to `null` by default. This will in turn cause their y-axis
+   * to not have a threshold. In order to avoid that, set the series
+   * `threshold` to 0 or another number.
+   *
+   * If `startOnTick` or `endOnTick` in the axis options are set to false, or
+   * if the axis is logarithmic, the threshold will not be aligned.
+   *
+   * @sample {highcharts} highcharts/chart/alignthresholds/ Set to true
+   *
+   * @since 10.0.0
+   * @product   highcharts highstock gantt
+   * @apioption chart.alignThresholds
+   */
+  alignThresholds: !1,
+  /**
+   * Set the overall animation for all chart updating. Animation can be
+   * disabled throughout the chart by setting it to false here. It can
+   * be overridden for each individual API method as a function parameter.
+   * The only animation not affected by this option is the initial series
+   * animation, see [plotOptions.series.animation](
+   * #plotOptions.series.animation).
+   *
+   * The animation can either be set as a boolean or a configuration
+   * object. If `true`, it will use the 'swing' jQuery easing and a
+   * duration of 500 ms. If used as a configuration object, the following
+   * properties are supported:
+   *
+   * - `defer`: The animation delay time in milliseconds.
+   *
+   * - `duration`: The duration of the animation in milliseconds.
+   *
+   * - `easing`: A string reference to an easing function set on the
+   *   `Math` object. See
+   *   [the easing demo](https://jsfiddle.net/gh/get/library/pure/highcharts/highcharts/tree/master/samples/highcharts/plotoptions/series-animation-easing/).
+   *
+   * When zooming on a series with less than 100 points, the chart redraw
+   * will be done with animation, but in case of more data points, it is
+   * necessary to set this option to ensure animation on zoom.
+   *
+   * @sample {highcharts} highcharts/chart/animation-none/
+   *         Updating with no animation
+   * @sample {highcharts} highcharts/chart/animation-duration/
+   *         With a longer duration
+   * @sample {highcharts} highcharts/chart/animation-easing/
+   *         With a jQuery UI easing
+   * @sample {highmaps} maps/chart/animation-none/
+   *         Updating with no animation
+   * @sample {highmaps} maps/chart/animation-duration/
+   *         With a longer duration
+   *
+   * @type      {boolean|Partial<Highcharts.AnimationOptionsObject>}
+   * @default   true
+   * @apioption chart.animation
+   */
+  /**
+   * A CSS class name to apply to the charts container `div`, allowing
+   * unique CSS styling for each chart.
+   *
+   * @type      {string}
+   * @apioption chart.className
+   */
+  /**
+   * Event listeners for the chart.
+   *
+   * @apioption chart.events
+   */
+  /**
+   * Fires when a series is added to the chart after load time, using the
+   * `addSeries` method. One parameter, `event`, is passed to the
+   * function, containing common event information. Through
+   * `event.options` you can access the series options that were passed to
+   * the `addSeries` method. Returning false prevents the series from
+   * being added.
+   *
+   * @sample {highcharts} highcharts/chart/events-addseries/
+   *         Alert on add series
+   * @sample {highstock} stock/chart/events-addseries/
+   *         Alert on add series
+   *
+   * @type      {Highcharts.ChartAddSeriesCallbackFunction}
+   * @since     1.2.0
+   * @context   Highcharts.Chart
+   * @apioption chart.events.addSeries
+   */
+  /**
+   * Fires when clicking on the plot background. One parameter, `event`,
+   * is passed to the function, containing common event information.
+   *
+   * Information on the clicked spot can be found through `event.xAxis`
+   * and `event.yAxis`, which are arrays containing the axes of each
+   * dimension and each axis' value at the clicked spot. The primary axes
+   * are `event.xAxis[0]` and `event.yAxis[0]`. Remember the unit of a
+   * datetime axis is milliseconds since 1970-01-01 00:00:00.
+   *
+   * ```js
+   * click: function(e) {
+   *     console.log(
+   *         Highcharts.dateFormat('%Y-%m-%d %H:%M:%S', e.xAxis[0].value),
+   *         e.yAxis[0].value
+   *     )
+   * }
+   * ```
+   *
+   * @sample {highcharts} highcharts/chart/events-click/
+   *         Alert coordinates on click
+   * @sample {highcharts} highcharts/chart/events-container/
+   *         Alternatively, attach event to container
+   * @sample {highstock} stock/chart/events-click/
+   *         Alert coordinates on click
+   * @sample {highstock} highcharts/chart/events-container/
+   *         Alternatively, attach event to container
+   * @sample {highmaps} maps/chart/events-click/
+   *         Record coordinates on click
+   * @sample {highmaps} highcharts/chart/events-container/
+   *         Alternatively, attach event to container
+   *
+   * @type      {Highcharts.ChartClickCallbackFunction}
+   * @since     1.2.0
+   * @context   Highcharts.Chart
+   * @apioption chart.events.click
+   */
+  /**
+   * Fires when the chart is finished loading. Since v4.2.2, it also waits
+   * for images to be loaded, for example from point markers. One
+   * parameter, `event`, is passed to the function, containing common
+   * event information.
+   *
+   * There is also a second parameter to the chart constructor where a
+   * callback function can be passed to be executed on chart.load.
+   *
+   * @sample {highcharts} highcharts/chart/events-load/
+   *         Alert on chart load
+   * @sample {highcharts} highcharts/chart/events-render/
+   *         Load vs Redraw vs Render
+   * @sample {highstock} stock/chart/events-load/
+   *         Alert on chart load
+   * @sample {highmaps} maps/chart/events-load/
+   *         Add series on chart load
+   *
+   * @type      {Highcharts.ChartLoadCallbackFunction}
+   * @context   Highcharts.Chart
+   * @apioption chart.events.load
+   */
+  /**
+   * Fires when the chart is redrawn, either after a call to
+   * `chart.redraw()` or after an axis, series or point is modified with
+   * the `redraw` option set to `true`. One parameter, `event`, is passed
+   * to the function, containing common event information.
+   *
+   * @sample {highcharts} highcharts/chart/events-redraw/
+   *         Alert on chart redraw
+   * @sample {highcharts} highcharts/chart/events-render/
+   *         Load vs Redraw vs Render
+   * @sample {highstock} stock/chart/events-redraw/
+   *         Alert on chart redraw when adding a series or moving the
+   *         zoomed range
+   * @sample {highmaps} maps/chart/events-redraw/
+   *         Set subtitle on chart redraw
+   *
+   * @type      {Highcharts.ChartRedrawCallbackFunction}
+   * @since     1.2.0
+   * @context   Highcharts.Chart
+   * @apioption chart.events.redraw
+   */
+  /**
+   * Fires after initial load of the chart (directly after the `load`
+   * event), and after each redraw (directly after the `redraw` event).
+   *
+   * @sample {highcharts} highcharts/chart/events-render/
+   *         Load vs Redraw vs Render
+   *
+   * @type      {Highcharts.ChartRenderCallbackFunction}
+   * @since     5.0.7
+   * @context   Highcharts.Chart
+   * @apioption chart.events.render
+   */
+  /**
+   * Fires when an area of the chart has been selected. Selection is
+   * enabled by setting the chart's zoomType. One parameter, `event`, is
+   * passed to the function, containing common event information. The
+   * default action for the selection event is to zoom the chart to the
+   * selected area. It can be prevented by calling
+   * `event.preventDefault()` or return false.
+   *
+   * Information on the selected area can be found through `event.xAxis`
+   * and `event.yAxis`, which are arrays containing the axes of each
+   * dimension and each axis' min and max values. The primary axes are
+   * `event.xAxis[0]` and `event.yAxis[0]`. Remember the unit of a
+   * datetime axis is milliseconds since 1970-01-01 00:00:00.
+   *
+   * ```js
+   * selection: function(event) {
+   *     // log the min and max of the primary, datetime x-axis
+   *     console.log(
+   *         Highcharts.dateFormat(
+   *             '%Y-%m-%d %H:%M:%S',
+   *             event.xAxis[0].min
+   *         ),
+   *         Highcharts.dateFormat(
+   *             '%Y-%m-%d %H:%M:%S',
+   *             event.xAxis[0].max
+   *         )
+   *     );
+   *     // log the min and max of the y axis
+   *     console.log(event.yAxis[0].min, event.yAxis[0].max);
+   * }
+   * ```
+   *
+   * @sample {highcharts} highcharts/chart/events-selection/
+   *         Report on selection and reset
+   * @sample {highcharts} highcharts/chart/events-selection-points/
+   *         Select a range of points through a drag selection
+   * @sample {highstock} stock/chart/events-selection/
+   *         Report on selection and reset
+   * @sample {highstock} highcharts/chart/events-selection-points/
+   *         Select a range of points through a drag selection
+   *         (Highcharts)
+   *
+   * @type      {Highcharts.ChartSelectionCallbackFunction}
+   * @apioption chart.events.selection
+   */
+  /**
+   * The margin between the outer edge of the chart and the plot area.
+   * The numbers in the array designate top, right, bottom and left
+   * respectively. Use the options `marginTop`, `marginRight`,
+   * `marginBottom` and `marginLeft` for shorthand setting of one option.
+   *
+   * By default there is no margin. The actual space is dynamically
+   * calculated from the offset of axis labels, axis title, title,
+   * subtitle and legend in addition to the `spacingTop`, `spacingRight`,
+   * `spacingBottom` and `spacingLeft` options.
+   *
+   * @sample {highcharts} highcharts/chart/margins-zero/
+   *         Zero margins
+   * @sample {highstock} stock/chart/margin-zero/
+   *         Zero margins
+   *
+   * @type      {number|Array<number>}
+   * @apioption chart.margin
+   */
+  /**
+   * The margin between the bottom outer edge of the chart and the plot
+   * area. Use this to set a fixed pixel value for the margin as opposed
+   * to the default dynamic margin. See also `spacingBottom`.
+   *
+   * @sample {highcharts} highcharts/chart/marginbottom/
+   *         100px bottom margin
+   * @sample {highstock} stock/chart/marginbottom/
+   *         100px bottom margin
+   * @sample {highmaps} maps/chart/margin/
+   *         100px margins
+   *
+   * @type      {number}
+   * @since     2.0
+   * @apioption chart.marginBottom
+   */
+  /**
+   * The margin between the left outer edge of the chart and the plot
+   * area. Use this to set a fixed pixel value for the margin as opposed
+   * to the default dynamic margin. See also `spacingLeft`.
+   *
+   * @sample {highcharts} highcharts/chart/marginleft/
+   *         150px left margin
+   * @sample {highstock} stock/chart/marginleft/
+   *         150px left margin
+   * @sample {highmaps} maps/chart/margin/
+   *         100px margins
+   *
+   * @type      {number}
+   * @since     2.0
+   * @apioption chart.marginLeft
+   */
+  /**
+   * The margin between the right outer edge of the chart and the plot
+   * area. Use this to set a fixed pixel value for the margin as opposed
+   * to the default dynamic margin. See also `spacingRight`.
+   *
+   * @sample {highcharts} highcharts/chart/marginright/
+   *         100px right margin
+   * @sample {highstock} stock/chart/marginright/
+   *         100px right margin
+   * @sample {highmaps} maps/chart/margin/
+   *         100px margins
+   *
+   * @type      {number}
+   * @since     2.0
+   * @apioption chart.marginRight
+   */
+  /**
+   * The margin between the top outer edge of the chart and the plot area.
+   * Use this to set a fixed pixel value for the margin as opposed to
+   * the default dynamic margin. See also `spacingTop`.
+   *
+   * @sample {highcharts} highcharts/chart/margintop/ 100px top margin
+   * @sample {highstock} stock/chart/margintop/
+   *         100px top margin
+   * @sample {highmaps} maps/chart/margin/
+   *         100px margins
+   *
+   * @type      {number}
+   * @since     2.0
+   * @apioption chart.marginTop
+   */
+  /**
+   * Callback function to override the default function that formats all
+   * the numbers in the chart. Returns a string with the formatted number.
+   *
+   * @sample highcharts/members/highcharts-numberformat
+   *      Arabic digits in Highcharts
+   * @type {Highcharts.NumberFormatterCallbackFunction}
+   * @since 8.0.0
+   * @apioption chart.numberFormatter
+   */
+  /**
+   * When a chart with an x and a y-axis is rendered, we first pre-render the
+   * labels of both in order to measure them. Then, if either of the axis
+   * labels take up so much space that it significantly affects the length of
+   * the other axis, we repeat the process.
+   *
+   * By default we stop at two axis layout runs, but it may be that the second
+   * run also alter the space required by either axis, for example if it
+   * causes the labels to rotate. In this situation, a subsequent redraw of
+   * the chart may cause the tick and label placement to change for apparently
+   * no reason.
+   *
+   * Use the `axisLayoutRuns` option to set the maximum allowed number of
+   * repetitions. But keep in mind that the default value of 2 is set because
+   * every run costs performance time.
+   *
+   * **Note:** Changing that option to higher than the default might decrease
+   * performance significantly, especially with bigger sets of data.
+   *
+   * @type      {number}
+   * @default   2
+   * @since     11.3.0
+   * @apioption chart.axisLayoutRuns
+   */
+  /**
+   * Allows setting a key to switch between zooming and panning. Can be
+   * one of `alt`, `ctrl`, `meta` (the command key on Mac and Windows
+   * key on Windows) or `shift`. The keys are mapped directly to the key
+   * properties of the click event argument (`event.altKey`,
+   * `event.ctrlKey`, `event.metaKey` and `event.shiftKey`).
+   *
+   * @type       {string}
+   * @since      4.0.3
+   * @product    highcharts gantt
+   * @validvalue ["alt", "ctrl", "meta", "shift"]
+   * @apioption  chart.panKey
+   */
+  /**
+   * Allow panning in a chart. Best used with [panKey](#chart.panKey)
+   * to combine zooming and panning.
+   *
+   * On touch devices, when the [tooltip.followTouchMove](
+   * #tooltip.followTouchMove) option is `true` (default), panning
+   * requires two fingers. To allow panning with one finger, set
+   * `followTouchMove` to `false`.
+   *
+   * @sample  {highcharts} highcharts/chart/pankey/ Zooming and panning
+   * @sample  {highstock} stock/chart/panning/ Zooming and xy panning
+   */
+  panning: {
+    /**
+     * Enable or disable chart panning.
+     *
+     * @type      {boolean}
+     * @default   {highcharts} false
+     * @default   {highstock|highmaps} true
+     */
+    enabled: !1,
+    /**
+     * Decides in what dimensions the user can pan the chart. Can be
+     * one of `x`, `y`, or `xy`.
+     *
+     * During panning, all axes will behave as if
+     * [`startOnTick`](#yAxis.startOnTick) and
+     * [`endOnTick`](#yAxis.endOnTick) were set to `false`. After the
+     * panning action is finished, the axes will adjust to their actual
+     * settings.
+     *
+     * **Note:** For non-cartesian series, the only supported panning type
+     * is `xy`, as zooming in a single direction is not applicable due to
+     * the radial nature of the coordinate system.
+     *
+     * @sample {highcharts} highcharts/chart/panning-type
+     *         Zooming and xy panning
+     *
+     * @declare    Highcharts.OptionsChartPanningTypeValue
+     * @type       {string}
+     * @validvalue ["x", "y", "xy"]
+     * @product    highcharts highstock gantt
+     */
+    type: "x"
+  },
+  /**
+   * Equivalent to [zoomType](#chart.zoomType), but for multitouch
+   * gestures only. By default, the `pinchType` is the same as the
+   * `zoomType` setting. However, pinching can be enabled separately in
+   * some cases, for example in stock charts where a mouse drag pans the
+   * chart, while pinching is enabled. When [tooltip.followTouchMove](
+   * #tooltip.followTouchMove) is true, pinchType only applies to
+   * two-finger touches.
+   *
+   * @type       {string}
+   * @default    {highcharts} undefined
+   * @default    {highstock} undefined
+   * @since      3.0
+   * @product    highcharts highstock gantt
+   * @deprecated
+   * @validvalue ["x", "y", "xy"]
+   * @apioption  chart.pinchType
+   */
+  /**
+   * Whether to apply styled mode. When in styled mode, no presentational
+   * attributes or CSS are applied to the chart SVG. Instead, CSS rules
+   * are required to style the chart. The default style sheet is
+   * available from `https://code.highcharts.com/css/highcharts.css`.
+   *
+   * [Read more in the docs](https://www.highcharts.com/docs/chart-design-and-style/style-by-css)
+   * on what classes and variables are available.
+   *
+   * @sample highcharts/css/colors
+   *         Color theming with CSS
+   * @sample highcharts/css/prefers-color-scheme
+   *         Dynamic theme based on system settings
+   * @type       {boolean}
+   * @default    false
+   * @since      7.0
+   * @apioption  chart.styledMode
+   */
+  styledMode: !1,
+  /**
+   * The corner radius of the outer chart border.
+   *
+   * @sample {highcharts} highcharts/chart/borderradius/
+   *         20px radius
+   * @sample {highstock} stock/chart/border/
+   *         10px radius
+   * @sample {highmaps} maps/chart/border/
+   *         Border options
+   *
+   */
+  borderRadius: 0,
+  /**
+   * In styled mode, this sets how many colors the class names
+   * should rotate between. With ten colors, series (or points) are
+   * given class names like `highcharts-color-0`, `highcharts-color-1`
+   * [...] `highcharts-color-9`. The equivalent in non-styled mode
+   * is to set colors using the [colors](#colors) setting.
+   *
+   * @since      5.0.0
+   */
+  colorCount: 10,
+  /**
+   * By default, (because of memory and performance reasons) the chart does
+   * not copy the data but keeps it as a reference. In some cases, this might
+   * result in mutating the original data source. In order to prevent that,
+   * set that property to false. Please note that changing that might decrease
+   * performance, especially with bigger sets of data.
+   *
+   * @type       {boolean}
+   * @since 10.1.0
+   */
+  allowMutatingData: !0,
+  /**
+   * If true, the axes will scale to the remaining visible series once
+   * one series is hidden. If false, hiding and showing a series will
+   * not affect the axes or the other series. For stacks, once one series
+   * within the stack is hidden, the rest of the stack will close in
+   * around it even if the axis is not affected.
+   *
+   * @sample {highcharts} highcharts/chart/ignorehiddenseries-true/
+   *         True by default
+   * @sample {highcharts} highcharts/chart/ignorehiddenseries-false/
+   *         False
+   * @sample {highcharts} highcharts/chart/ignorehiddenseries-true-stacked/
+   *         True with stack
+   * @sample {highstock} stock/chart/ignorehiddenseries-true/
+   *         True by default
+   * @sample {highstock} stock/chart/ignorehiddenseries-false/
+   *         False
+   *
+   * @since   1.2.0
+   * @product highcharts highstock gantt
+   */
+  ignoreHiddenSeries: !0,
+  /**
+   * Whether to invert the axes so that the x axis is vertical and y axis
+   * is horizontal. When `true`, the x axis is [reversed](#xAxis.reversed)
+   * by default.
+   *
+   * @productdesc {highcharts}
+   * If a bar series is present in the chart, it will be inverted
+   * automatically. Inverting the chart doesn't have an effect if there
+   * are no cartesian series in the chart.
+   *
+   * @sample {highcharts} highcharts/chart/inverted/
+   *         Inverted line
+   * @sample {highstock} stock/navigator/inverted/
+   *         Inverted stock chart
+   *
+   * @type      {boolean}
+   * @default   false
+   * @product   highcharts highstock gantt
+   * @apioption chart.inverted
+   */
+  /**
+   * The distance between the outer edge of the chart and the content,
+   * like title or legend, or axis title and labels if present. The
+   * numbers in the array designate top, right, bottom and left
+   * respectively. Use the options spacingTop, spacingRight, spacingBottom
+   * and spacingLeft options for shorthand setting of one option.
+   *
+   * @type    {Array<number>}
+   * @see     [chart.margin](#chart.margin)
+   * @default [10, 10, 15, 10]
+   * @since   3.0.6
+   */
+  spacing: [10, 10, 15, 10],
+  /**
+   * The button that appears after a selection zoom, allowing the user
+   * to reset zoom. This option is deprecated in favor of
+   * [zooming](#chart.zooming).
+   *
+   * @since      2.2
+   * @deprecated 10.2.1
+   */
+  resetZoomButton: {
+    /**
+     * What frame the button placement should be related to. Can be
+     * either `plotBox` or `spacingBox`.
+     *
+     * @sample {highcharts} highcharts/chart/resetzoombutton-relativeto/
+     *         Relative to the chart
+     * @sample {highstock} highcharts/chart/resetzoombutton-relativeto/
+     *         Relative to the chart
+     *
+     * @type      {Highcharts.ButtonRelativeToValue}
+     * @apioption chart.resetZoomButton.relativeTo
+     */
+    /**
+     * A collection of attributes for the button. The object takes SVG
+     * attributes like `fill`, `stroke`, `stroke-width` or `r`, the
+     * border radius. The theme also supports `style`, a collection of
+     * CSS properties for the text. Equivalent attributes for the hover
+     * state are given in `theme.states.hover`.
+     *
+     * @sample {highcharts} highcharts/chart/resetzoombutton-theme/
+     *         Theming the button
+     * @sample {highstock} highcharts/chart/resetzoombutton-theme/
+     *         Theming the button
+     *
+     * @type {Highcharts.SVGAttributes}
+     */
+    theme: {
+      /**
+       * The z-index of the button.
+       *
+       * @type {number}
+       * @apioption chart.resetZoomButton.theme.zIndex
+       */
+    },
+    /**
+     * The position of the button.
+     *
+     * @sample {highcharts} highcharts/chart/resetzoombutton-position/
+     *         Above the plot area
+     * @sample {highstock} highcharts/chart/resetzoombutton-position/
+     *         Above the plot area
+     * @sample {highmaps} highcharts/chart/resetzoombutton-position/
+     *         Above the plot area
+     *
+     * @type {Highcharts.AlignObject}
+     */
+    position: {
+      /**
+       * The horizontal alignment of the button.
+       *
+       * @type {number}
+       * @apioption chart.resetZoomButton.position.align
+       */
+      /**
+       * The horizontal offset of the button.
+       *
+       * @type {number}
+       * @apioption chart.resetZoomButton.position.x
+       */
+      /**
+       * The vertical alignment of the button.
+       *
+       * @type      {Highcharts.VerticalAlignValue}
+       * @apioption chart.resetZoomButton.position.verticalAlign
+       */
+      /**
+       * The vertical offset of the button.
+       *
+       * @type {number}
+       * @apioption chart.resetZoomButton.position.y
+       */
+    }
+  },
+  /**
+   * The pixel width of the plot area border.
+   *
+   * @sample {highcharts} highcharts/chart/plotborderwidth/
+   *         1px border
+   * @sample {highstock} stock/chart/plotborder/
+   *         2px border
+   * @sample {highmaps} maps/chart/plotborder/
+   *         Plot border options
+   *
+   * @type      {number}
+   * @default   0
+   * @apioption chart.plotBorderWidth
+   */
+  /**
+   * Whether to apply a drop shadow to the plot area. Requires that
+   * plotBackgroundColor be set. The shadow can be an object configuration
+   * containing `color`, `offsetX`, `offsetY`, `opacity` and `width`.
+   *
+   * @sample {highcharts} highcharts/chart/plotshadow/
+   *         Plot shadow
+   * @sample {highstock} stock/chart/plotshadow/
+   *         Plot shadow
+   * @sample {highmaps} maps/chart/plotborder/
+   *         Plot border options
+   *
+   * @type      {boolean|Highcharts.ShadowOptionsObject}
+   * @default   false
+   * @apioption chart.plotShadow
+   */
+  /**
+   * When true, cartesian charts like line, spline, area and column are
+   * transformed into the polar coordinate system. This produces _polar
+   * charts_, also known as _radar charts_.
+   *
+   * @sample {highcharts} highcharts/demo/polar/
+   *         Polar chart
+   * @sample {highcharts} highcharts/demo/polar-wind-rose/
+   *         Wind rose, stacked polar column chart
+   * @sample {highcharts} highcharts/demo/polar-spider/
+   *         Spider web chart
+   * @sample {highcharts} highcharts/parallel-coordinates/polar/
+   *         Star plot, multivariate data in a polar chart
+   *
+   * @type      {boolean}
+   * @default   false
+   * @since     2.3.0
+   * @product   highcharts
+   * @requires  highcharts-more
+   * @apioption chart.polar
+   */
+  /**
+   * Whether to reflow the chart to fit the width of the container div
+   * on resizing the window.
+   *
+   * @sample {highcharts} highcharts/chart/reflow-true/
+   *         True by default
+   * @sample {highcharts} highcharts/chart/reflow-false/
+   *         False
+   * @sample {highstock} stock/chart/reflow-true/
+   *         True by default
+   * @sample {highstock} stock/chart/reflow-false/
+   *         False
+   * @sample {highmaps} maps/chart/reflow-true/
+   *         True by default
+   * @sample {highmaps} maps/chart/reflow-false/
+   *         False
+   *
+   * @since     2.1
+   */
+  reflow: !0,
+  /**
+   * The HTML element where the chart will be rendered. If it is a string,
+   * the element by that id is used. The HTML element can also be passed
+   * by direct reference, or as the first argument of the chart
+   * constructor, in which case the option is not needed.
+   *
+   * @sample {highcharts} highcharts/chart/reflow-true/
+   *         String
+   * @sample {highcharts} highcharts/chart/renderto-object/
+   *         Object reference
+   * @sample {highstock} stock/chart/renderto-string/
+   *         String
+   * @sample {highstock} stock/chart/renderto-object/
+   *         Object reference
+   *
+   * @type      {string|Highcharts.HTMLDOMElement}
+   * @apioption chart.renderTo
+   */
+  /**
+   * The background color of the marker square when selecting (zooming
+   * in on) an area of the chart.
+   *
+   * @see In styled mode, the selection marker fill is set with the
+   *      `.highcharts-selection-marker` class.
+   *
+   * @type      {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
+   * @default   rgba(51,92,173,0.25)
+   * @since     2.1.7
+   * @apioption chart.selectionMarkerFill
+   */
+  /**
+   * Whether to apply a drop shadow to the global series group. This causes
+   * all the series to have the same shadow. Contrary to the `series.shadow`
+   * option, this prevents items from casting shadows on each other, like for
+   * others series in a stack. The shadow can be an object configuration
+   * containing `color`, `offsetX`, `offsetY`, `opacity` and `width`.
+   *
+   * @sample highcharts/chart/seriesgroupshadow/
+   *         Shadow
+   *
+   * @type      {boolean|Highcharts.ShadowOptionsObject}
+   * @default   false
+   * @apioption chart.seriesGroupShadow
+   */
+  /**
+   * Whether to apply a drop shadow to the outer chart area. Requires
+   * that backgroundColor be set. The shadow can be an object
+   * configuration containing `color`, `offsetX`, `offsetY`, `opacity` and
+   * `width`.
+   *
+   * @sample {highcharts} highcharts/chart/shadow/
+   *         Shadow
+   * @sample {highstock} stock/chart/shadow/
+   *         Shadow
+   * @sample {highmaps} maps/chart/border/
+   *         Chart border and shadow
+   *
+   * @type      {boolean|Highcharts.ShadowOptionsObject}
+   * @default   false
+   * @apioption chart.shadow
+   */
+  /**
+   * Whether to show the axes initially. This only applies to empty charts
+   * where series are added dynamically, as axes are automatically added
+   * to cartesian series.
+   *
+   * @sample {highcharts} highcharts/chart/showaxes-false/
+   *         False by default
+   * @sample {highcharts} highcharts/chart/showaxes-true/
+   *         True
+   *
+   * @type      {boolean}
+   * @since     1.2.5
+   * @product   highcharts gantt
+   * @apioption chart.showAxes
+   */
+  /**
+   * The space between the bottom edge of the chart and the content (plot
+   * area, axis title and labels, title, subtitle or legend in top
+   * position).
+   *
+   * @sample {highcharts} highcharts/chart/spacingbottom/
+   *         Spacing bottom set to 100
+   * @sample {highstock} stock/chart/spacingbottom/
+   *         Spacing bottom set to 100
+   * @sample {highmaps} maps/chart/spacing/
+   *         Spacing 100 all around
+   *
+   * @type      {number}
+   * @default   15
+   * @since     2.1
+   * @apioption chart.spacingBottom
+   */
+  /**
+   * The space between the left edge of the chart and the content (plot
+   * area, axis title and labels, title, subtitle or legend in top
+   * position).
+   *
+   * @sample {highcharts} highcharts/chart/spacingleft/
+   *         Spacing left set to 100
+   * @sample {highstock} stock/chart/spacingleft/
+   *         Spacing left set to 100
+   * @sample {highmaps} maps/chart/spacing/
+   *         Spacing 100 all around
+   *
+   * @type      {number}
+   * @default   10
+   * @since     2.1
+   * @apioption chart.spacingLeft
+   */
+  /**
+   * The space between the right edge of the chart and the content (plot
+   * area, axis title and labels, title, subtitle or legend in top
+   * position).
+   *
+   * @sample {highcharts} highcharts/chart/spacingright-100/
+   *         Spacing set to 100
+   * @sample {highcharts} highcharts/chart/spacingright-legend/
+   *         Legend in right position with default spacing
+   * @sample {highstock} stock/chart/spacingright/
+   *         Spacing set to 100
+   * @sample {highmaps} maps/chart/spacing/
+   *         Spacing 100 all around
+   *
+   * @type      {number}
+   * @default   10
+   * @since     2.1
+   * @apioption chart.spacingRight
+   */
+  /**
+   * The space between the top edge of the chart and the content (plot
+   * area, axis title and labels, title, subtitle or legend in top
+   * position).
+   *
+   * @sample {highcharts} highcharts/chart/spacingtop-100/
+   *         A top spacing of 100
+   * @sample {highcharts} highcharts/chart/spacingtop-10/
+   *         Floating chart title makes the plot area align to the default
+   *         spacingTop of 10.
+   * @sample {highstock} stock/chart/spacingtop/
+   *         A top spacing of 100
+   * @sample {highmaps} maps/chart/spacing/
+   *         Spacing 100 all around
+   *
+   * @type      {number}
+   * @default   10
+   * @since     2.1
+   * @apioption chart.spacingTop
+   */
+  /**
+   * Additional CSS styles to apply inline to the container `div` and the root
+   * SVG.
+   *
+   * According to the CSS syntax documentation, it is recommended to quote
+   * font family names that contain white space, digits, or punctuation
+   * characters other than hyphens. In such cases, wrap the fontFamily
+   * name as follows: `fontFamily: '"Font name"'`.
+   *
+   * Since v11, the root font size is 1rem by default, and all child element
+   * are given a relative `em` font size by default. This allows implementers
+   * to control all the chart's font sizes by only setting the root level.
+   *
+   * @see    In styled mode, general chart styles can be set with the
+   *         `.highcharts-root` class.
+   * @sample {highcharts} highcharts/chart/style-serif-font/
+   *         Using a serif type font
+   * @sample {highcharts} highcharts/chart/style-special-font/
+   *         Using a font with special character in name
+   * @sample {highcharts} highcharts/members/relative-font-size/
+   *         Relative font sizes
+   * @sample {highcharts} highcharts/css/em/
+   *         Styled mode with relative font sizes
+   * @sample {highstock} stock/chart/style/
+   *         Using a serif type font
+   * @sample {highmaps} maps/chart/style-serif-font/
+   *         Using a serif type font
+   *
+   * @type      {Highcharts.CSSObject}
+   * @default   {"fontFamily": "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif", "fontSize":"1rem"}
+   * @apioption chart.style
+   */
+  /**
+   * The default series type for the chart. Can be any of the chart types
+   * listed under [plotOptions](#plotOptions) and [series](#series) or can
+   * be a series provided by an additional module.
+   *
+   * In TypeScript this option has no effect in sense of typing and
+   * instead the `type` option must always be set in the series.
+   *
+   * @sample {highcharts} highcharts/chart/type-bar/
+   *         Bar
+   * @sample {highstock} stock/chart/type/
+   *         Areaspline
+   * @sample {highmaps} maps/chart/type-mapline/
+   *         Mapline
+   *
+   * @type       {string}
+   * @default    {highcharts} line
+   * @default    {highstock} line
+   * @default    {highmaps} map
+   * @since      2.1.0
+   * @apioption  chart.type
+   */
+  type: "line",
+  /**
+   * Decides in what dimensions the user can zoom by dragging the mouse.
+   * Can be one of `x`, `y` or `xy`.
+   *
+   * @see [panKey](#chart.panKey)
+   *
+   * @sample {highcharts} highcharts/chart/zoomtype-none/
+   *         None by default
+   * @sample {highcharts} highcharts/chart/zoomtype-x/
+   *         X
+   * @sample {highcharts} highcharts/chart/zoomtype-y/
+   *         Y
+   * @sample {highcharts} highcharts/chart/zoomtype-xy/
+   *         Xy
+   * @sample {highcharts} highcharts/chart/zoomtype-polar/
+   *         Zoom on polar chart
+   * @sample {highstock} stock/demo/basic-line/
+   *         None by default
+   * @sample {highstock} stock/chart/zoomtype-x/
+   *         X
+   * @sample {highstock} stock/chart/zoomtype-y/
+   *         Y
+   * @sample {highstock} stock/chart/zoomtype-xy/
+   *         Xy
+   * @sample {highmaps} maps/chart/zoomtype-xy/
+   *         Map with selection zoom
+   *
+   * @type       {string}
+   * @validvalue ["x", "y", "xy"]
+   * @deprecated
+   * @apioption  chart.zoomType
+   */
+  /**
+   * Enables zooming by a single touch, in combination with
+   * [chart.zoomType](#chart.zoomType). When enabled, two-finger pinch
+   * will still work as set up by [chart.pinchType](#chart.pinchType).
+   * However, `zoomBySingleTouch` will interfere with touch-dragging the
+   * chart to read the tooltip. And especially when vertical zooming is
+   * enabled, it will make it hard to scroll vertically on the page.
+   * @since      9.0.0
+   * @sample     highcharts/chart/zoombysingletouch
+   *             Zoom by single touch enabled, with buttons to toggle
+   * @product    highcharts highstock gantt
+   * @deprecated
+   */
+  /**
+   * Chart zooming options.
+   * @since 10.2.1
+   *
+   * @sample     highcharts/plotoptions/sankey-node-color
+   *             Zooming in sankey series
+   * @sample     highcharts/series-treegraph/link-types
+   *             Zooming in treegraph series
+   */
+  zooming: {
+    /**
+     * Equivalent to [type](#chart.zooming.type), but for multitouch
+     * gestures only. By default, the `pinchType` is the same as the
+     * `type` setting. However, pinching can be enabled separately in
+     * some cases, for example in stock charts where a mouse drag pans the
+     * chart, while pinching is enabled. When [tooltip.followTouchMove](
+     * #tooltip.followTouchMove) is true, pinchType only applies to
+     * two-finger touches.
+     *
+     * @type       {string}
+     * @default    {highcharts} undefined
+     * @default    {highstock} x
+     * @product    highcharts highstock gantt
+     * @validvalue ["x", "y", "xy"]
+     * @apioption  chart.zooming.pinchType
+     */
+    /**
+     * Decides in what dimensions the user can zoom by dragging the mouse.
+     * Can be one of `x`, `y` or `xy`.
+     *
+     * **Note:** For non-cartesian series, the only supported zooming type
+     * is `xy`, as zooming in a single direction is not applicable due to
+     * the radial nature of the coordinate system.
+     *
+     * @declare    Highcharts.OptionsChartZoomingTypeValue
+     * @type       {string}
+     * @default    {highcharts} undefined
+     * @product    highcharts highstock gantt
+     * @validvalue ["x", "y", "xy"]
+     * @apioption  chart.zooming.type
+     */
+    /**
+     * Set a key to hold when dragging to zoom the chart. This is useful to
+     * avoid zooming while moving points. Should be set different than
+     * [chart.panKey](#chart.panKey).
+     *
+     * @type       {string}
+     * @default    {highcharts} undefined
+     * @validvalue ["alt", "ctrl", "meta", "shift"]
+     * @requires   modules/draggable-points
+     * @apioption  chart.zooming.key
+     */
+    /**
+     * Enables zooming by a single touch, in combination with
+     * [chart.zooming.type](#chart.zooming.type). When enabled, two-finger
+     * pinch will still work as set up by [chart.zooming.pinchType]
+     * (#chart.zooming.pinchType). However, `singleTouch` will interfere
+     * with touch-dragging the chart to read the tooltip. And especially
+     * when vertical zooming is enabled, it will make it hard to scroll
+     * vertically on the page.
+     *
+     * @sample  highcharts/chart/zoombysingletouch
+     *          Zoom by single touch enabled, with buttons to toggle
+     *
+     * @product highcharts highstock gantt
+     */
+    singleTouch: !1,
+    /**
+     * The button that appears after a selection zoom, allowing the user
+     * to reset zoom.
+     */
+    resetButton: {
+      /**
+       * What frame the button placement should be related to. Can be
+       * either `plotBox` or `spacingBox`.
+       *
+       * @sample {highcharts} highcharts/chart/resetzoombutton-relativeto/
+       *         Relative to the chart
+       * @sample {highstock} highcharts/chart/resetzoombutton-relativeto/
+       *         Relative to the chart
+       *
+       * @type      {Highcharts.ButtonRelativeToValue}
+       * @default   plot
+       * @apioption chart.zooming.resetButton.relativeTo
+       */
+      /**
+       * A collection of attributes for the button. The object takes SVG
+       * attributes like `fill`, `stroke`, `stroke-width` or `r`, the
+       * border radius. The theme also supports `style`, a collection of
+       * CSS properties for the text. Equivalent attributes for the hover
+       * state are given in `theme.states.hover`.
+       *
+       * @sample {highcharts} highcharts/chart/resetzoombutton-theme/
+       *         Theming the button
+       * @sample {highstock} highcharts/chart/resetzoombutton-theme/
+       *         Theming the button
+       *
+       * @type  {Highcharts.SVGAttributes}
+       * @since 10.2.1
+       */
+      theme: {
+        /** @internal */
+        zIndex: 6
+      },
+      /**
+       * The position of the button.
+       *
+       * Note: Adjusting position values might cause overlap with chart
+       * elements. Ensure coordinates do not obstruct other components or
+       * data visibility.
+       *
+       * @sample {highcharts} highcharts/chart/resetzoombutton-position/
+       *         Above the plot area
+       * @sample {highstock} highcharts/chart/resetzoombutton-position/
+       *         Above the plot area
+       * @sample {highmaps} highcharts/chart/resetzoombutton-position/
+       *         Above the plot area
+       *
+       * @type  {Highcharts.AlignObject}
+       * @since 10.2.1
+       */
+      position: {
+        /**
+         * The horizontal alignment of the button.
+         */
+        align: "right",
+        /**
+         * The horizontal offset of the button.
+         */
+        x: -10,
+        /**
+         * The vertical alignment of the button.
+         *
+         * @type       {Highcharts.VerticalAlignValue}
+         * @default    top
+         * @apioption  chart.zooming.resetButton.position.verticalAlign
+         */
+        /**
+         * The vertical offset of the button.
+         */
+        y: 10
+      }
+    }
+  },
+  /**
+   * An explicit width for the chart. By default (when `null`) the width
+   * is calculated from the offset width of the containing element.
+   *
+   * @sample {highcharts} highcharts/chart/width/
+   *         800px wide
+   * @sample {highstock} stock/chart/width/
+   *         800px wide
+   * @sample {highmaps} maps/chart/size/
+   *         Chart with explicit size
+   *
+   * @type {null|number|string}
+   */
+  width: null,
+  /**
+   * An explicit height for the chart. If a _number_, the height is
+   * given in pixels. If given a _percentage string_ (for example
+   * `'56%'`), the height is given as the percentage of the actual chart
+   * width. This allows for preserving the aspect ratio across responsive
+   * sizes.
+   *
+   * By default (when `null`) the height is calculated from the offset
+   * height of the containing element, or 400 pixels if the containing
+   * element's height is 0.
+   *
+   * @sample {highcharts} highcharts/chart/height/
+   *         Forced 200px height
+   * @sample {highstock} stock/chart/height/
+   *         300px height
+   * @sample {highmaps} maps/chart/size/
+   *         Chart with explicit size
+   * @sample highcharts/chart/height-percent/
+   *         Highcharts with percentage height
+   * @sample highcharts/chart/height-inherited/
+   *         Chart with inherited height
+   *
+   * @type {null|number|string}
+   */
+  height: null,
+  /**
+   * The color of the outer chart border.
+   *
+   * @see In styled mode, the stroke is set with the
+   *      `.highcharts-background` class.
+   *
+   * @sample {highcharts} highcharts/chart/bordercolor/
+   *         Brown border
+   * @sample {highstock} stock/chart/border/
+   *         Brown border
+   * @sample {highmaps} maps/chart/border/
+   *         Border options
+   *
+   * @type {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
+   */
+  borderColor: "#334eff",
+  /**
+   * The pixel width of the outer chart border.
+   *
+   * @see In styled mode, the stroke is set with the
+   *      `.highcharts-background` class.
+   *
+   * @sample {highcharts} highcharts/chart/borderwidth/
+   *         5px border
+   * @sample {highstock} stock/chart/border/
+   *         2px border
+   * @sample {highmaps} maps/chart/border/
+   *         Border options
+   *
+   * @type      {number}
+   * @default   0
+   * @apioption chart.borderWidth
+   */
+  /**
+   * The background color or gradient for the outer chart area.
+   *
+   * @see In styled mode, the background is set with the
+   *      `.highcharts-background` class.
+   *
+   * @sample {highcharts} highcharts/chart/backgroundcolor-color/
+   *         Color
+   * @sample {highcharts} highcharts/chart/backgroundcolor-gradient/
+   *         Gradient
+   * @sample {highstock} stock/chart/backgroundcolor-color/
+   *         Color
+   * @sample {highstock} stock/chart/backgroundcolor-gradient/
+   *         Gradient
+   * @sample {highmaps} maps/chart/backgroundcolor-color/
+   *         Color
+   * @sample {highmaps} maps/chart/backgroundcolor-gradient/
+   *         Gradient
+   *
+   * @type {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
+   */
+  backgroundColor: "#ffffff",
+  /**
+   * The background color or gradient for the plot area.
+   *
+   * @see In styled mode, the plot background is set with the
+   *      `.highcharts-plot-background` class.
+   *
+   * @sample {highcharts} highcharts/chart/plotbackgroundcolor-color/
+   *         Color
+   * @sample {highcharts} highcharts/chart/plotbackgroundcolor-gradient/
+   *         Gradient
+   * @sample {highstock} stock/chart/plotbackgroundcolor-color/
+   *         Color
+   * @sample {highstock} stock/chart/plotbackgroundcolor-gradient/
+   *         Gradient
+   * @sample {highmaps} maps/chart/plotbackgroundcolor-color/
+   *         Color
+   * @sample {highmaps} maps/chart/plotbackgroundcolor-gradient/
+   *         Gradient
+   *
+   * @type      {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
+   * @apioption chart.plotBackgroundColor
+   */
+  /**
+   * The URL for an image to use as the plot background. To set an image
+   * as the background for the entire chart, set a CSS background image
+   * to the container element. Note that for the image to be applied to
+   * exported charts, its URL needs to be accessible by the export server.
+   *
+   * @see In styled mode, a plot background image can be set with the
+   *      `.highcharts-plot-background` class and a [custom pattern](
+   *      https://www.highcharts.com/docs/chart-design-and-style/gradients-shadows-and-patterns).
+   *
+   * @sample {highcharts} highcharts/chart/plotbackgroundimage/
+   *         Skies
+   * @sample {highstock} stock/chart/plotbackgroundimage/
+   *         Skies
+   *
+   * @type      {string}
+   * @apioption chart.plotBackgroundImage
+   */
+  /**
+   * The color of the inner chart or plot area border.
+   *
+   * @see In styled mode, a plot border stroke can be set with the
+   *      `.highcharts-plot-border` class.
+   *
+   * @sample {highcharts} highcharts/chart/plotbordercolor/
+   *         Blue border
+   * @sample {highstock} stock/chart/plotborder/
+   *         Blue border
+   * @sample {highmaps} maps/chart/plotborder/
+   *         Plot border options
+   *
+   * @type {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
+   */
+  plotBorderColor: "#cccccc"
+  /* Palette.neutralColor20 */
+}, en = {
+  /**
+   * Colors for data series and points
+   */
+  colors: [
+    "#2caffe",
+    "#544fc5",
+    "#00e272",
+    "#fe6a35",
+    "#6b8abc",
+    "#d568fb",
+    "#2ee0ca",
+    "#fa4b42",
+    "#feb56a",
+    "#91e8e1"
+  ]
+}, { pageLang: sn, win: Me } = I, { defined: ji, error: Hi, extend: Ne, isNumber: Xi, isObject: Re, isString: $t, merge: rn, objectEach: nn, pad: at, splat: on, timeUnits: ze, ucfirst: an } = G, ln = I.isSafari && Me.Intl && !Me.Intl.DateTimeFormat.prototype.formatRange, hn = (h) => h.main === void 0;
+class cn {
+  /* *
+   *
+   *  Constructors
+   *
+   * */
+  constructor(t, e) {
+    this.options = {
+      timezone: "UTC"
+    }, this.variableTimezone = !1, this.Date = Me.Date, this.update(t), this.lang = e;
+  }
+  /* *
+   *
+   *  Functions
+   *
+   * */
+  /**
+   * Update the Time object with current options. It is called internally on
+   * initializing Highcharts, after running `Highcharts.setOptions` and on
+   * `Chart.update`.
+   *
+   * @private
+   * @function Highcharts.Time#update
+   *
+   * @param {Highcharts.TimeOptions} [options]
+   *
+   */
+  update(t = {}) {
+    this.dTLCache = {}, this.options = t = rn(!0, this.options, t);
+    const { timezoneOffset: e, useUTC: i, locale: s } = t;
+    this.Date = t.Date || Me.Date || Date;
+    let r = t.timezone;
+    ji(i) && (r = i ? "UTC" : void 0), e && e % 60 === 0 && (r = "Etc/GMT" + (e > 0 ? "+" : "") + e / 60), this.variableTimezone = r !== "UTC" && r?.indexOf("Etc/GMT") !== 0, this.timezone = r, this.lang && s && (this.lang.locale = s), ["months", "shortMonths", "weekdays", "shortWeekdays"].forEach((n) => {
+      const o = /months/i.test(n), a = /short/.test(n), l = {
+        timeZone: "UTC"
+      };
+      l[o ? "month" : "weekday"] = a ? "short" : "long", this[n] = (o ? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11] : [3, 4, 5, 6, 7, 8, 9]).map((c) => this.dateFormat(l, (o ? 31 : 1) * 24 * 36e5 * c));
+    });
+  }
+  /**
+   * Get a date in terms of numbers (year, month, day etc) for further
+   * processing. Takes the current `timezone` setting into account. Inverse of
+   * `makeTime` and the native `Date` constructor and `Date.UTC`.
+   *
+   * The date is returned in array format with the following indices:
+   *
+   * 0: year,
+   * 1: month (zero based),
+   * 2: day,
+   * 3: hours,
+   * 4: minutes,
+   * 5: seconds,
+   * 6: milliseconds,
+   * 7: weekday (Sunday as 0)
+   *
+   * @function Highcharts.Time#toParts
+   *
+   * @param {number|Date} [timestamp]
+   *                 The timestamp in milliseconds since January 1st 1970.
+   *                 A Date object is also accepted.
+   *
+   * @return {Array<number>} The date parts in array format.
+   */
+  toParts(t) {
+    const [e, i, s, r, n, o, a] = this.dateTimeFormat({
+      weekday: "narrow",
+      day: "numeric",
+      month: "numeric",
+      year: "numeric",
+      hour: "numeric",
+      minute: "numeric",
+      second: "numeric"
+    }, t, "es").split(/(?:, | |\/|:)/g);
+    return [
+      r,
+      +s - 1,
+      i,
+      n,
+      o,
+      a,
+      // Milliseconds
+      Math.floor(Number(t) || 0) % 1e3,
+      // Spanish weekday index
+      "DLMXJVS".indexOf(e)
+    ].map(Number);
+  }
+  /**
+   * Shorthand to get a cached `Intl.DateTimeFormat` instance.
+   */
+  dateTimeFormat(t, e, i = this.options.locale || sn) {
+    const s = JSON.stringify(t) + i;
+    $t(t) && (t = this.str2dtf(t));
+    let r = this.dTLCache[s];
+    if (!r) {
+      t.timeZone ?? (t.timeZone = this.timezone);
+      try {
+        r = new Intl.DateTimeFormat(i, t);
+      } catch (n) {
+        /Invalid time zone/i.test(n.message) ? (Hi(34), t.timeZone = "UTC", r = new Intl.DateTimeFormat(i, t)) : Hi(n.message, !1);
+      }
+    }
+    return this.dTLCache[s] = r, r?.format(e) || "";
+  }
+  /**
+   * Take a locale-aware string format and return a full DateTimeFormat in
+   * object form.
+   */
+  str2dtf(t, e = {}) {
+    const i = {
+      L: { fractionalSecondDigits: 3 },
+      S: { second: "2-digit" },
+      M: { minute: "numeric" },
+      H: { hour: "2-digit" },
+      k: { hour: "numeric" },
+      E: { weekday: "narrow" },
+      a: { weekday: "short" },
+      A: { weekday: "long" },
+      d: { day: "2-digit" },
+      e: { day: "numeric" },
+      b: { month: "short" },
+      B: { month: "long" },
+      m: { month: "2-digit" },
+      o: { month: "numeric" },
+      y: { year: "2-digit" },
+      Y: { year: "numeric" }
+    };
+    return Object.keys(i).forEach((s) => {
+      t.indexOf(s) !== -1 && Ne(e, i[s]);
+    }), e;
+  }
+  /**
+   * Make a time and returns milliseconds. Similar to `Date.UTC`, but takes
+   * the current `timezone` setting into account.
+   *
+   * @function Highcharts.Time#makeTime
+   *
+   * @param {number} year
+   *        The year
+   *
+   * @param {number} month
+   *        The month. Zero-based, so January is 0.
+   *
+   * @param {number} [date=1]
+   *        The day of the month
+   *
+   * @param {number} [hours=0]
+   *        The hour of the day, 0-23.
+   *
+   * @param {number} [minutes=0]
+   *        The minutes
+   *
+   * @param {number} [seconds=0]
+   *        The seconds
+   *
+   * @return {number}
+   *         The time in milliseconds since January 1st 1970.
+   */
+  makeTime(t, e, i = 1, s = 0, r, n, o) {
+    let a = this.Date.UTC(t, e, i, s, r || 0, n || 0, o || 0);
+    if (this.timezone !== "UTC") {
+      const l = this.getTimezoneOffset(a);
+      if (a += l, // Optimize for speed by limiting the number of calls to
+      // `getTimezoneOffset`. According to
+      // https://en.wikipedia.org/wiki/Daylight_saving_time_by_country,
+      // DST change may only occur in these months.
+      [2, 3, 8, 9, 10, 11].indexOf(e) !== -1 && // DST transitions occur only in the night-time
+      (s < 5 || s > 20)) {
+        const c = this.getTimezoneOffset(a);
+        l !== c ? a += c - l : l - 36e5 === this.getTimezoneOffset(a - 36e5) && !ln && (a -= 36e5);
+      }
+    }
+    return a;
+  }
+  /**
+   * Parse a datetime string. Unless the string contains time zone
+   * information, apply the current `timezone` from options. If the argument
+   * is a number, return it.
+   *
+   * @function Highcharts.Time#parse
+   * @param    {string|number|undefined} s The datetime string to parse
+   * @return   {number|undefined}          Parsed JavaScript timestamp
+   */
+  parse(t) {
+    if (!$t(t))
+      return t ?? void 0;
+    t = t.replace(/\//g, "-").replace(/(GMT|UTC)/, "");
+    const e = t.indexOf("Z") > -1 || /([+-][0-9]{2}):?[0-9]{2}$/.test(t), i = /^[0-9]{4}-[0-9]{2}(-[0-9]{2}|)$/.test(t);
+    !e && !i && (t += "Z");
+    const s = Date.parse(t);
+    if (Xi(s))
+      return s + (!e || i ? this.getTimezoneOffset(s) : 0);
+  }
+  /**
+   * Get the time zone offset based on the current timezone information as
+   * set in the global options.
+   *
+   * @function Highcharts.Time#getTimezoneOffset
+   *
+   * @param {number} timestamp
+   *        The JavaScript timestamp to inspect.
+   *
+   * @return {number}
+   *         The timezone offset in minutes compared to UTC.
+   */
+  getTimezoneOffset(t) {
+    if (this.timezone !== "UTC") {
+      const [e, i, s, r, n = 0] = this.dateTimeFormat({ timeZoneName: "shortOffset" }, t, "en").split(/(GMT|:)/).map(Number), o = -(s + n / 60) * 60 * 6e4;
+      if (Xi(o))
+        return o;
+    }
+    return 0;
+  }
+  /**
+   * Formats a JavaScript date timestamp (milliseconds since January 1 1970)
+   * into a human readable date string.
+   *
+   * The `format` parameter accepts two types of values:
+   * - An object containing settings that are passed directly on to
+   *   [Intl.DateTimeFormat.prototype.format](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/format).
+   * - A format string containing either individual or locale-aware format
+   *   keys. **Individual keys**, for example `%Y-%m-%d`, are listed below.
+   *   **Locale-aware keys** are grouped by square brackets, for example
+   *   `%[Ymd]`. The order of keys within the square bracket doesn't affect
+   *   the output, which is determined by the locale. See example below.
+   *   Internally, the locale-aware format keys are just a shorthand for the
+   *   full object formats, but are particularly practical in
+   *   [templating](https://www.highcharts.com/docs/chart-concepts/templating)
+   *   where full object definitions are not an option.
+   *
+   * The available string format keys are listed below. Additional formats can
+   * be given in the {@link Highcharts.dateFormats} hook.
+   *
+   * Supported format keys:
+   * | Key  | Description                     | Notes on locale-aware format |
+   * -------|----------------------------------------------|-------|
+   * | `%A` | Long weekday, like 'Monday'                  |       |
+   * | `%a` | Short weekday, like 'Mon'                    |       |
+   * | `%E` | Narrow weekday, single character             |       |
+   * | `%d` | Two digit day of the month, 01 to 31         |       |
+   * | `%e` | Day of the month, 1 through 31               |       |
+   * | `%w` | Day of the week, 0 through 6                 | N/A   |
+   * | `%v` | The prefix "week from", read from `lang.weekFrom` | N/A |
+   * | `%b` | Short month, like 'Jan'                      |       |
+   * | `%B` | Long month, like 'January'                   |       |
+   * | `%m` | Two digit month number, 01 through 12        |       |
+   * | `%o` | Month number, 1 through 12                   |       |
+   * | `%y` | Two digits year, like 24 for 2024            |       |
+   * | `%Y` | Four digits year, like 2024                  |       |
+   * | `%H` | Two digits hours in 24h format, 00 through 23 | Depending on the locale, 12h format may be instered. |
+   * | `%k` | Hours in 24h format, 0 through 23            | Depending on the locale, 12h format may be instered. |
+   * | `%I` | Two digits hours in 12h format, 00 through 11 | N/A. The locale determines the hour format. |
+   * | `%l` | Hours in 12h format, 1 through 12            | N/A. The locale determines the hour format. |
+   * | `%M` | Two digits minutes, 00 through 59            |       |
+   * | `%p` | Upper case AM or PM                          | N/A. The locale determines whether to add AM and PM. |
+   * | `%P` | Lower case AM or PM                          | N/A. The locale determines whether to add AM and PM. |
+   * | `%S` | Two digits seconds, 00 through 59            |       |
+   * | `%L` | Milliseconds (naming from Ruby)              |       |
+   *
+   * @example
+   * // Object format, US English
+   * const time1 = new Highcharts.Time({ locale: 'en-US' });
+   * console.log(
+   *     time1.dateFormat({
+   *         day: 'numeric',
+   *         month: 'short',
+   *         year: 'numeric',
+   *         hour: 'numeric',
+   *         minute: 'numeric'
+   *     }, Date.UTC(2024, 11, 31))
+   * ); // => Dec 31, 2024, 12:00 AM
+   *
+   * // Object format, British English
+   * const time2 = new Highcharts.Time({ locale: 'en-GB' });
+   * console.log(
+   *     time2.dateFormat({
+   *         day: 'numeric',
+   *         month: 'short',
+   *         year: 'numeric',
+   *         hour: 'numeric',
+   *         minute: 'numeric'
+   *     }, Date.UTC(2024, 11, 31))
+   * ); // => 31 Dec 2024, 00:00
+   *
+   * // Individual key string replacement
+   * const time3 = new Highcharts.Time();
+   * console.log(
+   *     time3.dateFormat('%Y-%m-%d %H:%M:%S', Date.UTC(2024, 11, 31))
+   * ); // => 2024-12-31 00:00:00
+   *
+   * // Locale-aware keys, US English
+   * const time4 = new Highcharts.Time({ locale: 'en-US' });
+   * console.log(
+   *     time4.dateFormat('%[YebHM]', Date.UTC(2024, 11, 31))
+   * ); // => Dec 31, 2024, 12:00 AM
+   *
+   * // Locale-aware keys, British English
+   * const time5 = new Highcharts.Time({ locale: 'en-GB' });
+   * console.log(
+   *     time5.dateFormat('%[YebHM]', Date.UTC(2024, 11, 31))
+   * ); // => 31 Dec 2024, 00:00
+   *
+   * // Mixed locale-aware and individual keys
+   * console.log(
+   *     time5.dateFormat('%[Yeb], %H:%M', Date.UTC(2024, 11, 31))
+   * ); // => 31 Dec 2024, 00:00
+   *
+   * @function Highcharts.Time#dateFormat
+   *
+   * @param {string|Highcharts.DateTimeFormatOptions} format
+   *        The desired string format where various time representations are
+   *        prefixed with %, or an object representing the locale-aware format
+   *        options.
+   *
+   * @param {number} [timestamp]
+   *        The JavaScript timestamp.
+   *
+   * @param {boolean} [upperCaseFirst=false]
+   *        Upper case first letter in the return.
+   *
+   * @return {string}
+   *         The formatted date.
+   */
+  dateFormat(t, e, i) {
+    const s = this.lang;
+    if (!ji(e) || isNaN(e))
+      return s?.invalidDate || "";
+    if (t = t ?? "%Y-%m-%d %H:%M:%S", $t(t)) {
+      const r = /%\[([a-zA-Z]+)\]/g;
+      let n;
+      for (; n = r.exec(t); )
+        t = t.replace(n[0], this.dateTimeFormat(n[1], e, s?.locale));
+    }
+    if ($t(t) && t.indexOf("%") !== -1) {
+      const r = this, [n, o, a, l, c, f, d, p] = this.toParts(e), u = s?.weekdays || this.weekdays, g = s?.shortWeekdays || this.shortWeekdays, x = s?.months || this.months, m = s?.shortMonths || this.shortMonths, b = Ne({
+        // Day
+        // Short weekday, like 'Mon'
+        a: g ? g[p] : u[p].substr(0, 3),
+        // Long weekday, like 'Monday'
+        A: u[p],
+        // Two digit day of the month, 01 to 31
+        d: at(a),
+        // Day of the month, 1 through 31
+        e: at(a, 2, " "),
+        // Day of the week, 0 through 6
+        w: p,
+        // Week (none implemented)
+        // 'W': weekNumber(),
+        v: s?.weekFrom ?? "",
+        // Month
+        // Short month, like 'Jan'
+        b: m[o],
+        // Long month, like 'January'
+        B: x[o],
+        // Two digit month number, 01 through 12
+        m: at(o + 1),
+        // Month number, 1 through 12 (#8150)
+        o: o + 1,
+        // Year
+        // Two digits year, like 09 for 2009
+        y: n.toString().substr(2, 2),
+        // Four digits year, like 2009
+        Y: n,
+        // Time
+        // Two digits hours in 24h format, 00 through 23
+        H: at(l),
+        // Hours in 24h format, 0 through 23
+        k: l,
+        // Two digits hours in 12h format, 00 through 11
+        I: at(l % 12 || 12),
+        // Hours in 12h format, 1 through 12
+        l: l % 12 || 12,
+        // Two digits minutes, 00 through 59
+        M: at(c),
+        // Upper case AM or PM
+        p: l < 12 ? "AM" : "PM",
+        // Lower case AM or PM
+        P: l < 12 ? "am" : "pm",
+        // Two digits seconds, 00 through 59
+        S: at(f),
+        // Milliseconds (naming from Ruby)
+        L: at(d, 3)
+      }, I.dateFormats);
+      nn(b, function(y, v) {
+        if ($t(t))
+          for (; t.indexOf("%" + v) !== -1; )
+            t = t.replace("%" + v, typeof y == "function" ? y.call(r, e) : y);
+      });
+    } else if (Re(t)) {
+      const r = (this.getTimezoneOffset(e) || 0) / 36e5, n = this.timezone || "Etc/GMT" + (r >= 0 ? "+" : "") + r, { prefix: o = "", suffix: a = "" } = t;
+      t = o + this.dateTimeFormat(Ne({ timeZone: n }, t), e) + a;
+    }
+    return i ? an(t) : t;
+  }
+  /**
+   * Resolve legacy formats of dateTimeLabelFormats (strings and arrays) into
+   * an object.
+   * @private
+   * @param {string|Array<T>|Highcharts.Dictionary<T>} f
+   * General format description
+   * @return {Highcharts.Dictionary<T>}
+   * The object definition
+   */
+  resolveDTLFormat(t) {
+    return Re(t, !0) ? Re(t, !0) && hn(t) ? { main: t } : t : (t = on(t), {
+      main: t[0],
+      from: t[1],
+      to: t[2]
+    });
+  }
+  /**
+   * Get the optimal date format for a point, based on a range.
+   *
+   * @private
+   * @function Highcharts.Time#getDateFormat
+   *
+   * @param {number} range
+   *        The time range
+   *
+   * @param {number} timestamp
+   *        The timestamp of the date
+   *
+   * @param {number} startOfWeek
+   *        An integer representing the first day of the week, where 0 is
+   *        Sunday.
+   *
+   * @param {Highcharts.Dictionary<string>} dateTimeLabelFormats
+   *        A map of time units to formats.
+   *
+   * @return {string}
+   *         The optimal date format for a point.
+   */
+  getDateFormat(t, e, i, s) {
+    const r = this.dateFormat("%m-%d %H:%M:%S.%L", e), n = "01-01 00:00:00.000", o = {
+      millisecond: 15,
+      second: 12,
+      minute: 9,
+      hour: 6,
+      day: 3
+    };
+    let a = "millisecond", l = a;
+    for (a in ze) {
+      if (t && t === ze.week && +this.dateFormat("%w", e) === i && r.substr(6) === n.substr(6)) {
+        a = "week";
+        break;
+      }
+      if (t && ze[a] > t) {
+        a = l;
+        break;
+      }
+      if (o[a] && r.substr(o[a]) !== n.substr(o[a]))
+        break;
+      a !== "week" && (l = a);
+    }
+    return this.resolveDTLFormat(s[a]).main;
+  }
+}
+const { defined: Gi, extend: dn, timeUnits: Y } = G;
+class er extends cn {
+  /**
+   * Return an array with time positions distributed on round time values
+   * right and right after min and max. Used in datetime axes as well as for
+   * grouping data on a datetime axis.
+   *
+   * @function Highcharts.Time#getTimeTicks
+   *
+   * @param {Highcharts.TimeNormalizedObject} normalizedInterval
+   *        The interval in axis values (ms) and the count
+   *
+   * @param {number} [min]
+   *        The minimum in axis values
+   *
+   * @param {number} [max]
+   *        The maximum in axis values
+   *
+   * @param {number} [startOfWeek=1]
+   *
+   * @return {Highcharts.AxisTickPositionsArray}
+   * Time positions
+   */
+  getTimeTicks(t, e, i, s) {
+    const r = this, n = [], o = {}, { count: a = 1, unitRange: l } = t;
+    let [c, f, d, p, u, g] = r.toParts(e), x = (e || 0) % 1e3, m;
+    if (s ?? (s = 1), Gi(e)) {
+      if (x = l >= Y.second ? 0 : (
+        // #3935
+        a * Math.floor(x / a)
+      ), l >= Y.second && (g = l >= Y.minute ? 0 : (
+        // #3935
+        a * Math.floor(g / a)
+      )), l >= Y.minute && (u = l >= Y.hour ? 0 : a * Math.floor(u / a)), l >= Y.hour && (p = l >= Y.day ? 0 : a * Math.floor(p / a)), l >= Y.day && (d = l >= Y.month ? 1 : Math.max(1, a * Math.floor(d / a))), l >= Y.month && (f = l >= Y.year ? 0 : a * Math.floor(f / a)), l >= Y.year && (c -= c % a), l === Y.week) {
+        a && (e = r.makeTime(c, f, d, p, u, g, x));
+        const v = this.dateTimeFormat({
+          timeZone: this.timezone,
+          weekday: "narrow"
+        }, e, "es"), w = "DLMXJVS".indexOf(v);
+        d += -w + s + // We don't want to skip days that are before
+        // startOfWeek (#7051)
+        (w < s ? -7 : 0);
+      }
+      e = r.makeTime(c, f, d, p, u, g, x), r.variableTimezone && Gi(i) && (m = // Long range, assume we're crossing over.
+      i - e > 4 * Y.month || // Short range, check if min and max are in different time
+      // zones.
+      r.getTimezoneOffset(e) !== r.getTimezoneOffset(i));
+      let b = e, y = 1;
+      for (; b < i; )
+        n.push(b), l === Y.year ? b = r.makeTime(c + y * a, 0) : l === Y.month ? b = r.makeTime(c, f + y * a) : m && (l === Y.day || l === Y.week) ? b = r.makeTime(c, f, d + y * a * (l === Y.day ? 1 : 7)) : m && l === Y.hour && a > 1 ? b = r.makeTime(c, f, d, p + y * a) : b += l * a, y++;
+      n.push(b), l <= Y.hour && n.length < 1e4 && n.forEach((v) => {
+        // Speed optimization, no need to run dateFormat unless
+        // we're on a full or half hour
+        v % 18e5 === 0 && // Check for local or global midnight
+        r.dateFormat("%H%M%S%L", v) === "000000000" && (o[v] = "day");
+      });
+    }
+    return n.info = dn(t, {
+      higherRanks: o,
+      totalRange: l * a
+    }), n;
+  }
+}
+const { isTouchDevice: fn } = I, Si = {
+  /**
+   * An array containing the default colors for the chart's series. When
+   * all colors are used, new colors are pulled from the start again.
+   *
+   * Default colors can also be set on a series or series.type basis,
+   * see [column.colors](#plotOptions.column.colors),
+   * [pie.colors](#plotOptions.pie.colors).
+   *
+   * In styled mode, the colors option doesn't exist. Instead, colors
+   * are defined in CSS and applied either through series or point class
+   * names, or through the [chart.colorCount](#chart.colorCount) option.
+   *
+   * @sample {highcharts} highcharts/chart/colors/
+   *         Assign a global color theme
+   * @sample highcharts/members/theme-v10/
+   *         Latest release styled like version 10
+   *
+   * @type    {Array<(Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject)>}
+   * @default [
+   *     "#2caffe",
+   *     "#544fc5",
+   *     "#00e272",
+   *     "#fe6a35",
+   *     "#6b8abc",
+   *     "#d568fb",
+   *     "#2ee0ca",
+   *     "#fa4b42",
+   *     "#feb56a",
+   *     "#91e8e1"
+   * ]
+   */
+  colors: en.colors,
+  /**
+   * Styled mode only. Configuration object for adding SVG definitions for
+   * reusable elements. See [gradients, shadows and
+   * patterns](https://www.highcharts.com/docs/chart-design-and-style/gradients-shadows-and-patterns)
+   * for more information and code examples.
+   *
+   * @type      {*}
+   * @since     5.0.0
+   * @apioption defs
+   */
+  /**
+   * @ignore-option
+   */
+  symbols: ["circle", "diamond", "square", "triangle", "triangle-down"],
+  /**
+   * An object containing language-related strings and settings. A typical
+   * setup uses `Highcharts.setOptions` to make the options apply to all
+   * charts in the same page.
+   *
+   * Some language options, like `months` and `weekdays`, are only used
+   * with non-locale-aware date formats.
+   *
+   * ```js
+   * Highcharts.setOptions({
+   *     lang: {
+   *         locale: 'fr'
+   *     }
+   * });
+   * ```
+   *
+   * @optionparent lang
+   */
+  lang: {
+    weekFrom: "week from",
+    /**
+     * The default chart title.
+     *
+     * @since 12.2.0
+     */
+    chartTitle: "Chart title",
+    /**
+     * The browser locale to use for date and number formatting. The actual
+     * locale used for each chart is determined in three steps:
+     * 1. If this `lang.locale` option is specified, it is used.
+     * 2. Else, look for the closest ancestor HTML element with a `lang`
+     *    attribute, typically the `<html>` element.
+     * 3. If no 'lang' attribute is found, use the default browser locale.
+     *
+     * Use `en-GB`, British English, for approximate consistency with
+     * Highcharts v < 12.
+     *
+     * @sample highcharts/lang/locale/
+     *         Set the locale using the `lang.locale` option
+     * @sample highcharts/lang/locale-attribute/
+     *         Pick up the locale from the HTML `lang` attribute
+     * @sample highcharts/members/highcharts-numberformat
+     *         Arabic locale with digits and dates         *
+     *
+     * @since 12.0.0
+     * @type {string|Array<string>}
+     */
+    locale: void 0,
+    /**
+     * The loading text that appears when the chart is set into the loading
+     * state following a call to `chart.showLoading`.
+     */
+    loading: "Loading...",
+    /**
+     * An array containing the months names. Corresponds to the `%B` format
+     * in `Highcharts.dateFormat()`. Defaults to 'undefined',
+     * meaning the default month names are used according to the
+     * `lang.locale` or browser settings.
+     *
+     * @type    {Array<string>}
+     */
+    months: void 0,
+    /**
+     * [Format string](https://www.highcharts.com/docs/chart-concepts/templating) for the default series name.
+     *
+     * @since 12.2.0
+     */
+    seriesName: "Series {add index 1}",
+    /**
+     * An array containing the months names in abbreviated form. Corresponds
+     * to the `%b` format in `Highcharts.dateFormat()`. Defaults to
+     * 'undefined', meaning the default short month names are used according
+     * to the `lang.locale` or browser settings.
+     *
+     * @type    {Array<string>}
+     */
+    shortMonths: void 0,
+    /**
+     * An array containing the weekday names. Corresponds
+     * to the `%A` format in `Highcharts.dateFormat()`. Defaults to
+     * 'undefined', meaning the default weekday names are used according to
+     * the `lang.locale` or browser settings.
+     *
+     * @type    {Array<string>}
+     */
+    weekdays: void 0,
+    /**
+     * Short week days, starting Sunday. Corresponds to the `%a` format in
+     * `Highcharts.dateFormat()`. Defaults to 'undefined', meaning
+     * the default short weekday names are used according to the
+     * `lang.locale` or browser settings.
+     *
+     * @sample highcharts/lang/shortweekdays/
+     *         Finnish two-letter abbreviations
+     *
+     * @type      {Array<string>}
+     * @since     4.2.4
+     * @apioption lang.shortWeekdays
+     */
+    /**
+     * What to show in a date field for invalid dates. Defaults to an empty
+     * string.
+     *
+     * @type      {string}
+     * @since     4.1.8
+     * @product   highcharts highstock
+     * @apioption lang.invalidDate
+     */
+    /**
+     * The title appearing on hovering the zoom in button. The text itself
+     * defaults to "+" and can be changed in the button options.
+     *
+     * @type      {string}
+     * @default   Zoom in
+     * @product   highmaps
+     * @apioption lang.zoomIn
+     */
+    /**
+     * The title appearing on hovering the zoom out button. The text itself
+     * defaults to "-" and can be changed in the button options.
+     *
+     * @type      {string}
+     * @default   Zoom out
+     * @product   highmaps
+     * @apioption lang.zoomOut
+     */
+    /**
+     * The default decimal point used in the `Highcharts.numberFormat`
+     * method unless otherwise specified in the function arguments. Defaults
+     * to the locale decimal point as determined by `lang.locale`.
+     *
+     * @type      {string}
+     * @default   undefined
+     * @since     1.2.2
+     * @apioption lang.decimalPoint
+     */
+    /**
+     * [Metric prefixes](https://en.wikipedia.org/wiki/Metric_prefix) used
+     * to shorten high numbers in axis labels. Replacing any of the
+     * positions with `null` causes the full number to be written. Setting
+     * `numericSymbols` to `undefined` disables shortening altogether.
+     *
+     * @sample {highcharts} highcharts/lang/numericsymbols/
+     *         Replacing the symbols with text
+     * @sample {highstock} highcharts/lang/numericsymbols/
+     *         Replacing the symbols with text
+     *
+     * @type    {Array<string>}
+     * @default ["k", "M", "G", "T", "P", "E"]
+     * @since   2.3.0
+     */
+    numericSymbols: ["k", "M", "G", "T", "P", "E"],
+    /**
+     * The default name for a pie slice (point).
+     * @since 12.2.0
+     */
+    pieSliceName: "Slice",
+    /**
+     * The magnitude of [numericSymbols](#lang.numericSymbol) replacements.
+     * Use 10000 for Japanese, Korean and various Chinese locales, which
+     * use symbols for 10^4, 10^8 and 10^12.
+     *
+     * @sample highcharts/lang/numericsymbolmagnitude/
+     *         10000 magnitude for Japanese
+     *
+     * @type      {number}
+     * @default   1000
+     * @since     5.0.3
+     * @apioption lang.numericSymbolMagnitude
+     */
+    /**
+     * The default thousands separator used in the `Highcharts.numberFormat`
+     * method unless otherwise specified in the function arguments. Defaults
+     * to the locale thousands separator as determined by `lang.locale`.
+     *
+     * @type      {string}
+     * @default   undefined
+     * @since     1.2.2
+     * @apioption lang.thousandsSep
+     */
+    /**
+     * The text for the label appearing when a chart is zoomed.
+     *
+     * @since 1.2.4
+     */
+    resetZoom: "Reset zoom",
+    /**
+     * The tooltip title for the label appearing when a chart is zoomed.
+     *
+     * @since 1.2.4
+     */
+    /**
+     * The default title of the Y axis
+     *
+     * @since 12.2.0
+     */
+    yAxisTitle: "Values",
+    resetZoomTitle: "Reset zoom level 1:1"
+  },
+  /**
+   * Global options that don't apply to each chart. These options must be set
+   * using the `Highcharts.setOptions` method.
+   *
+   * ```js
+   * Highcharts.setOptions({
+   *     global: {
+   *         buttonTheme: {
+   *             fill: '#d0d0d0'
+   *         }
+   *     }
+   * });
+   * ```
+   */
+  global: {
+    /**
+     * General theme for buttons. This applies to the zoom button, exporting
+     * context menu, map navigation, range selector buttons and custom
+     * buttons generated using the `SVGRenderer.button` function. However,
+     * each of these may be overridden with more specific options.
+     *
+     * @sample highcharts/global/buttontheme
+     *         General button theme
+     * @since 11.4.2
+     */
+    buttonTheme: {
+      /**
+       * The fill color for buttons
+       */
+      fill: "#f7f7f7",
+      /**
+       * The padding of buttons
+       */
+      padding: 8,
+      /**
+       * The border radius for buttons
+       */
+      r: 2,
+      /**
+       * The stroke color for buttons
+       */
+      stroke: "#cccccc",
+      /**
+       * The stroke width for buttons
+       */
+      "stroke-width": 1,
+      /**
+       * CSS styling for the buttons' text
+       */
+      style: {
+        color: "#333333",
+        cursor: "pointer",
+        fontSize: "0.8em",
+        fontWeight: "normal"
+      },
+      /**
+       * State overrides for the buttons
+       */
+      states: {
+        /**
+         * Hover state overrides for the buttons are applied in addition
+         * to the normal state options
+         */
+        hover: {
+          fill: "#e6e6e6"
+          /* Palette.neutralColor10 */
+        },
+        /**
+         * Select state overrides for the buttons are applied in
+         * addition to the normal state options
+         */
+        select: {
+          fill: "#e6e9ff",
+          style: {
+            color: "#000000",
+            fontWeight: "bold"
+          }
+        },
+        /**
+         * Disabled state overrides for the buttons are applied in
+         * addition to the normal state options
+         */
+        disabled: {
+          /**
+           * Disabled state CSS style overrides for the buttons' text
+           */
+          style: {
+            color: "#cccccc"
+            /* Palette.neutralColor20 */
+          }
+        }
+      }
+    }
+  },
+  /**
+   * Time options that can apply globally or to individual charts. These
+   * settings affect how `datetime` axes are laid out, how tooltips are
+   * formatted, how series
+   * [pointIntervalUnit](#plotOptions.series.pointIntervalUnit) works and how
+   * the Highcharts Stock range selector handles time.
+   *
+   * The common use case is that all charts in the same Highcharts object
+   * share the same time settings, in which case the global settings are set
+   * using `setOptions`.
+   *
+   * ```js
+   * // Apply time settings globally
+   * Highcharts.setOptions({
+   *     time: {
+   *         timezone: 'Europe/London'
+   *     }
+   * });
+   * // Apply time settings by instance
+   * const chart = Highcharts.chart('container', {
+   *     time: {
+   *         timezone: 'America/New_York'
+   *     },
+   *     series: [{
+   *         data: [1, 4, 3, 5]
+   *     }]
+   * });
+   *
+   * // Use the Time object
+   * console.log(
+   *        'Current time in New York',
+   *        chart.time.dateFormat('%Y-%m-%d %H:%M:%S', Date.now())
+   * );
+   * ```
+   *
+   * Since v6.0.5, the time options were moved from the `global` object to the
+   * `time` object, and time options can be set on each individual chart.
+   *
+   * @sample {highcharts|highstock}
+   *         highcharts/time/timezone/
+   *         Set the timezone globally
+   * @sample {highcharts}
+   *         highcharts/time/individual/
+   *         Set the timezone per chart instance
+   * @sample {highstock}
+   *         stock/time/individual/
+   *         Set the timezone per chart instance
+   *
+   * @since     6.0.5
+   * @optionparent time
+   */
+  time: {
+    /**
+     * A custom `Date` class for advanced date handling. For example,
+     * [JDate](https://github.com/tahajahangir/jdate) can be hooked in to
+     * handle Jalali dates.
+     *
+     * @type      {*}
+     * @since     4.0.4
+     * @product   highcharts highstock gantt
+     */
+    Date: void 0,
+    /**
+     * A named time zone. Supported time zone names rely on the browser
+     * implementations, as described in the [mdn
+     * docs](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/DateTimeFormat#timezone).
+     * If the given time zone is not recognized by the browser, Highcharts
+     * provides a warning and falls back to returning a 0 offset,
+     * corresponding to the UTC time zone.
+     *
+     * The time zone affects axis scaling, tickmark placement and
+     * time display in `Highcharts.dateFormat`.
+     *
+     * Setting `timezone` to `undefined` falls back to the default browser
+     * timezone setting.
+     *
+     * Until v11.2.0, this option depended on moment.js.
+     *
+     * @sample {highcharts|highstock} highcharts/time/timezone/ Europe/Oslo
+     *
+     * @type      {string}
+     * @since     5.0.7
+     * @product   highcharts highstock gantt
+     */
+    timezone: "UTC",
+    /**
+     * The timezone offset in minutes. Positive values are west, negative
+     * values are east of UTC, as in the ECMAScript
+     * [getTimezoneOffset](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/getTimezoneOffset)
+     * method. Use this to display UTC based data in a predefined time zone.
+     *
+     * This option is deprecated as of v11.4.1 and will be removed in a
+     * future release. Use the [time.timezone](#time.timezone) option
+     * instead.
+     *
+     * @see [time.getTimezoneOffset](#time.getTimezoneOffset)
+     *
+     * @sample {highcharts|highstock} highcharts/time/timezoneoffset/
+     *         Timezone offset
+     *
+     * @since     3.0.8
+     * @deprecated 11.4.2
+     * @product   highcharts highstock gantt
+     */
+    timezoneOffset: 0,
+    /**
+     * Whether to use UTC time for axis scaling, tickmark placement and
+     * time display in `Highcharts.dateFormat`. Advantages of using UTC
+     * is that the time displays equally regardless of the user agent's
+     * time zone settings. Local time can be used when the data is loaded
+     * in real time or when correct Daylight Saving Time transitions are
+     * required.
+     *
+     * Setting `useUTC` to true is equivalent to setting `time.timezone` to
+     * `"UTC"`. Setting `useUTC` to false is equivalent to setting
+     * `time.timezone` to `undefined`.
+     *
+     * @see [time.timezone](#timezone)
+     *
+     * @sample {highcharts} highcharts/time/useutc-true/
+     *         True by default
+     * @sample {highcharts} highcharts/time/useutc-false/
+     *         False
+     *
+     * @deprecated
+     */
+    useUTC: void 0
+  },
+  chart: tn,
+  /**
+   * The chart's main title.
+   *
+   * @sample {highmaps} maps/title/title/
+   *         Title options demonstrated
+   * @sample {highcharts} highcharts/title/align-auto/
+   *         Default title alignment
+   */
+  title: {
+    /**
+     * When the title is floating, the plot area will not move to make space
+     * for it.
+     *
+     * @sample {highcharts} highcharts/chart/zoomtype-none/
+     *         False by default
+     * @sample {highcharts} highcharts/title/floating/
+     *         True - title on top of the plot area
+     * @sample {highstock} stock/chart/title-floating/
+     *         True - title on top of the plot area
+     *
+     * @type      {boolean}
+     * @default   false
+     * @since     2.1
+     * @apioption title.floating
+     */
+    /**
+     * Whether to
+     * [use HTML](https://www.highcharts.com/docs/chart-concepts/labels-and-string-formatting#html)
+     * to render the text.
+     *
+     * @type      {boolean}
+     * @default   false
+     * @apioption title.useHTML
+     */
+    /**
+     * The vertical alignment of the title. Can be one of `"top"`,
+     * `"middle"` and `"bottom"`. When a value is given, the title behaves
+     * as if [floating](#title.floating) were `true`.
+     *
+     * @sample {highcharts} highcharts/title/verticalalign/
+     *         Chart title in bottom right corner
+     * @sample {highstock} stock/chart/title-verticalalign/
+     *         Chart title in bottom right corner
+     *
+     * @type      {Highcharts.VerticalAlignValue}
+     * @since     2.1
+     * @apioption title.verticalAlign
+     */
+    /**
+     * The x position of the title relative to the alignment within
+     * `chart.spacingLeft` and `chart.spacingRight`.
+     *
+     * @sample {highcharts} highcharts/title/align/
+     *         Aligned to the plot area (x = 70px = margin left - spacing
+     *         left)
+     * @sample {highstock} stock/chart/title-align/
+     *         Aligned to the plot area (x = 50px = margin left - spacing
+     *         left)
+     *
+     * @type      {number}
+     * @default   0
+     * @since     2.0
+     * @apioption title.x
+     */
+    /**
+     * The y position of the title relative to the alignment within
+     * [chart.spacingTop](#chart.spacingTop) and [chart.spacingBottom](
+     * #chart.spacingBottom). By default it depends on the font size.
+     *
+     * @sample {highcharts} highcharts/title/y/
+     *         Title inside the plot area
+     * @sample {highstock} stock/chart/title-verticalalign/
+     *         Chart title in bottom right corner
+     *
+     * @type      {number}
+     * @since     2.0
+     * @apioption title.y
+     */
+    /**
+     * CSS styles for the title. Use this for font styling, but use `align`,
+     * `x` and `y` for text alignment.
+     *
+     * Note that the default [title.minScale](#title.minScale) option also
+     * affects the rendered font size. In order to keep the font size fixed
+     * regardless of title length, set `minScale` to 1.
+     *
+     * In styled mode, the title style is given in the `.highcharts-title`
+     * class.
+     *
+     * @sample {highcharts} highcharts/title/style/
+     *         Custom color and weight
+     * @sample {highstock} stock/chart/title-style/
+     *         Custom color and weight
+     * @sample highcharts/css/titles/
+     *         Styled mode
+     *
+     * @type      {Highcharts.CSSObject}
+     * @default   {highcharts|highmaps} { "color": "#333333", "fontSize": "18px" }
+     * @default   {highstock} { "color": "#333333", "fontSize": "16px" }
+     */
+    style: {
+      color: "#333333",
+      fontWeight: "bold"
+    },
+    /**
+     * The title of the chart. To disable the title, set the `text` to
+     * `undefined`.
+     *
+     * @sample {highcharts} highcharts/title/text/
+     *         Custom title
+     * @sample {highstock} stock/chart/title-text/
+     *         Custom title
+     *
+     * @default {highcharts|highmaps} Chart title
+     * @default {highstock} undefined
+     */
+    text: "Chart title",
+    /**
+     * The horizontal alignment of the title. Can be one of "left", "center"
+     * and "right".
+     *
+     * Since v12 it defaults to `undefined`, meaning the alignment is
+     * computed for best fit. If the text fits in one line, it aligned to
+     * the center, but if it is wrapped into multiple lines, it is aligned
+     * to the left.
+     *
+     * @sample {highcharts} highcharts/title/align-auto/
+     *         Default alignment, dynamic
+     * @sample {highcharts} highcharts/title/align/
+     *         Aligned to the plot area (x = 70px = margin left - spacing
+     *         left)
+     * @sample {highstock} stock/chart/title-align/
+     *         Aligned to the plot area (x = 50px = margin left - spacing
+     *         left)
+     *
+     * @type      {Highcharts.AlignValue}
+     * @default   undefined
+     * @since     2.0
+     * @apioption title.align
+     */
+    /**
+     * The margin between the title and the plot area, or if a subtitle
+     * is present, the margin between the subtitle and the plot area.
+     *
+     * @sample {highcharts} highcharts/title/margin-50/
+     *         A chart title margin of 50
+     * @sample {highcharts} highcharts/title/margin-subtitle/
+     *         The same margin applied with a subtitle
+     * @sample {highstock} stock/chart/title-margin/
+     *         A chart title margin of 50
+     *
+     * @since 2.1
+     */
+    margin: 15,
+    /**
+     * When the title is too wide to fit in the chart, the default behavior
+     * is to scale it down to fit, or apply word wrap if it is scaled down
+     * to `minScale` and still doesn't fit.
+     *
+     * The default value reflects the scale, when using default font sizes,
+     * when the title font size matches that of the subtitle. The title
+     * still stands out as it is bold by default.
+     *
+     * Set `minScale` to 1 to avoid downscaling.
+     *
+     * @sample {highcharts} highcharts/title/align-auto/
+     *         Downscaling demonstrated
+     *
+     * @since 12.0.0
+     */
+    minScale: 0.67
+  },
+  /**
+   * The chart's subtitle. This can be used both to display a subtitle below
+   * the main title, and to display random text anywhere in the chart. The
+   * subtitle can be updated after chart initialization through the
+   * `Chart.setTitle` method.
+   *
+   * @sample {highcharts} highcharts/title/align-auto/
+   *         Default title alignment
+   * @sample {highmaps} maps/title/subtitle/
+   *         Subtitle options demonstrated
+   */
+  subtitle: {
+    /**
+     * The horizontal alignment of the subtitle. Can be one of "left",
+     * "center" and "right". Since v12, it defaults to `undefined`, meaning
+     * the actual alignment is inherited from the alignment of the main
+     * title.
+     *
+     * @sample {highcharts} highcharts/title/align-auto/
+     *         Default title and subtitle alignment, dynamic
+     * @sample {highcharts} highcharts/subtitle/align/
+     *         Footnote at right of plot area
+     * @sample {highstock} stock/chart/subtitle-footnote
+     *         Footnote at bottom right of plot area
+     *
+     * @type  {Highcharts.AlignValue}
+     * @default undefined
+     * @since 2.0
+     * @apioption subtitle.align
+     */
+    /**
+     * When the subtitle is floating, the plot area will not move to make
+     * space for it.
+     *
+     * @sample {highcharts} highcharts/subtitle/floating/
+     *         Floating title and subtitle
+     * @sample {highstock} stock/chart/subtitle-footnote
+     *         Footnote floating at bottom right of plot area
+     *
+     * @type      {boolean}
+     * @default   false
+     * @since     2.1
+     * @apioption subtitle.floating
+     */
+    /**
+     * CSS styles for the title.
+     *
+     * In styled mode, the subtitle style is given in the
+     * `.highcharts-subtitle` class.
+     *
+     * @sample {highcharts} highcharts/subtitle/style/
+     *         Custom color and weight
+     * @sample {highcharts} highcharts/css/titles/
+     *         Styled mode
+     * @sample {highstock} stock/chart/subtitle-style
+     *         Custom color and weight
+     * @sample {highstock} highcharts/css/titles/
+     *         Styled mode
+     * @sample {highmaps} highcharts/css/titles/
+     *         Styled mode
+     *
+     * @type      {Highcharts.CSSObject}
+     * @default   {"color": "#666666"}
+     * @apioption subtitle.style
+     */
+    /**
+     * Whether to
+     * [use HTML](https://www.highcharts.com/docs/chart-concepts/labels-and-string-formatting#html)
+     * to render the text.
+     *
+     * @type      {boolean}
+     * @default   false
+     * @apioption subtitle.useHTML
+     */
+    /**
+     * The vertical alignment of the title. Can be one of `"top"`,
+     * `"middle"` and `"bottom"`. When middle, the subtitle behaves as
+     * floating.
+     *
+     * @sample {highcharts} highcharts/subtitle/verticalalign/
+     *         Footnote at the bottom right of plot area
+     * @sample {highstock} stock/chart/subtitle-footnote
+     *         Footnote at the bottom right of plot area
+     *
+     * @type      {Highcharts.VerticalAlignValue}
+     * @since     2.1
+     * @apioption subtitle.verticalAlign
+     */
+    /**
+     * The x position of the subtitle relative to the alignment within
+     * `chart.spacingLeft` and `chart.spacingRight`.
+     *
+     * @sample {highcharts} highcharts/subtitle/align/
+     *         Footnote at right of plot area
+     * @sample {highstock} stock/chart/subtitle-footnote
+     *         Footnote at the bottom right of plot area
+     *
+     * @type      {number}
+     * @default   0
+     * @since     2.0
+     * @apioption subtitle.x
+     */
+    /**
+     * The y position of the subtitle relative to the alignment within
+     * `chart.spacingTop` and `chart.spacingBottom`. By default the subtitle
+     * is laid out below the title unless the title is floating.
+     *
+     * @sample {highcharts} highcharts/subtitle/verticalalign/
+     *         Footnote at the bottom right of plot area
+     * @sample {highstock} stock/chart/subtitle-footnote
+     *         Footnote at the bottom right of plot area
+     *
+     * @type      {number}
+     * @since     2.0
+     * @apioption subtitle.y
+     */
+    /**
+     * CSS styles for the title.
+     *
+     * In styled mode, the subtitle style is given in the
+     * `.highcharts-subtitle` class.
+     *
+     * @sample {highcharts} highcharts/subtitle/style/
+     *         Custom color and weight
+     * @sample {highcharts} highcharts/css/titles/
+     *         Styled mode
+     * @sample {highstock} stock/chart/subtitle-style
+     *         Custom color and weight
+     * @sample {highstock} highcharts/css/titles/
+     *         Styled mode
+     * @sample {highmaps} highcharts/css/titles/
+     *         Styled mode
+     *
+     * @type      {Highcharts.CSSObject}
+     * @default   {"color": "#666666"}
+     */
+    style: {
+      color: "#666666",
+      /**
+       * @type {number|string}
+       */
+      fontSize: "0.8em"
+    },
+    /**
+     * The subtitle of the chart.
+     *
+     * @sample {highcharts|highstock} highcharts/subtitle/text/
+     *         Custom subtitle
+     * @sample {highcharts|highstock} highcharts/subtitle/text-formatted/
+     *         Formatted and linked text.
+     */
+    text: ""
+  },
+  /**
+   * The chart's caption, which will render below the chart and will be part
+   * of exported charts. The caption can be updated after chart initialization
+   * through the `Chart.update` or `Chart.caption.update` methods.
+   *
+   * @sample highcharts/caption/text/
+   *         A chart with a caption
+   * @since  7.2.0
+   */
+  caption: {
+    /**
+     * When the caption is floating, the plot area will not move to make
+     * space for it.
+     *
+     * @type      {boolean}
+     * @default   false
+     * @apioption caption.floating
+     */
+    /**
+     * The margin between the caption and the plot area.
+     */
+    margin: 15,
+    /**
+     * Whether to
+     * [use HTML](https://www.highcharts.com/docs/chart-concepts/labels-and-string-formatting#html)
+     * to render the text.
+     *
+     * @type      {boolean}
+     * @default   false
+     * @apioption caption.useHTML
+     */
+    /**
+     * The x position of the caption relative to the alignment within
+     * `chart.spacingLeft` and `chart.spacingRight`.
+     *
+     * @type      {number}
+     * @default   0
+     * @apioption caption.x
+     */
+    /**
+     * The y position of the caption relative to the alignment within
+     * `chart.spacingTop` and `chart.spacingBottom`.
+     *
+     * @type      {number}
+     * @apioption caption.y
+     */
+    /**
+     * CSS styles for the caption.
+     *
+     * In styled mode, the caption style is given in the
+     * `.highcharts-caption` class.
+     *
+     * @sample {highcharts} highcharts/css/titles/
+     *         Styled mode
+     *
+     * @type      {Highcharts.CSSObject}
+     * @default   {"color": "#666666"}
+     */
+    style: {
+      color: "#666666",
+      /**
+       * @type {number|string}
+       */
+      fontSize: "0.8em"
+    },
+    /**
+     * The caption text of the chart.
+     *
+     * @sample {highcharts} highcharts/caption/text/
+     *         Custom caption
+     */
+    text: "",
+    /**
+     * The horizontal alignment of the caption. Can be one of "left",
+     *  "center" and "right".
+     *
+     * @type  {Highcharts.AlignValue}
+     */
+    align: "left",
+    /**
+     * The vertical alignment of the caption. Can be one of `"top"`,
+     * `"middle"` and `"bottom"`. When middle, the caption behaves as
+     * floating.
+     *
+     * @type      {Highcharts.VerticalAlignValue}
+     */
+    verticalAlign: "bottom"
+  },
+  /**
+   * The plotOptions is a wrapper object for config objects for each series
+   * type. The config objects for each series can also be overridden for
+   * each series item as given in the series array.
+   *
+   * Configuration options for the series are given in three levels. Options
+   * for all series in a chart are given in the [plotOptions.series](
+   * #plotOptions.series) object. Then options for all series of a specific
+   * type are given in the plotOptions of that type, for example
+   * `plotOptions.line`. Next, options for one single series are given in
+   * [the series array](#series).
+   */
+  plotOptions: {},
+  /**
+   * The legend is a box containing a symbol and name for each series
+   * item or point item in the chart. Each series (or points in case
+   * of pie charts) is represented by a symbol and its name in the legend.
+   *
+   * It is possible to override the symbol creator function and create
+   * [custom legend symbols](https://jsfiddle.net/gh/get/library/pure/highcharts/highcharts/tree/master/samples/highcharts/studies/legend-custom-symbol/).
+   *
+   * @productdesc {highmaps}
+   * A Highmaps legend by default contains one legend item per series, but if
+   * a `colorAxis` is defined, the axis will be displayed in the legend.
+   * Either as a gradient, or as multiple legend items for `dataClasses`.
+   */
+  legend: {
+    /**
+     * The background color of the legend.
+     *
+     * @see In styled mode, the legend background fill can be applied with
+     *      the `.highcharts-legend-box` class.
+     *
+     * @sample {highcharts} highcharts/legend/backgroundcolor/
+     *         Yellowish background
+     * @sample {highstock} stock/legend/align/
+     *         Various legend options
+     * @sample {highmaps} maps/legend/border-background/
+     *         Border and background options
+     *
+     * @type      {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
+     * @apioption legend.backgroundColor
+     */
+    /**
+     * The width of the drawn border around the legend.
+     *
+     * @see In styled mode, the legend border stroke width can be applied
+     *      with the `.highcharts-legend-box` class.
+     *
+     * @sample {highcharts} highcharts/legend/borderwidth/
+     *         2px border width
+     * @sample {highstock} stock/legend/align/
+     *         Various legend options
+     * @sample {highmaps} maps/legend/border-background/
+     *         Border and background options
+     *
+     * @type      {number}
+     * @default   0
+     * @apioption legend.borderWidth
+     */
+    /**
+     * Enable or disable the legend. There is also a series-specific option,
+     * [showInLegend](#plotOptions.series.showInLegend), that can hide the
+     * series from the legend. In some series types this is `false` by
+     * default, so it must set to `true` in order to show the legend for the
+     * series.
+     *
+     * @sample {highcharts} highcharts/legend/enabled-false/ Legend disabled
+     * @sample {highstock} stock/legend/align/ Various legend options
+     * @sample {highmaps} maps/legend/enabled-false/ Legend disabled
+     *
+     * @default {highstock} false
+     * @default {highmaps} true
+     * @default {gantt} false
+     */
+    enabled: !0,
+    /**
+     * The horizontal alignment of the legend box within the chart area.
+     * Valid values are `left`, `center` and `right`.
+     *
+     * In the case that the legend is aligned in a corner position, the
+     * `layout` option will determine whether to place it above/below
+     * or on the side of the plot area.
+     *
+     * @sample {highcharts} highcharts/legend/align/
+     *         Legend at the right of the chart
+     * @sample {highstock} stock/legend/align/
+     *         Various legend options
+     * @sample {highmaps} maps/legend/alignment/
+     *         Legend alignment
+     *
+     * @type  {Highcharts.AlignValue}
+     * @since 2.0
+     */
+    align: "center",
+    /**
+     * If the [layout](legend.layout) is `horizontal` and the legend items
+     * span over two lines or more, whether to align the items into vertical
+     * columns. Setting this to `false` makes room for more items, but will
+     * look more messy.
+     *
+     * @since 6.1.0
+     */
+    alignColumns: !0,
+    /**
+     * A CSS class name to apply to the legend group.
+     */
+    className: "highcharts-no-tooltip",
+    /**
+     * General event handlers for the legend. These event hooks can
+     * also be attached to the legend at run time using the
+     * `Highcharts.addEvent` function.
+     *
+     * @declare Highcharts.LegendEventsOptionsObject
+     *
+     * @private
+     */
+    events: {},
+    /**
+     * Fires when the legend item belonging to the series is clicked. One
+     * parameter, `event`, is passed to the function. The default action
+     * is to toggle the visibility of the series, point or data class. This
+     * can be prevented by returning `false` or calling
+     * `event.preventDefault()`.
+     *
+     * @sample {highcharts} highcharts/legend/itemclick/
+     *         Confirm hiding and showing
+     * @sample {highcharts} highcharts/legend/pie-legend-itemclick/
+     *         Confirm toggle visibility of pie slices
+     *
+     * @type      {Highcharts.LegendItemClickCallbackFunction}
+     * @context   Highcharts.Legend
+     * @apioption legend.events.itemClick
+     */
+    /**
+     * When the legend is floating, the plot area ignores it and is allowed
+     * to be placed below it.
+     *
+     * @sample {highcharts} highcharts/legend/floating-false/
+     *         False by default
+     * @sample {highcharts} highcharts/legend/floating-true/
+     *         True
+     * @sample {highmaps} maps/legend/alignment/
+     *         Floating legend
+     *
+     * @type      {boolean}
+     * @default   false
+     * @since     2.1
+     * @apioption legend.floating
+     */
+    /**
+     * The layout of the legend items. Can be one of `horizontal` or
+     * `vertical` or `proximate`. When `proximate`, the legend items will be
+     * placed as close as possible to the graphs they're representing,
+     * except in inverted charts or when the legend position doesn't allow
+     * it.
+     *
+     * @sample {highcharts} highcharts/legend/layout-horizontal/
+     *         Horizontal by default
+     * @sample {highcharts} highcharts/legend/layout-vertical/
+     *         Vertical
+     * @sample highcharts/legend/layout-proximate
+     *         Labels proximate to the data
+     * @sample {highstock} stock/legend/layout-horizontal/
+     *         Horizontal by default
+     * @sample {highmaps} maps/legend/padding-itemmargin/
+     *         Vertical with data classes
+     * @sample {highmaps} maps/legend/layout-vertical/
+     *         Vertical with color axis gradient
+     *
+     * @validvalue ["horizontal", "vertical", "proximate"]
+     */
+    layout: "horizontal",
+    /**
+     * In a legend with horizontal layout, the itemDistance defines the
+     * pixel distance between each item.
+     *
+     * @sample {highcharts} highcharts/legend/layout-horizontal/
+     *         50px item distance
+     * @sample {highstock} highcharts/legend/layout-horizontal/
+     *         50px item distance
+     *
+     * @type      {number}
+     * @default   {highcharts} 20
+     * @default   {highstock} 20
+     * @default   {highmaps} 8
+     * @since     3.0.3
+     * @apioption legend.itemDistance
+     */
+    /**
+     * The pixel bottom margin for each legend item.
+     *
+     * @sample {highcharts|highstock} highcharts/legend/padding-itemmargin/
+     *         Padding and item margins demonstrated
+     * @sample {highmaps} maps/legend/padding-itemmargin/
+     *         Padding and item margins demonstrated
+     *
+     * @since     2.2.0
+     */
+    itemMarginBottom: 2,
+    /**
+     * The pixel top margin for each legend item.
+     *
+     * @sample {highcharts|highstock} highcharts/legend/padding-itemmargin/
+     *         Padding and item margins demonstrated
+     * @sample {highmaps} maps/legend/padding-itemmargin/
+     *         Padding and item margins demonstrated
+     *
+     * @since     2.2.0
+     */
+    itemMarginTop: 2,
+    /**
+     * The width for each legend item. By default the items are laid out
+     * successively. In a [horizontal layout](legend.layout), if the items
+     * are laid out across two rows or more, they will be vertically aligned
+     * depending on the [legend.alignColumns](legend.alignColumns) option.
+     *
+     * @sample {highcharts} highcharts/legend/itemwidth-default/
+     *         Undefined by default
+     * @sample {highcharts} highcharts/legend/itemwidth-80/
+     *         80 for aligned legend items
+     *
+     * @type      {number}
+     * @since     2.0
+     * @apioption legend.itemWidth
+     */
+    /**
+     * A [format string](https://www.highcharts.com/docs/chart-concepts/labels-and-string-formatting)
+     * for each legend label. Available variables relates to properties on
+     * the series, or the point in case of pies.
+     *
+     * @type      {string}
+     * @default   {name}
+     * @since     1.3
+     * @apioption legend.labelFormat
+     */
+    /* eslint-disable valid-jsdoc */
+    /**
+     * Callback function to format each of the series' labels. The `this`
+     * keyword refers to the series object, or the point object in case of
+     * pie charts. By default the series or point name is printed.
+     *
+     * @productdesc {highmaps}
+     * In Highmaps the context can also be a data class in case of a
+     * `colorAxis`.
+     *
+     * @sample {highcharts} highcharts/legend/labelformatter/
+     *         Add text
+     * @sample {highmaps} maps/legend/labelformatter/
+     *         Data classes with label formatter
+     *
+     * @type {Highcharts.FormatterCallbackFunction<Point|Series>}
+     */
+    labelFormatter: function() {
+      return this.name;
+    },
+    /**
+     * Line height for the legend items. Deprecated as of 2.1\. Instead,
+     * the line height for each item can be set using
+     * `itemStyle.lineHeight`, and the padding between items using
+     * `itemMarginTop` and `itemMarginBottom`.
+     *
+     * @sample {highcharts} highcharts/legend/lineheight/
+     *         Setting padding
+     *
+     * @deprecated
+     *
+     * @type      {number}
+     * @default   16
+     * @since     2.0
+     * @product   highcharts gantt
+     * @apioption legend.lineHeight
+     */
+    /**
+     * If the plot area sized is calculated automatically and the legend is
+     * not floating, the legend margin is the space between the legend and
+     * the axis labels or plot area.
+     *
+     * @sample {highcharts} highcharts/legend/margin-default/
+     *         12 pixels by default
+     * @sample {highcharts} highcharts/legend/margin-30/
+     *         30 pixels
+     *
+     * @type      {number}
+     * @default   12
+     * @since     2.1
+     * @apioption legend.margin
+     */
+    /**
+     * Maximum pixel height for the legend. When the maximum height is
+     * extended, navigation will show.
+     *
+     * @type      {number}
+     * @since     2.3.0
+     * @apioption legend.maxHeight
+     */
+    /**
+     * The color of the drawn border around the legend.
+     *
+     * @see In styled mode, the legend border stroke can be applied with the
+     *      `.highcharts-legend-box` class.
+     *
+     * @sample {highcharts} highcharts/legend/bordercolor/
+     *         Brown border
+     * @sample {highstock} stock/legend/align/
+     *         Various legend options
+     * @sample {highmaps} maps/legend/border-background/
+     *         Border and background options
+     *
+     * @type {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
+     */
+    borderColor: "#999999",
+    /**
+     * The border corner radius of the legend.
+     *
+     * @sample {highcharts} highcharts/legend/borderradius-default/
+     *         Square by default
+     * @sample {highcharts} highcharts/legend/borderradius-round/
+     *         5px rounded
+     * @sample {highmaps} maps/legend/border-background/
+     *         Border and background options
+     */
+    borderRadius: 0,
+    /**
+     * Options for the paging or navigation appearing when the legend is
+     * overflown. Navigation works well on screen, but not in static
+     * exported images. One way of working around that is to
+     * [increase the chart height in
+     * export](https://jsfiddle.net/gh/get/library/pure/highcharts/highcharts/tree/master/samples/highcharts/legend/navigation-enabled-false/).
+     *
+     * @sample highcharts/legend/scrollable-vertical/
+     *         Legend with vertical scrollable extension
+     * @sample highcharts/legend/scrollable-horizontal/
+     *         Legend with horizontal scrollable extension
+     *
+     */
+    navigation: {
+      /**
+       * How to animate the pages when navigating up or down. A value of
+       * `true` applies the default navigation given in the
+       * `chart.animation` option. Additional options can be given as an
+       * object containing values for easing and duration.
+       *
+       * @sample {highcharts} highcharts/legend/navigation/
+       *         Legend page navigation demonstrated
+       * @sample {highstock} highcharts/legend/navigation/
+       *         Legend page navigation demonstrated
+       *
+       * @type      {boolean|Partial<Highcharts.AnimationOptionsObject>}
+       * @default   true
+       * @since     2.2.4
+       * @apioption legend.navigation.animation
+       */
+      /**
+       * The pixel size of the up and down arrows in the legend paging
+       * navigation.
+       *
+       * @sample {highcharts} highcharts/legend/navigation/
+       *         Legend page navigation demonstrated
+       * @sample {highstock} highcharts/legend/navigation/
+       *         Legend page navigation demonstrated
+       *
+       * @type      {number}
+       * @default   12
+       * @since     2.2.4
+       * @apioption legend.navigation.arrowSize
+       */
+      /**
+       * Whether to enable the legend navigation. In most cases, disabling
+       * the navigation results in an unwanted overflow.
+       *
+       * See also the
+       * [adapt chart to legend](https://github.com/highcharts/adapt-chart-to-legend)
+       * plugin for a solution to extend the chart height to make room for
+       * the legend, optionally in exported charts only.
+       *
+       * @type      {boolean}
+       * @default   true
+       * @since     4.2.4
+       * @apioption legend.navigation.enabled
+       */
+      /**
+       * Text styles for the legend page navigation.
+       *
+       * @see In styled mode, the navigation items are styled with the
+       *      `.highcharts-legend-navigation` class.
+       *
+       * @sample {highcharts} highcharts/legend/navigation/
+       *         Legend page navigation demonstrated
+       * @sample {highstock} highcharts/legend/navigation/
+       *         Legend page navigation demonstrated
+       *
+       * @type      {Highcharts.CSSObject}
+       * @since     2.2.4
+       * @apioption legend.navigation.style
+       */
+      style: {
+        /**
+         * @type {number|string}
+         */
+        fontSize: "0.8em"
+      },
+      /**
+       * The color for the active up or down arrow in the legend page
+       * navigation.
+       *
+       * @see In styled mode, the active arrow be styled with the
+       *      `.highcharts-legend-nav-active` class.
+       *
+       * @sample  {highcharts} highcharts/legend/navigation/
+       *          Legend page navigation demonstrated
+       * @sample  {highstock} highcharts/legend/navigation/
+       *          Legend page navigation demonstrated
+       *
+       * @type  {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
+       * @since 2.2.4
+       */
+      activeColor: "#0022ff",
+      /**
+       * The color of the inactive up or down arrow in the legend page
+       * navigation. .
+       *
+       * @see In styled mode, the inactive arrow be styled with the
+       *      `.highcharts-legend-nav-inactive` class.
+       *
+       * @sample {highcharts} highcharts/legend/navigation/
+       *         Legend page navigation demonstrated
+       * @sample {highstock} highcharts/legend/navigation/
+       *         Legend page navigation demonstrated
+       *
+       * @type  {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
+       * @since 2.2.4
+       */
+      inactiveColor: "#cccccc"
+      /* Palette.neutralColor20 */
+    },
+    /**
+     * The inner padding of the legend box.
+     *
+     * @sample {highcharts|highstock} highcharts/legend/padding-itemmargin/
+     *         Padding and item margins demonstrated
+     * @sample {highmaps} maps/legend/padding-itemmargin/
+     *         Padding and item margins demonstrated
+     *
+     * @type      {number}
+     * @default   8
+     * @since     2.2.0
+     * @apioption legend.padding
+     */
+    /**
+     * Whether to reverse the order of the legend items compared to the
+     * order of the series or points as defined in the configuration object.
+     *
+     * @see [yAxis.reversedStacks](#yAxis.reversedStacks),
+     *      [series.legendIndex](#series.legendIndex)
+     *
+     * @sample {highcharts} highcharts/legend/reversed/
+     *         Stacked bar with reversed legend
+     *
+     * @type      {boolean}
+     * @default   false
+     * @since     1.2.5
+     * @apioption legend.reversed
+     */
+    /**
+     * Whether to show the symbol on the right side of the text rather than
+     * the left side. This is common in Arabic and Hebrew.
+     *
+     * @sample {highcharts} highcharts/legend/rtl/
+     *         Symbol to the right
+     *
+     * @type      {boolean}
+     * @default   false
+     * @since     2.2
+     * @apioption legend.rtl
+     */
+    /**
+     * CSS styles for the legend area. In the 1.x versions the position
+     * of the legend area was determined by CSS. In 2.x, the position is
+     * determined by properties like `align`, `verticalAlign`, `x` and `y`,
+     * but the styles are still parsed for backwards compatibility.
+     *
+     * @deprecated
+     *
+     * @type      {Highcharts.CSSObject}
+     * @product   highcharts highstock
+     * @apioption legend.style
+     */
+    /**
+     * CSS styles for each legend item. Only a subset of CSS is supported,
+     * notably those options related to text. The default `textOverflow`
+     * property makes long texts truncate. Set it to `undefined` to wrap
+     * text instead. A `width` property can be added to control the text
+     * width.
+     *
+     * @see In styled mode, the legend items can be styled with the
+     *      `.highcharts-legend-item` class.
+     *
+     * @sample {highcharts} highcharts/legend/itemstyle/
+     *         Bold black text
+     * @sample {highmaps} maps/legend/itemstyle/
+     *         Item text styles
+     *
+     * @type    {Highcharts.CSSObject}
+     * @default {"color": "#333333", "cursor": "pointer", "fontSize": "0.8em", "fontWeight": "bold", "textOverflow": "ellipsis"}
+     */
+    itemStyle: {
+      /**
+       * @ignore
+       */
+      color: "#333333",
+      /**
+       * @ignore
+       */
+      cursor: "pointer",
+      /**
+       * @ignore
+       */
+      fontSize: "0.8em",
+      /**
+       * @ignore
+       */
+      textDecoration: "none",
+      /**
+       * @ignore
+       */
+      textOverflow: "ellipsis"
+    },
+    /**
+     * CSS styles for each legend item in hover mode. Only a subset of
+     * CSS is supported, notably those options related to text. Properties
+     * are inherited from `style` unless overridden here.
+     *
+     * @see In styled mode, the hovered legend items can be styled with
+     *      the `.highcharts-legend-item:hover` pseudo-class.
+     *
+     * @sample {highcharts} highcharts/legend/itemhoverstyle/
+     *         Red on hover
+     * @sample {highmaps} maps/legend/itemstyle/
+     *         Item text styles
+     *
+     * @type    {Highcharts.CSSObject}
+     * @default {"color": "#000000"}
+     */
+    itemHoverStyle: {
+      /**
+       * @ignore
+       */
+      color: "#000000"
+      /* Palette.neutralColor100 */
+    },
+    /**
+     * CSS styles for each legend item when the corresponding series or
+     * point is hidden. Only a subset of CSS is supported, notably those
+     * options related to text. Properties are inherited from `style`
+     * unless overridden here.
+     *
+     * @see In styled mode, the hidden legend items can be styled with
+     *      the `.highcharts-legend-item-hidden` class.
+     *
+     * @sample {highcharts} highcharts/legend/itemhiddenstyle/
+     *         Darker gray color
+     *
+     * @type    {Highcharts.CSSObject}
+     * @default {"color": "#cccccc"}
+     */
+    itemHiddenStyle: {
+      /**
+       * @ignore
+       */
+      color: "#666666",
+      /**
+       * @ignore
+       */
+      textDecoration: "line-through"
+    },
+    /**
+     * Whether to apply a drop shadow to the legend. A `backgroundColor`
+     * also needs to be applied for this to take effect. The shadow can be
+     * an object configuration containing `color`, `offsetX`, `offsetY`,
+     * `opacity` and `width`.
+     *
+     * @sample {highcharts} highcharts/legend/shadow/
+     *         White background and drop shadow
+     * @sample {highstock} stock/legend/align/
+     *         Various legend options
+     * @sample {highmaps} maps/legend/border-background/
+     *         Border and background options
+     *
+     * @type {boolean|Highcharts.CSSObject}
+     */
+    shadow: !1,
+    /**
+     * Default styling for the checkbox next to a legend item when
+     * `showCheckbox` is true.
+     *
+     * @type {Highcharts.CSSObject}
+     * @default {"width": "13px", "height": "13px", "position":"absolute"}
+     */
+    itemCheckboxStyle: {
+      /**
+       * @ignore
+       */
+      position: "absolute",
+      /**
+       * @ignore
+       */
+      width: "13px",
+      // For IE precision
+      /**
+       * @ignore
+       */
+      height: "13px"
+    },
+    /// itemWidth: undefined,
+    /**
+     * When this is true, the legend symbol width will be the same as
+     * the symbol height, which in turn defaults to the font size of the
+     * legend items.
+     *
+     * @since 5.0.0
+     */
+    squareSymbol: !0,
+    /**
+     * The pixel height of the symbol for series types that use a rectangle
+     * in the legend. Defaults to the font size of legend items.
+     *
+     * Note: This option is a default source of color axis height, if the
+     * [colorAxis.height](https://api.highcharts.com/highcharts/colorAxis.height)
+     * option is not set.
+     *
+     * @productdesc {highmaps}
+     * In Highmaps, when the symbol is the gradient of a vertical color
+     * axis, the height defaults to 200.
+     *
+     * @sample {highmaps} maps/legend/layout-vertical-sized/
+     *         Sized vertical gradient
+     * @sample {highmaps} maps/legend/padding-itemmargin/
+     *         No distance between data classes
+     *
+     * @type      {number}
+     * @since     3.0.8
+     * @apioption legend.symbolHeight
+     */
+    /**
+     * The border radius of the symbol for series types that use a rectangle
+     * in the legend. Defaults to half the `symbolHeight`, effectively
+     * creating a circle.
+     *
+     * For color axis scales, it defaults to 3.
+     *
+     * @sample {highcharts} highcharts/legend/symbolradius/
+     *         Round symbols
+     * @sample {highstock} highcharts/legend/symbolradius/
+     *         Round symbols
+     * @sample {highmaps} highcharts/legend/symbolradius/
+     *         Round symbols
+     *
+     * @type      {number}
+     * @since     3.0.8
+     * @apioption legend.symbolRadius
+     */
+    /**
+     * The pixel width of the legend item symbol. When the `squareSymbol`
+     * option is set, this defaults to the `symbolHeight`, otherwise 16.
+     *
+     * Note: This option is a default source of color axis width, if the
+     * [colorAxis.width](https://api.highcharts.com/highcharts/colorAxis.width)
+     * option is not set.
+     *
+     * @productdesc {highmaps}
+     * In Highmaps, when the symbol is the gradient of a horizontal color
+     * axis, the width defaults to 200.
+     *
+     * @sample {highcharts} highcharts/legend/symbolwidth/
+     *         Greater symbol width and padding
+     * @sample {highmaps} maps/legend/padding-itemmargin/
+     *         Padding and item margins demonstrated
+     * @sample {highmaps} maps/legend/layout-vertical-sized/
+     *         Sized vertical gradient
+     *
+     * @type      {number}
+     * @apioption legend.symbolWidth
+     */
+    /**
+     * Whether to [use HTML](https://www.highcharts.com/docs/chart-concepts/labels-and-string-formatting#html)
+     * to render the legend item texts.
+     *
+     * Prior to 4.1.7, when using HTML, [legend.navigation](
+     * #legend.navigation) was disabled.
+     *
+     * @sample highcharts/legend/scrollable-vertical/
+     *         Legend with vertical scrollable extension
+     * @sample highcharts/legend/scrollable-horizontal/
+     *         Legend with horizontal scrollable extension
+     *
+     * @type      {boolean}
+     * @default   false
+     * @apioption legend.useHTML
+     */
+    /**
+     * For a color axis with data classes, how many decimals to render in
+     * the legend. The default preserves the decimals of the range numbers.
+     *
+     * @type      {number}
+     * @default   -1
+     * @product   highcharts highmaps
+     * @apioption legend.valueDecimals
+     */
+    /**
+     * For a color axis with data classes, a suffix for the range numbers in
+     * the legend.
+     *
+     * @type      {string}
+     * @default   ''
+     * @product   highcharts highmaps
+     * @apioption legend.valueSuffix
+     */
+    /**
+     * The width of the legend box. If a number is set, it translates to
+     * pixels. Since v7.0.2 it allows setting a percent string of the full
+     * chart width, for example `40%`.
+     *
+     * Defaults to the full chart width for legends below or above the
+     * chart, half the chart width for legends to the left and right.
+     *
+     * @sample {highcharts} highcharts/legend/width/
+     *         Aligned to the plot area
+     * @sample {highcharts} highcharts/legend/width-percent/
+     *         A percent of the chart width
+     *
+     * @type      {number|string}
+     * @since     2.0
+     * @apioption legend.width
+     */
+    /**
+     * The pixel padding between the legend item symbol and the legend
+     * item text.
+     *
+     * @sample {highcharts} highcharts/legend/symbolpadding/
+     *         Greater symbol width and padding
+     */
+    symbolPadding: 5,
+    /**
+     * The vertical alignment of the legend box. Can be one of `top`,
+     * `middle` or `bottom`. Vertical position can be further determined
+     * by the `y` option.
+     *
+     * In the case that the legend is aligned in a corner position, the
+     * `layout` option will determine whether to place it above/below
+     * or on the side of the plot area.
+     *
+     * When the [layout](#legend.layout) option is `proximate`, the
+     * `verticalAlign` option doesn't apply.
+     *
+     * @sample {highcharts} highcharts/legend/verticalalign/
+     *         Legend 100px from the top of the chart
+     * @sample {highstock} stock/legend/align/
+     *         Various legend options
+     * @sample {highmaps} maps/legend/alignment/
+     *         Legend alignment
+     *
+     * @type  {Highcharts.VerticalAlignValue}
+     * @since 2.0
+     */
+    verticalAlign: "bottom",
+    // Width: undefined,
+    /**
+     * The x offset of the legend relative to its horizontal alignment
+     * `align` within chart.spacingLeft and chart.spacingRight. Negative
+     * x moves it to the left, positive x moves it to the right.
+     *
+     * @sample {highcharts} highcharts/legend/width/
+     *         Aligned to the plot area
+     *
+     * @since 2.0
+     */
+    x: 0,
+    /**
+     * The vertical offset of the legend relative to it's vertical alignment
+     * `verticalAlign` within chart.spacingTop and chart.spacingBottom.
+     *  Negative y moves it up, positive y moves it down.
+     *
+     * @sample {highcharts} highcharts/legend/verticalalign/
+     *         Legend 100px from the top of the chart
+     * @sample {highstock} stock/legend/align/
+     *         Various legend options
+     * @sample {highmaps} maps/legend/alignment/
+     *         Legend alignment
+     *
+     * @since 2.0
+     */
+    y: 0,
+    /**
+     * A title to be added on top of the legend.
+     *
+     * @sample {highcharts} highcharts/legend/title/
+     *         Legend title
+     * @sample {highmaps} maps/legend/alignment/
+     *         Legend with title
+     *
+     * @since 3.0
+     */
+    title: {
+      /**
+       * A text or HTML string for the title.
+       *
+       * @type      {string}
+       * @since     3.0
+       * @apioption legend.title.text
+       */
+      /**
+       * Generic CSS styles for the legend title.
+       *
+       * @see In styled mode, the legend title is styled with the
+       *      `.highcharts-legend-title` class.
+       *
+       * @type    {Highcharts.CSSObject}
+       * @default {"fontSize": "0.8em", "fontWeight": "bold"}
+       * @since   3.0
+       */
+      style: {
+        /**
+         * @ignore
+         */
+        color: "#333333",
+        /**
+         * @ignore
+         */
+        fontSize: "0.8em",
+        /**
+         * @ignore
+         */
+        fontWeight: "bold"
+      }
+    }
+  },
+  /**
+   * The loading options control the appearance of the loading screen
+   * that covers the plot area on chart operations. This screen only
+   * appears after an explicit call to `chart.showLoading()`. It is a
+   * utility for developers to communicate to the end user that something
+   * is going on, for example while retrieving new data via an XHR connection.
+   * The "Loading..." text itself is not part of this configuration
+   * object, but part of the `lang` object.
+   */
+  loading: {
+    /**
+     * The duration in milliseconds of the fade out effect.
+     *
+     * @sample highcharts/loading/hideduration/
+     *         Fade in and out over a second
+     *
+     * @type      {number}
+     * @default   100
+     * @since     1.2.0
+     * @apioption loading.hideDuration
+     */
+    /**
+     * The duration in milliseconds of the fade in effect.
+     *
+     * @sample highcharts/loading/hideduration/
+     *         Fade in and out over a second
+     *
+     * @type      {number}
+     * @default   100
+     * @since     1.2.0
+     * @apioption loading.showDuration
+     */
+    /**
+     * CSS styles for the loading label `span`.
+     *
+     * @see In styled mode, the loading label is styled with the
+     *      `.highcharts-loading-inner` class.
+     *
+     * @sample {highcharts|highmaps} highcharts/loading/labelstyle/
+     *         Vertically centered
+     * @sample {highstock} stock/loading/general/
+     *         Label styles
+     *
+     * @type    {Highcharts.CSSObject}
+     * @default {"fontWeight": "bold", "position": "relative", "top": "45%"}
+     * @since   1.2.0
+     */
+    labelStyle: {
+      /**
+       * @ignore
+       */
+      fontWeight: "bold",
+      /**
+       * @ignore
+       */
+      position: "relative",
+      /**
+       * @ignore
+       */
+      top: "45%"
+    },
+    /**
+     * CSS styles for the loading screen that covers the plot area.
+     *
+     * In styled mode, the loading label is styled with the
+     * `.highcharts-loading` class.
+     *
+     * @sample  {highcharts|highmaps} highcharts/loading/style/
+     *          Gray plot area, white text
+     * @sample  {highstock} stock/loading/general/
+     *          Gray plot area, white text
+     *
+     * @type    {Highcharts.CSSObject}
+     * @default {"position": "absolute", "backgroundColor": "#ffffff", "opacity": 0.5, "textAlign": "center"}
+     * @since   1.2.0
+     */
+    style: {
+      /**
+       * @ignore
+       */
+      position: "absolute",
+      /**
+       * @ignore
+       */
+      backgroundColor: "#ffffff",
+      /**
+       * @ignore
+       */
+      opacity: 0.5,
+      /**
+       * @ignore
+       */
+      textAlign: "center"
+    }
+  },
+  /**
+   * Options for the tooltip that appears when the user hovers over a
+   * series or point.
+   *
+   * @declare Highcharts.TooltipOptions
+   */
+  tooltip: {
+    /**
+     * The color of the tooltip border. When `undefined`, the border takes
+     * the color of the corresponding series or point.
+     *
+     * Note that the [borderWidth](#tooltip.borderWidth) is usually 0 by
+     * default, so the border color may not be visible until a border width
+     * is set.
+     *
+     * @sample {highcharts} highcharts/tooltip/bordercolor-default/ Follow
+     *         series by default
+     * @sample {highcharts} highcharts/tooltip/bordercolor-black/ Black
+     *         border
+     * @sample {highstock} stock/tooltip/general/ Styled tooltip
+     * @sample {highmaps} maps/tooltip/background-border/ Background and
+     *         border demo
+     *
+     * @type {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
+     * @apioption tooltip.borderColor
+     */
+    /**
+     * A CSS class name to apply to the tooltip's container div,
+     * allowing unique CSS styling for each chart.
+     *
+     * @type      {string}
+     * @apioption tooltip.className
+     */
+    /**
+     * Since 4.1, the crosshair definitions are moved to the Axis object
+     * in order for a better separation from the tooltip. See
+     * [xAxis.crosshair](#xAxis.crosshair).
+     *
+     * @sample {highcharts} highcharts/tooltip/crosshairs-x/
+     *         Enable a crosshair for the x value
+     *
+     * @deprecated
+     *
+     * @type      {*}
+     * @default   true
+     * @apioption tooltip.crosshairs
+     */
+    /**
+     * Distance from point to tooltip in pixels.
+     *
+     * @type      {number}
+     * @default   16
+     * @apioption tooltip.distance
+     */
+    /**
+     * Whether the tooltip should be fixed to one position in the chart, or
+     * located next to the point or mouse. When the tooltip is fixed, the
+     * position can be further specified with the
+     * [tooltip.position](#tooltip.position) options set.
+     *
+     * @sample    highcharts/tooltip/fixed/
+     *            Fixed tooltip and position options
+     * @sample    {highstock} stock/tooltip/fixed/
+     *            Stock chart with fixed tooltip
+     * @sample    {highmaps} maps/tooltip/fixed/
+     *            Map with fixed tooltip
+     *
+     * @type      {boolean}
+     * @default   false
+     * @since 12.2.0
+     * @apioption tooltip.fixed
+     */
+    /**
+     * Whether the tooltip should follow the mouse as it moves across
+     * columns, pie slices and other point types with an extent.
+     * By default it behaves this way for pie, polygon, map, sankey
+     * and wordcloud series by override in the `plotOptions`
+     * for those series types.
+     *
+     * Does not apply if [split](#tooltip.split) is `true`.
+     *
+     * For touch moves to behave the same way, [followTouchMove](
+     * #tooltip.followTouchMove) must be `true` also.
+     *
+     * @sample highcharts/tooltip/followpointer/
+     *         Tooltip follow pointer comparison
+     *
+     * @type      {boolean}
+     * @default   {highcharts} false
+     * @default   {highstock} false
+     * @default   {highmaps} true
+     * @since     3.0
+     * @apioption tooltip.followPointer
+     */
+    /**
+     * Whether the tooltip should update as the finger moves on a touch
+     * device. If this is `true` and [chart.panning](#chart.panning) is
+     * set,`followTouchMove` will take over one-finger touches, so the user
+     * needs to use two fingers for zooming and panning.
+     *
+     * Note the difference to [followPointer](#tooltip.followPointer) that
+     * only defines the _position_ of the tooltip. If `followPointer` is
+     * false in for example a column series, the tooltip will show above or
+     * below the column, but as `followTouchMove` is true, the tooltip will
+     * jump from column to column as the user swipes across the plot area.
+     *
+     * @type      {boolean}
+     * @default   {highcharts} true
+     * @default   {highstock} true
+     * @default   {highmaps} false
+     * @since     3.0.1
+     * @apioption tooltip.followTouchMove
+     */
+    /**
+     * A [format string](https://www.highcharts.com/docs/chart-concepts/labels-and-string-formatting)
+     * for the whole shared tooltip. When format strings are a requirement,
+     * it is usually more convenient to use `headerFormat`, `pointFormat`
+     * and `footerFormat`, but the `format` option allows combining them
+     * into one setting.
+     *
+     * The context of the format string is the same as that of the
+     * `tooltip.formatter` callback.
+     *
+     * @sample {highcharts} highcharts/tooltip/format-shared/
+     *         Format for shared tooltip
+     *
+     * @type      {string}
+     * @default   undefined
+     * @since     11.1.0
+     * @apioption tooltip.format
+     */
+    /**
+     * Callback function to format the text of the tooltip from scratch. In
+     * case of single or [shared](#tooltip.shared) tooltips, a string should
+     * be returned. In case of [split](#tooltip.split) tooltips, it should
+     * return an array where the first item is the header, and subsequent
+     * items are mapped to the points. Return `false` to disable tooltip for
+     * a specific point on series.
+     *
+     * A subset of HTML is supported. Unless `useHTML` is true, the HTML of
+     * the tooltip is parsed and converted to SVG, therefore this isn't a
+     * complete HTML renderer. The following HTML tags are supported: `b`,
+     * `br`, `em`, `i`, `span`, `strong`. Spans can be styled with a `style`
+     * attribute, but only text-related CSS, that is shared with SVG, is
+     * handled.
+     *
+     * The context of the formatter (since v12) is the
+     * [Point](https://api.highcharts.com/class-reference/Highcharts.Point)
+     * instance. If the tooltip is shared or split, an array `this.points`
+     * contains all points of the hovered x-value.
+     *
+     * Common properties from the Point to use in the formatter include:
+     *
+     * - **Point.percentage**:
+     *   Stacked series and pies only. The point's percentage of the total.
+     *
+     * - **Point.points**:
+     *   In a shared or split tooltip, this is an array containing all the
+     *   hovered points.
+     *
+     * - **this.series**:
+     *   The series object. The series name is available through
+     *   `this.series.name`.
+     *
+     * - **this.total**:
+     *   The total value at this point's x value in a stacked series, or the
+     *   sum of all slices in a pie series.
+     *
+     * - **this.x**:
+     *   The x value.
+     *
+     * - **this.y**:
+     *   The y value.
+     *
+     * @sample {highcharts} highcharts/tooltip/formatter-simple/
+     *         Simple string formatting
+     * @sample {highcharts} highcharts/tooltip/formatter-shared/
+     *         Formatting with shared tooltip
+     * @sample {highcharts|highstock} highcharts/tooltip/formatter-split/
+     *         Formatting with split tooltip
+     * @sample highcharts/tooltip/formatter-conditional-default/
+     *         Extending default formatter
+     * @sample {highstock} stock/tooltip/formatter/
+     *         Formatting with shared tooltip
+     * @sample {highmaps} maps/tooltip/formatter/
+     *         String formatting
+     *
+     * @type      {Highcharts.TooltipFormatterCallbackFunction}
+     * @apioption tooltip.formatter
+     */
+    /**
+     * Callback function to format the text of the tooltip for
+     * visible null points.
+     * Works analogously to [formatter](#tooltip.formatter).
+     *
+     * @sample highcharts/plotoptions/series-nullformat
+     *         Format data label and tooltip for null point.
+     *
+     * @type      {Highcharts.TooltipFormatterCallbackFunction}
+     * @apioption tooltip.nullFormatter
+     */
+    /**
+     * Whether to allow the tooltip to render outside the chart's SVG
+     * element box. By default (`false`), the tooltip is rendered within the
+     * chart's SVG element, which results in the tooltip being aligned
+     * inside the chart area. For small charts, this may result in clipping
+     * or overlapping. When `true`, a separate SVG element is created and
+     * overlaid on the page, allowing the tooltip to be aligned inside the
+     * page itself. Beware that with this option active, CSS classes on the
+     * chart's target container, with classnames matching the pattern
+     * 'highcharts-*', will be set on the tooltip as well. This is done to
+     * support theming for tooltips with this option.
+     *
+     * Defaults to `true` if `chart.scrollablePlotArea` is activated,
+     * otherwise `false`.
+     *
+     * @sample highcharts/tooltip/outside
+     *         Small charts with tooltips outside
+     *
+     * @type      {boolean|undefined}
+     * @default   undefined
+     * @since     6.1.1
+     * @apioption tooltip.outside
+     */
+    /**
+     * A callback function for formatting the HTML output for a single point
+     * in the tooltip. Like the `pointFormat` string, but with more
+     * flexibility.
+     *
+     * @type      {Highcharts.FormatterCallbackFunction<Highcharts.Point>}
+     * @since     4.1.0
+     * @context   Highcharts.Point
+     * @apioption tooltip.pointFormatter
+     */
+    /**
+     * A callback function to place the tooltip in a custom position. The
+     * callback receives three parameters: `labelWidth`, `labelHeight` and
+     * `point`, where point contains values for `plotX` and `plotY` telling
+     * where the reference point is in the plot area. Add `chart.plotLeft`
+     * and `chart.plotTop` to get the full coordinates.
+     *
+     * To find the actual hovered `Point` instance, use
+     * `this.chart.hoverPoint`. For shared or split tooltips, all the hover
+     * points are available in `this.chart.hoverPoints`.
+     *
+     * Since v7, when [tooltip.split](#tooltip.split) option is enabled,
+     * positioner is called for each of the boxes separately, including
+     * xAxis header. xAxis header is not a point, instead `point` argument
+     * contains info: `{ plotX: Number, plotY: Number, isHeader: Boolean }`
+     *
+     * Since v12.2, the [tooltip.fixed](#tooltip.fixed) option combined with
+     * [tooltip.position](#tooltip.position) covers most of the use cases
+     * for custom tooltip positioning.
+     *
+     * The return should be an object containing x and y values, for example
+     * `{ x: 100, y: 100 }`.
+     *
+     * @sample {highcharts} highcharts/tooltip/positioner/
+     *         A fixed tooltip position
+     * @sample {highstock} stock/tooltip/positioner/
+     *         A fixed tooltip position on top of the chart
+     * @sample {highmaps} maps/tooltip/positioner/
+     *         A fixed tooltip position
+     * @sample {highstock} stock/tooltip/split-positioner/
+     *         Split tooltip with fixed positions
+     * @sample {highstock} stock/tooltip/positioner-scrollable-plotarea/
+     *         Scrollable plot area combined with tooltip positioner
+     *
+     * @see [position](#tooltip.position)
+     *
+     * @type      {Highcharts.TooltipPositionerCallbackFunction}
+     * @since     2.2.4
+     * @apioption tooltip.positioner
+     */
+    /**
+     * Shows tooltip for all points with the same X value. Splits the
+     * tooltip into one label per series, with the header close to the axis.
+     * This is recommended over [shared](#tooltip.shared)
+     * tooltips for charts with multiple line series, generally making them
+     * easier to read. This option takes precedence over `tooltip.shared`.
+     *
+     * Not supported for [polar](#chart.polar) and [inverted](#chart.inverted) charts.
+     *
+     * @productdesc {highstock} In Highcharts Stock, tooltips are split
+     * by default since v6.0.0. Stock charts typically contain
+     * multi-dimension points and multiple panes, making split tooltips
+     * the preferred layout over
+     * the previous `shared` tooltip.
+     *
+     * @sample highcharts/tooltip/split/
+     *         Split tooltip
+     * @sample {highcharts|highstock} highcharts/tooltip/formatter-split/
+     *         Split tooltip and custom formatter callback
+     *
+     * @type      {boolean}
+     * @default   {highcharts} false
+     * @default   {highstock} true
+     * @since     5.0.0
+     * @product   highcharts highstock
+     * @apioption tooltip.split
+     */
+    /**
+     * Prevents the tooltip from switching or closing, when touched or
+     * pointed.
+     *
+     * @sample highcharts/tooltip/stickoncontact/
+     *         Tooltip sticks on pointer contact
+     *
+     * @type      {boolean}
+     * @since     8.0.1
+     * @apioption tooltip.stickOnContact
+     */
+    /**
+     * Use HTML to render the contents of the tooltip instead of SVG. Using
+     * HTML allows advanced formatting like tables and images in the
+     * tooltip. It is also recommended for rtl languages as it works around
+     * rtl bugs in early Firefox.
+     *
+     * @sample {highcharts|highstock} highcharts/tooltip/footerformat/
+     *         A table for value alignment
+     * @sample {highcharts|highstock} highcharts/tooltip/fullhtml/
+     *         Full HTML tooltip
+     * @sample {highmaps} maps/tooltip/usehtml/
+     *         Pure HTML tooltip
+     *
+     * @type      {boolean}
+     * @default   false
+     * @since     2.2
+     * @apioption tooltip.useHTML
+     */
+    /**
+     * How many decimals to show in each series' y value. This is
+     * overridable in each series' tooltip options object. The default is to
+     * preserve all decimals.
+     *
+     * @sample {highcharts|highstock} highcharts/tooltip/valuedecimals/
+     *         Set decimals, prefix and suffix for the value
+     * @sample {highmaps} maps/tooltip/valuedecimals/
+     *         Set decimals, prefix and suffix for the value
+     *
+     * @type      {number|undefined}
+     * @since     2.2
+     * @apioption tooltip.valueDecimals
+     */
+    /**
+     * A string to prepend to each series' y value. Overridable in each
+     * series' tooltip options object.
+     *
+     * @sample {highcharts|highstock} highcharts/tooltip/valuedecimals/
+     *         Set decimals, prefix and suffix for the value
+     * @sample {highmaps} maps/tooltip/valuedecimals/
+     *         Set decimals, prefix and suffix for the value
+     *
+     * @type      {string}
+     * @since     2.2
+     * @apioption tooltip.valuePrefix
+     */
+    /**
+     * A string to append to each series' y value. Overridable in each
+     * series' tooltip options object.
+     *
+     * @sample {highcharts|highstock} highcharts/tooltip/valuedecimals/
+     *         Set decimals, prefix and suffix for the value
+     * @sample {highmaps} maps/tooltip/valuedecimals/
+     *         Set decimals, prefix and suffix for the value
+     *
+     * @type      {string}
+     * @since     2.2
+     * @apioption tooltip.valueSuffix
+     */
+    /**
+     * The format for the date in the tooltip header if the X axis is a
+     * datetime axis. The default is a best guess based on the smallest
+     * distance between points in the chart.
+     *
+     * @sample {highcharts} highcharts/tooltip/xdateformat/
+     *         A different format
+     *
+     * @type      {string|Highcharts.DateTimeFormatOptions}
+     * @product   highcharts highstock gantt
+     * @apioption tooltip.xDateFormat
+     */
+    /**
+     * How many decimals to show for the `point.change`
+     * or the `point.cumulativeSum` value when the `series.compare`
+     * or the `series.cumulative` option is set.
+     * This is overridable in each series' tooltip options object.
+     *
+     * @type      {number}
+     * @default   2
+     * @since     1.0.1
+     * @product   highstock
+     * @apioption tooltip.changeDecimals
+     */
+    /**
+     * Enable or disable the tooltip.
+     *
+     * @sample {highcharts} highcharts/tooltip/enabled/
+     *         Disabled
+     * @sample {highcharts} highcharts/plotoptions/series-point-events-mouseover/
+     *         Disable tooltip and show values on chart instead
+     */
+    enabled: !0,
+    /**
+     * Enable or disable animation of the tooltip.
+     *
+     * @type       {boolean|Partial<Highcharts.AnimationOptionsObject>}
+     * @since      2.3.0
+     */
+    animation: {
+      duration: 300,
+      // EaseOutCirc
+      easing: (h) => Math.sqrt(1 - Math.pow(h - 1, 2))
+    },
+    /**
+     * The radius of the rounded border corners.
+     *
+     * @sample {highcharts} highcharts/tooltip/bordercolor-default/
+     *         Default border radius
+     * @sample {highcharts} highcharts/tooltip/borderradius-0/
+     *         Square borders
+     * @sample {highmaps} maps/tooltip/background-border/
+     *         Background and border demo
+     */
+    borderRadius: 3,
+    /**
+     * For series on datetime axes, the date format in the tooltip's
+     * header will by default be guessed based on the closest data points.
+     * This member gives the default string representations used for
+     * each unit. For an overview of the string or object configuration, see
+     * [dateFormat](/class-reference/Highcharts.Time#dateFormat).
+     *
+     * @see [xAxis.dateTimeLabelFormats](#xAxis.dateTimeLabelFormats)
+     *
+     * @type    {Highcharts.Dictionary<string|Highcharts.DateTimeFormatOptions>}
+     * @product highcharts highstock gantt
+     */
+    dateTimeLabelFormats: {
+      /** @internal */
+      millisecond: "%[AebHMSL]",
+      /** @internal */
+      second: "%[AebHMS]",
+      /** @internal */
+      minute: "%[AebHM]",
+      /** @internal */
+      hour: "%[AebHM]",
+      /** @internal */
+      day: "%[AebY]",
+      /** @internal */
+      week: "%v %[AebY]",
+      /** @internal */
+      month: "%[BY]",
+      /** @internal */
+      year: "%Y"
+    },
+    /**
+     * A string to append to the tooltip format.
+     *
+     * @sample {highcharts} highcharts/tooltip/footerformat/
+     *         A table for value alignment
+     * @sample {highmaps} maps/tooltip/format/
+     *         Format demo
+     *
+     * @since 2.2
+     */
+    footerFormat: "",
+    /**
+     * The name of a symbol to use for the border around the tooltip
+     * header. Applies only when [tooltip.split](#tooltip.split) is
+     * enabled.
+     *
+     * Custom callbacks for symbol path generation can also be added to
+     * `Highcharts.SVGRenderer.prototype.symbols` the same way as for
+     * [series.marker.symbol](plotOptions.line.marker.symbol).
+     *
+     * @see [tooltip.shape](#tooltip.shape)
+     *
+     * @sample {highstock} stock/tooltip/split-positioner/
+     *         Different shapes for header and split boxes
+     *
+     * @type       {Highcharts.TooltipShapeValue}
+     * @validvalue ["callout", "rect"]
+     * @since      7.0
+     */
+    headerShape: "callout",
+    /**
+     * The number of milliseconds to wait until the tooltip is hidden when
+     * mouse out from a point or chart.
+     *
+     * @since 3.0
+     */
+    hideDelay: 500,
+    /**
+     * Padding inside the tooltip, in pixels.
+     *
+     * @since 5.0.0
+     */
+    padding: 8,
+    /**
+     * Positioning options for fixed tooltip, taking effect only when
+     * [tooltip.fixed](#tooltip.fixed) is `true`.
+     *
+     * @sample {highcharts} highcharts/tooltip/fixed/
+     *         Fixed tooltip and position options
+     * @sample {highstock} stock/tooltip/fixed/
+     *         Stock chart with fixed tooltip
+     * @sample {highmaps} maps/tooltip/fixed/
+     *         Map with fixed tooltip
+     *
+     * @since 12.2.0
+     */
+    position: {
+      /**
+       * The horizontal alignment of the fixed tooltip.
+       *
+       * @sample highcharts/tooltip/fixed/
+       *         Fixed tooltip
+       * @sample {highstock} stock/tooltip/fixed/
+       *         Stock chart with fixed tooltip
+       *
+       * @type {Highcharts.AlignValue}
+       * @default left
+       * @apioption tooltip.position.align
+       */
+      /**
+       * The vertical alignment of the fixed tooltip.
+       *
+       * @sample highcharts/tooltip/fixed/
+       *         Fixed tooltip
+       * @sample {highstock} stock/tooltip/fixed/
+       *         Stock chart with fixed tooltip
+       *
+       * @type {Highcharts.VerticalAlignValue}
+       * @default top
+       * @apioption tooltip.position.verticalAlign
+       */
+      /**
+       * What the fixed tooltip alignment should be relative to.
+       *
+       * The default, `pane`, means that it is aligned within the plot
+       * area for that given series. If the tooltip is split (as default
+       * in Stock charts), each partial tooltip is aligned within the
+       * series' pane.
+       *
+       * @sample highcharts/tooltip/fixed/
+       *         Fixed tooltip
+       * @sample {highstock} stock/tooltip/fixed/
+       *         Stock chart with fixed tooltip
+       *
+       * @type {string}
+       * @default pane
+       * @validvalue ["pane", "chart", "plotBox", "spacingBox"]
+       * @apioption tooltip.position.relativeTo
+       */
+      /**
+       * X pixel offset from the given position. Can be used to shy away
+       * from axis lines, grid lines etc to avoid the tooltip overlapping
+       * other elements.
+       *
+       * @sample highcharts/tooltip/fixed/
+       *         Fixed tooltip
+       * @sample {highstock} stock/tooltip/fixed/
+       *         Stock chart with fixed tooltip
+       */
+      x: 0,
+      /**
+       * Y pixel offset from the given position. Can be used to shy away
+       * from axis lines, grid lines etc to avoid the tooltip overlapping
+       * other elements.
+       *
+       * @sample highcharts/tooltip/fixed/
+       *         Fixed tooltip
+       * @sample {highstock} stock/tooltip/fixed/
+       *         Stock chart with fixed tooltip
+       */
+      y: 3
+    },
+    /**
+     * The name of a symbol to use for the border around the tooltip. Can
+     * be one of: `"callout"`, `"circle"` or `"rect"`. When
+     * [tooltip.split](#tooltip.split)
+     * option is enabled, shape is applied to all boxes except header, which
+     * is controlled by
+     * [tooltip.headerShape](#tooltip.headerShape).
+     *
+     * Custom callbacks for symbol path generation can also be added to
+     * `Highcharts.SVGRenderer.prototype.symbols` the same way as for
+     * [series.marker.symbol](plotOptions.line.marker.symbol).
+     *
+     * Defaults to `callout` for floating tooltip, `rect` for
+     * [fixed](#tooltip.fixed) tooltip.
+     *
+     * @type  {Highcharts.TooltipShapeValue}
+     * @since 4.0
+     * @default undefined
+     * @apioption tooltip.shape
+     */
+    /**
+     * Shows information in the tooltip for all points with the same X
+     * value. When the tooltip is shared, the entire plot area will capture
+     * mouse movement or touch events. Tooltip texts for series types with
+     * ordered data (not pie, scatter, flags etc) will be shown in a single
+     * bubble. This is recommended for single series charts and for
+     * tablet/mobile optimized charts.
+     *
+     * See also [tooltip.split](#tooltip.split), that is better suited for
+     * charts with many series, especially line-type series. The
+     * `tooltip.split` option takes precedence over `tooltip.shared`.
+     *
+     * @sample {highcharts} highcharts/tooltip/shared-false/
+     *         False by default
+     * @sample {highcharts} highcharts/tooltip/shared-true/
+     *         True
+     * @sample {highcharts} highcharts/tooltip/shared-x-crosshair/
+     *         True with x axis crosshair
+     * @sample {highcharts} highcharts/tooltip/shared-true-mixed-types/
+     *         True with mixed series types
+     *
+     * @since   2.1
+     * @product highcharts highstock
+     */
+    shared: !1,
+    /**
+     * Proximity snap for graphs or single points. It defaults to 10 for
+     * mouse-powered devices and 25 for touch devices.
+     *
+     * Note that in most cases the whole plot area captures the mouse
+     * movement, and in these cases `tooltip.snap` doesn't make sense. This
+     * applies when [stickyTracking](#plotOptions.series.stickyTracking)
+     * is `true` (default) and when the tooltip is [shared](#tooltip.shared)
+     * or [split](#tooltip.split).
+     *
+     * @sample {highcharts} highcharts/tooltip/bordercolor-default/
+     *         10 px by default
+     * @sample {highcharts} highcharts/tooltip/snap-50/
+     *         50 px on graph
+     *
+     * @type    {number}
+     * @default 10/25
+     * @since   1.2.0
+     * @product highcharts highstock
+     */
+    snap: fn ? 25 : 10,
+    /**
+     * The HTML of the tooltip header line. The context is the
+     * [Point class](https://api.highcharts.com/class-reference/Highcharts.Point).
+     * Variables are enclosed in curly brackets. Examples of common
+     * variables to include are `x`, `y`, `series.name` and `series.color`
+     * and other properties on the same form. The `point.key` variable
+     * contains the category name, x value or datetime string depending on
+     * the type of axis. For datetime axes, the `point.key` date format can
+     * be set using `tooltip.xDateFormat`.
+     *
+     * @sample {highcharts} highcharts/tooltip/footerformat/
+     *         An HTML table in the tooltip
+     * @sample {highstock} highcharts/tooltip/footerformat/
+     *         An HTML table in the tooltip
+     * @sample {highmaps} maps/tooltip/format/
+     *         Format demo
+     *
+     * @type      {string}
+     * @apioption tooltip.headerFormat
+     */
+    headerFormat: '<span style="font-size: 0.8em">{ucfirst point.key}</span><br/>',
+    /**
+     * The HTML of the null point's line in the tooltip. Works analogously
+     * to [pointFormat](#tooltip.pointFormat).
+     *
+     * @sample {highcharts} highcharts/series/null-interaction
+     *         Line chart with null interaction
+     * @sample {highcharts} highcharts/plotoptions/series-nullformat
+     *         Heatmap with null interaction
+     *
+     * @type      {string}
+     * @apioption tooltip.nullFormat
+     */
+    /**
+     * The HTML of the point's line in the tooltip. The context is the
+     * [Point class](https://api.highcharts.com/class-reference/Highcharts.Point).
+     * Variables are enclosed in curly brackets. Examples of common
+     * variables to include are `x`, `y`, `series.name` and `series.color`
+     * and other properties on the same form. Furthermore, `y` can be
+     * extended by the `tooltip.valuePrefix` and `tooltip.valueSuffix`
+     * variables. This can also be overridden for each series, which makes
+     * it a good hook for displaying units.
+     *
+     * In styled mode, the dot is colored by a class name rather than the
+     * point color.
+     *
+     * @sample {highcharts} highcharts/tooltip/pointformat/
+     *         A different point format with value suffix
+     * @sample {highcharts|highstock} highcharts/tooltip/pointformat-extra-information/
+     *         Show extra information about points in the tooltip
+     * @sample {highmaps} maps/tooltip/format/
+     *         Format demo
+     *
+     * @type       {string}
+     * @since      2.2
+     * @apioption  tooltip.pointFormat
+     */
+    pointFormat: '<span style="color:{point.color}">●</span> {series.name}: <b>{point.y}</b><br/>',
+    /**
+     * The background color or gradient for the tooltip.
+     *
+     * In styled mode, the stroke width is set in the
+     * `.highcharts-tooltip-box` class.
+     *
+     * @sample {highcharts} highcharts/tooltip/backgroundcolor-solid/
+     *         Yellowish background
+     * @sample {highcharts} highcharts/tooltip/backgroundcolor-gradient/
+     *         Gradient
+     * @sample {highcharts} highcharts/css/tooltip-border-background/
+     *         Tooltip in styled mode
+     * @sample {highstock} stock/tooltip/general/
+     *         Custom tooltip
+     * @sample {highstock} highcharts/css/tooltip-border-background/
+     *         Tooltip in styled mode
+     * @sample {highmaps} maps/tooltip/background-border/
+     *         Background and border demo
+     * @sample {highmaps} highcharts/css/tooltip-border-background/
+     *         Tooltip in styled mode
+     *
+     * @type {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
+     */
+    backgroundColor: "#ffffff",
+    /**
+     * The pixel width of the tooltip border. Defaults to 0 for single
+     * tooltips and fixed tooltips, otherwise 1 for split tooltips.
+     *
+     * In styled mode, the stroke width is set in the
+     * `.highcharts-tooltip-box` class.
+     *
+     * @sample {highcharts} highcharts/tooltip/bordercolor-default/
+     *         2 pixels
+     * @sample {highcharts} highcharts/tooltip/borderwidth/
+     *         No border (shadow only)
+     * @sample {highcharts} highcharts/css/tooltip-border-background/
+     *         Tooltip in styled mode
+     * @sample {highstock} stock/tooltip/general/
+     *         Custom tooltip
+     * @sample {highstock} highcharts/css/tooltip-border-background/
+     *         Tooltip in styled mode
+     * @sample {highmaps} maps/tooltip/background-border/
+     *         Background and border demo
+     * @sample {highmaps} highcharts/css/tooltip-border-background/
+     *         Tooltip in styled mode
+     *
+     * @type {number}
+     */
+    borderWidth: void 0,
+    /**
+     * Whether to apply a drop shadow to the tooltip. Defaults to true,
+     * unless the tooltip is [fixed](#tooltip.fixed).
+     *
+     * @sample {highcharts} highcharts/tooltip/bordercolor-default/
+     *         True by default
+     * @sample {highcharts} highcharts/tooltip/shadow/
+     *         False
+     * @sample {highmaps} maps/tooltip/positioner/
+     *         Fixed tooltip position, border and shadow disabled
+     *
+     * @type {boolean|Highcharts.ShadowOptionsObject}
+     * @default undefined
+     * @apioption tooltip.shadow
+     */
+    /**
+     * Prevents the tooltip from switching or closing when touched or
+     * pointed.
+     *
+     * @sample highcharts/tooltip/stickoncontact/
+     *         Tooltip sticks on pointer contact
+     *
+     * @since 8.0.1
+     */
+    stickOnContact: !1,
+    /**
+     * CSS styles for the tooltip. The tooltip can also be styled through
+     * the CSS class `.highcharts-tooltip`.
+     *
+     * Note that the default `pointerEvents` style makes the tooltip ignore
+     * mouse events, so in order to use clickable tooltips, this value must
+     * be set to `auto`.
+     *
+     * @sample {highcharts} highcharts/tooltip/style/
+     *         Greater padding, bold text
+     *
+     * @type {Highcharts.CSSObject}
+     */
+    style: {
+      /** @internal */
+      color: "#333333",
+      /** @internal */
+      cursor: "default",
+      /**
+       * @type {number|string}
+       */
+      fontSize: "0.8em"
+    },
+    /**
+     * Use HTML to render the contents of the tooltip instead of SVG. Using
+     * HTML allows advanced formatting like tables and images in the
+     * tooltip. It is also recommended for rtl languages as it works around
+     * rtl bugs in early Firefox.
+     *
+     * @sample {highcharts|highstock} highcharts/tooltip/footerformat/
+     *         A table for value alignment
+     * @sample {highcharts|highstock} highcharts/tooltip/fullhtml/
+     *         Full HTML tooltip
+     * @sample {highmaps} maps/tooltip/usehtml/
+     *         Pure HTML tooltip
+     *
+     * @since 2.2
+     */
+    useHTML: !1
+  },
+  /**
+   * Highchart by default puts a credits label in the lower right corner
+   * of the chart. This can be changed using these options.
+   */
+  credits: {
+    /**
+     * Credits for map source to be concatenated with conventional credit
+     * text. By default this is a format string that collects copyright
+     * information from the map if available.
+     *
+     * @see [mapTextFull](#credits.mapTextFull)
+     * @see [text](#credits.text)
+     *
+     * @type      {string}
+     * @default   \u00a9 <a href="{geojson.copyrightUrl}">{geojson.copyrightShort}</a>
+     * @since     4.2.2
+     * @product   highmaps
+     * @apioption credits.mapText
+     */
+    /**
+     * Detailed credits for map source to be displayed on hover of credits
+     * text. By default this is a format string that collects copyright
+     * information from the map if available.
+     *
+     * @see [mapText](#credits.mapText)
+     * @see [text](#credits.text)
+     *
+     * @type      {string}
+     * @default   {geojson.copyright}
+     * @since     4.2.2
+     * @product   highmaps
+     * @apioption credits.mapTextFull
+     */
+    /**
+     * Whether to show the credits text.
+     *
+     * @sample {highcharts} highcharts/credits/enabled-false/
+     *         Credits disabled
+     * @sample {highstock} stock/credits/enabled/
+     *         Credits disabled
+     * @sample {highmaps} maps/credits/enabled-false/
+     *         Credits disabled
+     */
+    enabled: !0,
+    /**
+     * The URL for the credits label.
+     *
+     * @sample {highcharts} highcharts/credits/href/
+     *         Custom URL and text
+     * @sample {highmaps} maps/credits/customized/
+     *         Custom URL and text
+     */
+    href: "https://www.highcharts.com?credits",
+    /**
+     * Position configuration for the credits label.
+     *
+     * @sample {highcharts} highcharts/credits/position-left/
+     *         Left aligned
+     * @sample {highcharts} highcharts/credits/position-left/
+     *         Left aligned
+     * @sample {highmaps} maps/credits/customized/
+     *         Left aligned
+     * @sample {highmaps} maps/credits/customized/
+     *         Left aligned
+     *
+     * @type    {Highcharts.AlignObject}
+     * @since   2.1
+     */
+    position: {
+      /** @internal */
+      align: "right",
+      /** @internal */
+      x: -10,
+      /** @internal */
+      verticalAlign: "bottom",
+      /** @internal */
+      y: -5
+    },
+    /**
+     * CSS styles for the credits label.
+     *
+     * @see In styled mode, credits styles can be set with the
+     *      `.highcharts-credits` class.
+     *
+     * @type {Highcharts.CSSObject}
+     */
+    style: {
+      /** @internal */
+      cursor: "pointer",
+      /** @internal */
+      color: "#999999",
+      /**
+       * @type {number|string}
+       */
+      fontSize: "0.6em"
+    },
+    /**
+     * The text for the credits label.
+     *
+     * @productdesc {highmaps}
+     * If a map is loaded as GeoJSON, the text defaults to
+     * `Highcharts @ {map-credits}`. Otherwise, it defaults to
+     * `Highcharts.com`.
+     *
+     * @sample {highcharts} highcharts/credits/href/
+     *         Custom URL and text
+     * @sample {highmaps} maps/credits/customized/
+     *         Custom URL and text
+     */
+    text: "Highcharts.com"
+  }
+}, pn = new er(Si.time, Si.lang), St = {
+  defaultOptions: Si,
+  defaultTime: pn
+}, { addEvent: un, isFunction: gn, objectEach: mn, removeEvent: xn } = G;
+var wi;
+(function(h) {
   function t(e, i) {
-    e.eventOptions = e.eventOptions || {}, Xn(i.events, function(s, r) {
-      e.eventOptions[r] !== s && (e.eventOptions[r] && (jn(e, r, e.eventOptions[r]), delete e.eventOptions[r]), Fn(s) && (e.eventOptions[r] = s, Hn(e, r, s, {
+    e.eventOptions = e.eventOptions || {}, mn(i.events, function(s, r) {
+      e.eventOptions[r] !== s && (e.eventOptions[r] && (xn(e, r, e.eventOptions[r]), delete e.eventOptions[r]), gn(s) && (e.eventOptions[r] = s, un(e, r, s, {
         order: 0
         // #14080 fire those events as firsts
       })));
     });
   }
-  c.registerEventOptions = t;
-})(Di || (Di = {}));
-const ze = Di, { defaultOptions: Cr, defaultTime: Ar } = Ct, { pageLang: Gn } = N, { extend: Yn, getNestedProperty: Vn, isArray: Un, isNumber: ls, isObject: Kn, isString: qn, pick: Zn, ucfirst: _n } = R, Oe = {
+  h.registerEventOptions = t;
+})(wi || (wi = {}));
+const Ei = wi, { defaultOptions: ir, defaultTime: sr } = St, { pageLang: yn } = I, { extend: bn, getNestedProperty: vn, isArray: Sn, isNumber: Yi, isObject: wn, isString: Mn, pick: kn, ucfirst: An } = G, be = {
   // Built-in helpers
-  add: (c, t) => c + t,
-  divide: (c, t) => t !== 0 ? c / t : "",
+  add: (h, t) => h + t,
+  divide: (h, t) => t !== 0 ? h / t : "",
   // eslint-disable-next-line eqeqeq
-  eq: (c, t) => c == t,
-  each: function(c) {
+  eq: (h, t) => h == t,
+  each: function(h) {
     const t = arguments[arguments.length - 1];
-    return Un(c) ? c.map((e, i) => De(t.body, Yn(Kn(e) ? e : { "@this": e }, {
+    return Sn(h) ? h.map((e, i) => ke(t.body, bn(wn(e) ? e : { "@this": e }, {
       "@index": i,
       "@first": i === 0,
-      "@last": i === c.length - 1
+      "@last": i === h.length - 1
     }))).join("") : !1;
   },
-  ge: (c, t) => c >= t,
-  gt: (c, t) => c > t,
-  if: (c) => !!c,
-  le: (c, t) => c <= t,
-  lt: (c, t) => c < t,
-  multiply: (c, t) => c * t,
+  ge: (h, t) => h >= t,
+  gt: (h, t) => h > t,
+  if: (h) => !!h,
+  le: (h, t) => h <= t,
+  lt: (h, t) => h < t,
+  multiply: (h, t) => h * t,
   // eslint-disable-next-line eqeqeq
-  ne: (c, t) => c != t,
-  subtract: (c, t) => c - t,
-  ucfirst: _n,
-  unless: (c) => !c
-}, hs = {}, cs = (c) => /^["'].+["']$/.test(c);
-function Jn(c, t, e) {
-  return Ar.dateFormat(c, t, e);
+  ne: (h, t) => h != t,
+  subtract: (h, t) => h - t,
+  ucfirst: An,
+  unless: (h) => !h
+}, Vi = {}, Ui = (h) => /^["'].+["']$/.test(h);
+function Cn(h, t, e) {
+  return sr.dateFormat(h, t, e);
 }
-function De(c = "", t, e) {
-  const i = /\{([a-zA-Z\u00C0-\u017F\d:\.,;\-\/<>\[\]%_@+"'’= #\(\)]+)\}/g, s = /\(([a-zA-Z\u00C0-\u017F\d:\.,;\-\/<>\[\]%_@+"'= ]+)\)/g, r = [], n = /f$/, o = /\.(\d)/, a = e?.options?.lang || Cr.lang, l = e?.time || Ar, h = e?.numberFormatter || Tr.bind(e), d = (x = "") => {
+function ke(h = "", t, e) {
+  const i = /\{([a-zA-Z\u00C0-\u017F\d:\.,;\-\/<>\[\]%_@+"'’= #\(\)]+)\}/g, s = /\(([a-zA-Z\u00C0-\u017F\d:\.,;\-\/<>\[\]%_@+"'= ]+)\)/g, r = [], n = /f$/, o = /\.(\d)/, a = e?.options?.lang || ir.lang, l = e?.time || sr, c = e?.numberFormatter || rr.bind(e), f = (x = "") => {
     let m;
-    return x === "true" ? !0 : x === "false" ? !1 : (m = Number(x)).toString() === x ? m : cs(x) ? x.slice(1, -1) : Vn(x, t);
+    return x === "true" ? !0 : x === "false" ? !1 : (m = Number(x)).toString() === x ? m : Ui(x) ? x.slice(1, -1) : vn(x, t);
   };
-  let f, p, u = 0, g;
-  for (; (f = i.exec(c)) !== null; ) {
-    const x = f, m = s.exec(f[1]);
-    m && (f = m, g = !0), p?.isBlock || (p = {
+  let d, p, u = 0, g;
+  for (; (d = i.exec(h)) !== null; ) {
+    const x = d, m = s.exec(d[1]);
+    m && (d = m, g = !0), p?.isBlock || (p = {
       ctx: t,
-      expression: f[1],
-      find: f[0],
-      isBlock: f[1].charAt(0) === "#",
-      start: f.index,
-      startInner: f.index + f[0].length,
-      length: f[0].length
+      expression: d[1],
+      find: d[0],
+      isBlock: d[1].charAt(0) === "#",
+      start: d.index,
+      startInner: d.index + d[0].length,
+      length: d[0].length
     });
-    const b = (p.isBlock ? x : f)[1].split(" ")[0].replace("#", "");
-    Oe[b] && (p.isBlock && b === p.fn && u++, p.fn || (p.fn = b));
-    const y = f[1] === "else";
-    if (p.isBlock && p.fn && (f[1] === `/${p.fn}` || y))
+    const b = (p.isBlock ? x : d)[1].split(" ")[0].replace("#", "");
+    be[b] && (p.isBlock && b === p.fn && u++, p.fn || (p.fn = b));
+    const y = d[1] === "else";
+    if (p.isBlock && p.fn && (d[1] === `/${p.fn}` || y))
       if (u)
         y || u--;
       else {
-        const v = p.startInner, S = c.substr(v, f.index - v);
-        p.body === void 0 ? (p.body = S, p.startInner = f.index + f[0].length) : p.elseBody = S, p.find += S + f[0], y || (r.push(p), p = void 0);
+        const v = p.startInner, w = h.substr(v, d.index - v);
+        p.body === void 0 ? (p.body = w, p.startInner = d.index + d[0].length) : p.elseBody = w, p.find += w + d[0], y || (r.push(p), p = void 0);
       }
     else p.isBlock || r.push(p);
     if (m && !p?.isBlock)
@@ -8498,58 +8497,58 @@ function De(c = "", t, e) {
   }
   return r.forEach((x) => {
     const { body: m, elseBody: b, expression: y, fn: v } = x;
-    let S, k;
+    let w, S;
     if (v) {
-      const w = [x], M = [], C = y.length;
-      let A = 0, O;
-      for (k = 0; k <= C; k++) {
-        const L = y.charAt(k);
-        !O && (L === '"' || L === "'") ? O = L : O === L && (O = ""), !O && (L === " " || k === C) && (M.push(y.substr(A, k - A)), A = k + 1);
+      const k = [x], M = [], A = y.length;
+      let T = 0, O;
+      for (S = 0; S <= A; S++) {
+        const B = y.charAt(S);
+        !O && (B === '"' || B === "'") ? O = B : O === B && (O = ""), !O && (B === " " || S === A) && (M.push(y.substr(T, S - T)), T = S + 1);
       }
-      for (k = Oe[v].length; k--; )
-        w.unshift(d(M[k + 1]));
-      S = Oe[v].apply(t, w), x.isBlock && typeof S == "boolean" && (S = De(S ? m : b, t, e));
+      for (S = be[v].length; S--; )
+        k.unshift(f(M[S + 1]));
+      w = be[v].apply(t, k), x.isBlock && typeof w == "boolean" && (w = ke(w ? m : b, t, e));
     } else {
-      const w = cs(y) ? [y] : y.split(":");
-      S = d(w.shift() || "");
-      const M = S % 1 !== 0;
-      if (typeof S == "number" && (w.length || M)) {
-        const C = w.join(":");
-        if (n.test(C) || M) {
-          const A = parseInt((C.match(o) || ["", "-1"])[1], 10);
-          S !== null && (S = h(S, A, a.decimalPoint, C.indexOf(",") > -1 ? a.thousandsSep : ""));
+      const k = Ui(y) ? [y] : y.split(":");
+      w = f(k.shift() || "");
+      const M = w % 1 !== 0;
+      if (typeof w == "number" && (k.length || M)) {
+        const A = k.join(":");
+        if (n.test(A) || M) {
+          const T = parseInt((A.match(o) || ["", "-1"])[1], 10);
+          w !== null && (w = c(w, T, a.decimalPoint, A.indexOf(",") > -1 ? a.thousandsSep : ""));
         } else
-          S = l.dateFormat(C, S);
+          w = l.dateFormat(A, w);
       }
-      s.lastIndex = 0, s.test(x.find) && qn(S) && (S = `"${S}"`);
+      s.lastIndex = 0, s.test(x.find) && Mn(w) && (w = `"${w}"`);
     }
-    c = c.replace(x.find, Zn(S, ""));
-  }), g ? De(c, t, e) : c;
+    h = h.replace(x.find, kn(w, ""));
+  }), g ? ke(h, t, e) : h;
 }
-function Tr(c, t, e, i) {
-  c = +c || 0, t = +t;
-  let s, r, [n, o] = c.toString().split("e").map(Number);
-  const a = this?.options?.lang || Cr.lang, l = (c.toString().split(".")[1] || "").split("e")[0].length, h = t, d = {};
-  e ?? (e = a.decimalPoint), i ?? (i = a.thousandsSep), t === -1 ? t = Math.min(l, 20) : ls(t) ? t && o < 0 && (r = t + o, r >= 0 ? (n = +n.toExponential(r).split("e")[0], t = r) : (n = Math.floor(n), t < 20 ? c = +(n * Math.pow(10, o)).toFixed(t) : c = 0, o = 0)) : t = 2, o && (t ?? (t = 2), c = n), ls(t) && t >= 0 && (d.minimumFractionDigits = t, d.maximumFractionDigits = t), i === "" && (d.useGrouping = !1);
-  const f = i || e, p = f ? "en" : this?.locale || a.locale || Gn, u = JSON.stringify(d) + p;
-  return s = (hs[u] ?? (hs[u] = new Intl.NumberFormat(p, d))).format(c), f && (s = s.replace(/([,\.])/g, "_$1").replace(/_\,/g, i ?? ",").replace("_.", e ?? ".")), // Remove signed zero (#20564)
+function rr(h, t, e, i) {
+  h = +h || 0, t = +t;
+  let s, r, [n, o] = h.toString().split("e").map(Number);
+  const a = this?.options?.lang || ir.lang, l = (h.toString().split(".")[1] || "").split("e")[0].length, c = t, f = {};
+  e ?? (e = a.decimalPoint), i ?? (i = a.thousandsSep), t === -1 ? t = Math.min(l, 20) : Yi(t) ? t && o < 0 && (r = t + o, r >= 0 ? (n = +n.toExponential(r).split("e")[0], t = r) : (n = Math.floor(n), t < 20 ? h = +(n * Math.pow(10, o)).toFixed(t) : h = 0, o = 0)) : t = 2, o && (t ?? (t = 2), h = n), Yi(t) && t >= 0 && (f.minimumFractionDigits = t, f.maximumFractionDigits = t), i === "" && (f.useGrouping = !1);
+  const d = i || e, p = d ? "en" : this?.locale || a.locale || yn, u = JSON.stringify(f) + p;
+  return s = (Vi[u] ?? (Vi[u] = new Intl.NumberFormat(p, f))).format(h), d && (s = s.replace(/([,\.])/g, "_$1").replace(/_\,/g, i ?? ",").replace("_.", e ?? ".")), // Remove signed zero (#20564)
   (!t && +s == 0 || // Small numbers, no decimals (#14023)
-  o < 0 && !h) && (s = "0"), o && +s != 0 && (s += "e" + (o < 0 ? "" : "+") + o), s;
+  o < 0 && !c) && (s = "0"), o && +s != 0 && (s += "e" + (o < 0 ? "" : "+") + o), s;
 }
-const ee = {
-  dateFormat: Jn,
-  format: De,
-  helpers: Oe,
-  numberFormat: Tr
-}, { deg2rad: qe } = N, { clamp: Qn, correctFloat: ae, defined: Ze, destroyObjectProperties: to, extend: ds, fireEvent: Ht, getAlignFactor: eo, isNumber: le, merge: io, objectEach: so, pick: nt } = R;
-class _t {
+const Te = {
+  dateFormat: Cn,
+  format: ke,
+  helpers: be,
+  numberFormat: rr
+}, { deg2rad: We } = I, { clamp: Tn, correctFloat: ie, defined: Fe, destroyObjectProperties: On, extend: Ki, fireEvent: It, getAlignFactor: Ln, isNumber: se, merge: En, objectEach: Pn, pick: st } = G;
+class Gt {
   /* *
    *
    *  Constructors
    *
    * */
   constructor(t, e, i, s, r) {
-    this.isNew = !0, this.isNewLabel = !0, this.axis = t, this.pos = e, this.type = i || "", this.parameters = r || {}, this.tickmarkOffset = this.parameters.tickmarkOffset, this.options = this.parameters.options, Ht(this, "init"), !i && !s && this.addLabel();
+    this.isNew = !0, this.isNewLabel = !0, this.axis = t, this.pos = e, this.type = i || "", this.parameters = r || {}, this.tickmarkOffset = this.parameters.tickmarkOffset, this.options = this.parameters.options, It(this, "init"), !i && !s && this.addLabel();
   }
   /* *
    *
@@ -8563,32 +8562,32 @@ class _t {
    * @function Highcharts.Tick#addLabel
    */
   addLabel() {
-    const t = this, e = t.axis, i = e.options, s = e.chart, r = e.categories, n = e.logarithmic, o = e.names, a = t.pos, l = nt(t.options?.labels, i.labels), h = e.tickPositions, d = a === h[0], f = a === h[h.length - 1], p = (!l.step || l.step === 1) && e.tickInterval === 1, u = h.info;
-    let g = t.label, x, m, b, y = this.parameters.category || (r ? nt(r[a], o[a], a) : a);
-    n && le(y) && (y = ae(n.lin2log(y))), e.dateTime && (u ? (m = s.time.resolveDTLFormat(i.dateTimeLabelFormats[!i.grid?.enabled && u.higherRanks[a] || u.unitName]), x = m.main) : le(y) && (x = e.dateTime.getXDateFormat(y, i.dateTimeLabelFormats || {}))), t.isFirst = d, t.isLast = f;
+    const t = this, e = t.axis, i = e.options, s = e.chart, r = e.categories, n = e.logarithmic, o = e.names, a = t.pos, l = st(t.options?.labels, i.labels), c = e.tickPositions, f = a === c[0], d = a === c[c.length - 1], p = (!l.step || l.step === 1) && e.tickInterval === 1, u = c.info;
+    let g = t.label, x, m, b, y = this.parameters.category || (r ? st(r[a], o[a], a) : a);
+    n && se(y) && (y = ie(n.lin2log(y))), e.dateTime && (u ? (m = s.time.resolveDTLFormat(i.dateTimeLabelFormats[!i.grid?.enabled && u.higherRanks[a] || u.unitName]), x = m.main) : se(y) && (x = e.dateTime.getXDateFormat(y, i.dateTimeLabelFormats || {}))), t.isFirst = f, t.isLast = d;
     const v = {
       axis: e,
       chart: s,
       dateTimeLabelFormat: x,
-      isFirst: d,
-      isLast: f,
+      isFirst: f,
+      isLast: d,
       pos: a,
       tick: t,
       tickPositionInfo: u,
       value: y
     };
-    Ht(this, "labelFormat", v);
-    const S = (M) => l.formatter ? l.formatter.call(M, M) : l.format ? (M.text = e.defaultLabelFormatter.call(M), ee.format(l.format, M, s)) : e.defaultLabelFormatter.call(M), k = S.call(v, v), w = m?.list;
-    w ? t.shortenLabel = function() {
-      for (b = 0; b < w.length; b++)
-        if (ds(v, { dateTimeLabelFormat: w[b] }), g.attr({
-          text: S.call(v, v)
+    It(this, "labelFormat", v);
+    const w = (M) => l.formatter ? l.formatter.call(M, M) : l.format ? (M.text = e.defaultLabelFormatter.call(M), Te.format(l.format, M, s)) : e.defaultLabelFormatter.call(M), S = w.call(v, v), k = m?.list;
+    k ? t.shortenLabel = function() {
+      for (b = 0; b < k.length; b++)
+        if (Ki(v, { dateTimeLabelFormat: k[b] }), g.attr({
+          text: w.call(v, v)
         }), g.getBBox().width < e.getSlotWidth(t) - 2 * (l.padding || 0))
           return;
       g.attr({
         text: ""
       });
-    } : t.shortenLabel = void 0, p && e._addedPlotLB && t.moveLabel(k, l), !Ze(g) && !t.movedLabel ? (t.label = g = t.createLabel(k, l), t.rotation = 0) : g && g.textStr !== k && !p && (g.textWidth && !l.style.width && !g.styles.width && g.css({ width: null }), g.attr({ text: k }), g.textPxLength = g.getBBox().width);
+    } : t.shortenLabel = void 0, p && e._addedPlotLB && t.moveLabel(S, l), !Fe(g) && !t.movedLabel ? (t.label = g = t.createLabel(S, l), t.rotation = 0) : g && g.textStr !== S && !p && (g.textWidth && !l.style.width && !g.styles.width && g.css({ width: null }), g.attr({ text: S }), g.textPxLength = g.getBBox().width);
   }
   /**
    * Render and return the label of the tick.
@@ -8597,8 +8596,8 @@ class _t {
    * @function Highcharts.Tick#createLabel
    */
   createLabel(t, e, i) {
-    const s = this.axis, { renderer: r, styledMode: n } = s.chart, o = e.style.whiteSpace, a = Ze(t) && e.enabled ? r.text(t, i?.x, i?.y, e.useHTML).add(s.labelGroup) : void 0;
-    return a && (n || a.css(io(e.style)), a.textPxLength = a.getBBox().width, !n && o && a.css({ whiteSpace: o })), a;
+    const s = this.axis, { renderer: r, styledMode: n } = s.chart, o = e.style.whiteSpace, a = Fe(t) && e.enabled ? r.text(t, i?.x, i?.y, e.useHTML).add(s.labelGroup) : void 0;
+    return a && (n || a.css(En(e.style)), a.textPxLength = a.getBBox().width, !n && o && a.css({ whiteSpace: o })), a;
   }
   /**
    * Destructor for the tick prototype
@@ -8607,7 +8606,7 @@ class _t {
    * @function Highcharts.Tick#destroy
    */
   destroy() {
-    to(this, this.axis);
+    On(this, this.axis);
   }
   /**
    * Gets the x and y positions for ticks in terms of pixels.
@@ -8634,22 +8633,22 @@ class _t {
    */
   getPosition(t, e, i, s) {
     const r = this.axis, n = r.chart, o = s && n.oldChartHeight || n.chartHeight, a = {
-      x: t ? ae(r.translate(e + i, void 0, void 0, s) + r.transB) : r.left + r.offset + (r.opposite ? (s && n.oldChartWidth || n.chartWidth) - r.right - r.left : 0),
-      y: t ? o - r.bottom + r.offset - (r.opposite ? r.height : 0) : ae(o - r.translate(e + i, void 0, void 0, s) - r.transB)
+      x: t ? ie(r.translate(e + i, void 0, void 0, s) + r.transB) : r.left + r.offset + (r.opposite ? (s && n.oldChartWidth || n.chartWidth) - r.right - r.left : 0),
+      y: t ? o - r.bottom + r.offset - (r.opposite ? r.height : 0) : ie(o - r.translate(e + i, void 0, void 0, s) - r.transB)
     };
-    return a.y = Qn(a.y, -1e9, 1e9), Ht(this, "afterGetPosition", { pos: a }), a;
+    return a.y = Tn(a.y, -1e9, 1e9), It(this, "afterGetPosition", { pos: a }), a;
   }
   /**
    * Get the x, y position of the tick label
    * @private
    */
   getLabelPosition(t, e, i, s, r, n, o, a) {
-    const l = this.axis, h = l.transA, d = (
+    const l = this.axis, c = l.transA, f = (
       // #7911
       l.isLinked && l.linkedParent ? l.linkedParent.reversed : l.reversed
-    ), f = l.staggerLines, p = l.tickRotCorr || { x: 0, y: 0 }, u = !s && !l.reserveSpaceDefault ? -l.labelOffset * (l.labelAlign === "center" ? 0.5 : 1) : 0, g = r.distance, x = {};
+    ), d = l.staggerLines, p = l.tickRotCorr || { x: 0, y: 0 }, u = !s && !l.reserveSpaceDefault ? -l.labelOffset * (l.labelAlign === "center" ? 0.5 : 1) : 0, g = r.distance, x = {};
     let m, b;
-    return l.side === 0 ? m = i.rotation ? -g : -i.getBBox().height : l.side === 2 ? m = p.y + g : m = Math.cos(i.rotation * qe) * (p.y - i.getBBox(!1, 0).height / 2), Ze(r.y) && (m = l.side === 0 && l.horiz ? r.y + m : r.y), t = t + nt(r.x, [0, 1, 0, -1][l.side] * g) + u + p.x - (n && s ? n * h * (d ? -1 : 1) : 0), e = e + m - (n && !s ? n * h * (d ? 1 : -1) : 0), f && (b = o / (a || 1) % f, l.opposite && (b = f - b - 1), e += b * (l.labelOffset / f)), x.x = t, x.y = Math.round(e), Ht(this, "afterGetLabelPosition", { pos: x, tickmarkOffset: n, index: o }), x;
+    return l.side === 0 ? m = i.rotation ? -g : -i.getBBox().height : l.side === 2 ? m = p.y + g : m = Math.cos(i.rotation * We) * (p.y - i.getBBox(!1, 0).height / 2), Fe(r.y) && (m = l.side === 0 && l.horiz ? r.y + m : r.y), t = t + st(r.x, [0, 1, 0, -1][l.side] * g) + u + p.x - (n && s ? n * c * (f ? -1 : 1) : 0), e = e + m - (n && !s ? n * c * (f ? 1 : -1) : 0), d && (b = o / (a || 1) % d, l.opposite && (b = d - b - 1), e += b * (l.labelOffset / d)), x.x = t, x.y = Math.round(e), It(this, "afterGetLabelPosition", { pos: x, tickmarkOffset: n, index: o }), x;
   }
   /**
    * Get the offset height or width of the label
@@ -8683,10 +8682,10 @@ class _t {
    * @function Highcharts.Tick#handleOverflow
    */
   handleOverflow(t) {
-    const e = this, i = this.axis, s = i.options.labels, r = t.x, n = i.chart.chartWidth, o = i.chart.spacing, a = nt(i.labelLeft, Math.min(i.pos, o[3])), l = nt(i.labelRight, Math.max(i.isRadial ? 0 : i.pos + i.len, n - o[1])), h = this.label, d = this.rotation, f = eo(i.labelAlign || h.attr("align")), p = h.getBBox().width, u = i.getSlotWidth(e), g = f, x = {};
-    let m = u, b = 1, y, v, S;
-    !d && s.overflow === "justify" ? (y = r - f * p, v = r + (1 - f) * p, y < a ? m = t.x + m * (1 - f) - a : v > l && (m = l - t.x + m * f, b = -1), m = Math.min(u, m), m < u && i.labelAlign === "center" && (t.x += b * (u - m - g * (u - Math.min(p, m)))), (p > m || i.autoRotation && h?.styles?.width) && (S = m)) : d < 0 && r - f * p < a ? S = Math.round(r / Math.cos(d * qe) - a) : d > 0 && r + f * p > l && (S = Math.round((n - r) / Math.cos(d * qe))), S && h && (e.shortenLabel ? e.shortenLabel() : h.css(ds(x, {
-      width: Math.floor(S) + "px",
+    const e = this, i = this.axis, s = i.options.labels, r = t.x, n = i.chart.chartWidth, o = i.chart.spacing, a = st(i.labelLeft, Math.min(i.pos, o[3])), l = st(i.labelRight, Math.max(i.isRadial ? 0 : i.pos + i.len, n - o[1])), c = this.label, f = this.rotation, d = Ln(i.labelAlign || c.attr("align")), p = c.getBBox().width, u = i.getSlotWidth(e), g = d, x = {};
+    let m = u, b = 1, y, v, w;
+    !f && s.overflow === "justify" ? (y = r - d * p, v = r + (1 - d) * p, y < a ? m = t.x + m * (1 - d) - a : v > l && (m = l - t.x + m * d, b = -1), m = Math.min(u, m), m < u && i.labelAlign === "center" && (t.x += b * (u - m - g * (u - Math.min(p, m)))), (p > m || i.autoRotation && c?.styles?.width) && (w = m)) : f < 0 && r - d * p < a ? w = Math.round(r / Math.cos(f * We) - a) : f > 0 && r + d * p > l && (w = Math.round((n - r) / Math.cos(f * We))), w && c && (e.shortenLabel ? e.shortenLabel() : c.css(Ki(x, {
+      width: Math.floor(w) + "px",
       lineClamp: i.isRadial ? 0 : 1
     })));
   }
@@ -8699,7 +8698,7 @@ class _t {
   moveLabel(t, e) {
     const i = this, s = i.label, r = i.axis;
     let n = !1, o;
-    s && s.textStr === t ? (i.movedLabel = s, n = !0, delete i.label) : so(r.ticks, function(a) {
+    s && s.textStr === t ? (i.movedLabel = s, n = !0, delete i.label) : Pn(r.ticks, function(a) {
       !n && !a.isNew && a !== i && a.label && a.label.textStr === t && (i.movedLabel = a.label, n = !0, a.labelPos = i.movedLabel.xy, delete a.label);
     }), !n && (i.labelPos || s) && (o = i.labelPos || s.xy, i.movedLabel = i.createLabel(t, e, o), i.movedLabel && i.movedLabel.attr({ opacity: 0 }));
   }
@@ -8715,13 +8714,13 @@ class _t {
    * @param {number} [opacity]
    */
   render(t, e, i) {
-    const s = this, r = s.axis, n = r.horiz, o = s.pos, a = nt(s.tickmarkOffset, r.tickmarkOffset), l = s.getPosition(n, o, a, e), h = l.x, d = l.y, f = r.pos, p = f + r.len, u = n ? h : d, g = nt(
+    const s = this, r = s.axis, n = r.horiz, o = s.pos, a = st(s.tickmarkOffset, r.tickmarkOffset), l = s.getPosition(n, o, a, e), c = l.x, f = l.y, d = r.pos, p = d + r.len, u = n ? c : f, g = st(
       i,
       s.label?.newOpacity,
       // #15528
       1
     );
-    !r.chart.polar && (ae(u) < f || u > p) && (i = 0), i ?? (i = 1), this.isActive = !0, this.renderGridLine(e, i), this.renderMark(l, i), this.renderLabel(l, e, g, t), s.isNew = !1, Ht(this, "afterRender");
+    !r.chart.polar && (ie(u) < d || u > p) && (i = 0), i ?? (i = 1), this.isActive = !0, this.renderGridLine(e, i), this.renderMark(l, i), this.renderLabel(l, e, g, t), s.isNew = !1, It(this, "afterRender");
   }
   /**
    * Renders the gridLine.
@@ -8732,17 +8731,17 @@ class _t {
    * @param {number} opacity  The opacity of the grid line
    */
   renderGridLine(t, e) {
-    const i = this, s = i.axis, r = s.options, n = {}, o = i.pos, a = i.type, l = nt(i.tickmarkOffset, s.tickmarkOffset), h = s.chart.renderer;
-    let d = i.gridLine, f, p = r.gridLineWidth, u = r.gridLineColor, g = r.gridLineDashStyle;
-    i.type === "minor" && (p = r.minorGridLineWidth, u = r.minorGridLineColor, g = r.minorGridLineDashStyle), d || (s.chart.styledMode || (n.stroke = u, n["stroke-width"] = p || 0, n.dashstyle = g), a || (n.zIndex = 1), t && (e = 0), i.gridLine = d = h.path().attr(n).addClass("highcharts-" + (a ? a + "-" : "") + "grid-line").add(s.gridGroup)), d && (f = s.getPlotLinePath({
+    const i = this, s = i.axis, r = s.options, n = {}, o = i.pos, a = i.type, l = st(i.tickmarkOffset, s.tickmarkOffset), c = s.chart.renderer;
+    let f = i.gridLine, d, p = r.gridLineWidth, u = r.gridLineColor, g = r.gridLineDashStyle;
+    i.type === "minor" && (p = r.minorGridLineWidth, u = r.minorGridLineColor, g = r.minorGridLineDashStyle), f || (s.chart.styledMode || (n.stroke = u, n["stroke-width"] = p || 0, n.dashstyle = g), a || (n.zIndex = 1), t && (e = 0), i.gridLine = f = c.path().attr(n).addClass("highcharts-" + (a ? a + "-" : "") + "grid-line").add(s.gridGroup)), f && (d = s.getPlotLinePath({
       value: o + l,
-      lineWidth: d.strokeWidth(),
+      lineWidth: f.strokeWidth(),
       force: "pass",
       old: t,
       acrossPanes: !1
       // #18025
-    }), f && d[t || i.isNew ? "attr" : "animate"]({
-      d: f,
+    }), d && f[t || i.isNew ? "attr" : "animate"]({
+      d,
       opacity: e
     }));
   }
@@ -8755,14 +8754,14 @@ class _t {
    * @param {number} opacity  The opacity of the mark
    */
   renderMark(t, e) {
-    const i = this, s = i.axis, r = s.options, n = s.chart.renderer, o = i.type, a = s.tickSize(o ? o + "Tick" : "tick"), l = t.x, h = t.y, d = nt(r[o !== "minor" ? "tickWidth" : "minorTickWidth"], !o && s.isXAxis ? 1 : 0), f = r[o !== "minor" ? "tickColor" : "minorTickColor"];
+    const i = this, s = i.axis, r = s.options, n = s.chart.renderer, o = i.type, a = s.tickSize(o ? o + "Tick" : "tick"), l = t.x, c = t.y, f = st(r[o !== "minor" ? "tickWidth" : "minorTickWidth"], !o && s.isXAxis ? 1 : 0), d = r[o !== "minor" ? "tickColor" : "minorTickColor"];
     let p = i.mark;
     const u = !p;
     a && (s.opposite && (a[0] = -a[0]), p || (i.mark = p = n.path().addClass("highcharts-" + (o ? o + "-" : "") + "tick").add(s.axisGroup), s.chart.styledMode || p.attr({
-      stroke: f,
-      "stroke-width": d
+      stroke: d,
+      "stroke-width": f
     })), p[u ? "attr" : "animate"]({
-      d: i.getMarkPath(l, h, a[0], p.strokeWidth(), s.horiz, n),
+      d: i.getMarkPath(l, c, a[0], p.strokeWidth(), s.horiz, n),
       opacity: e
     }));
   }
@@ -8779,9 +8778,9 @@ class _t {
    * @param {number} index  The index of the tick
    */
   renderLabel(t, e, i, s) {
-    const r = this, n = r.axis, o = n.horiz, a = n.options, l = r.label, h = a.labels, d = h.step, f = nt(r.tickmarkOffset, n.tickmarkOffset), p = t.x, u = t.y;
+    const r = this, n = r.axis, o = n.horiz, a = n.options, l = r.label, c = a.labels, f = c.step, d = st(r.tickmarkOffset, n.tickmarkOffset), p = t.x, u = t.y;
     let g = !0;
-    l && le(p) && (l.xy = t = r.getLabelPosition(p, u, l, o, h, f, s, d), r.isFirst && !r.isLast && !a.showFirstLabel || r.isLast && !r.isFirst && !a.showLastLabel ? g = !1 : o && !h.step && !h.rotation && !e && i !== 0 && r.handleOverflow(t), d && s % d && (g = !1), g && le(t.y) ? (t.opacity = i, l[r.isNewLabel ? "attr" : "animate"](t).show(!0), r.isNewLabel = !1) : (l.hide(), r.isNewLabel = !0));
+    l && se(p) && (l.xy = t = r.getLabelPosition(p, u, l, o, c, d, s, f), r.isFirst && !r.isLast && !a.showFirstLabel || r.isLast && !r.isFirst && !a.showLastLabel ? g = !1 : o && !c.step && !c.rotation && !e && i !== 0 && r.handleOverflow(t), f && s % f && (g = !1), g && se(t.y) ? (t.opacity = i, l[r.isNewLabel ? "attr" : "animate"](t).show(!0), r.isNewLabel = !1) : (l.hide(), r.isNewLabel = !0));
   }
   /**
    * Replace labels with the moved ones to perform animation. Additionally
@@ -8795,16 +8794,16 @@ class _t {
     e && !t.isNew && (e.animate({ opacity: 0 }, void 0, e.destroy), delete t.label), i.isDirty = !0, t.label = t.movedLabel, delete t.movedLabel;
   }
 }
-const { animObject: ro } = At, { xAxis: fs, yAxis: no } = Wn, { defaultOptions: Bi } = Ct, { registerEventOptions: oo } = ze, { deg2rad: ao } = N, { arrayMax: ps, arrayMin: lo, clamp: _e, correctFloat: Q, defined: z, destroyObjectProperties: ho, erase: us, error: Je, extend: Le, fireEvent: H, getClosestDistance: gs, insertItem: co, isArray: ms, isNumber: T, isString: xs, merge: Pe, normalizeTickInterval: fo, objectEach: he, pick: P, relativeLength: ce, removeEvent: po, splat: uo, syncTimeout: go } = R, ys = (c, t) => fo(t, void 0, void 0, P(
-  c.options.allowDecimals,
+const { animObject: Dn } = qt, { xAxis: qi, yAxis: $n } = Jr, { defaultOptions: Mi } = St, { registerEventOptions: In } = Ei, { deg2rad: Bn } = I, { arrayMax: Zi, arrayMin: Nn, clamp: je, correctFloat: Q, defined: R, destroyObjectProperties: Rn, erase: _i, error: He, extend: ve, fireEvent: W, getClosestDistance: Qi, insertItem: zn, isArray: Ji, isNumber: C, isString: ts, merge: Se, normalizeTickInterval: Wn, objectEach: re, pick: L, relativeLength: ne, removeEvent: Fn, splat: jn, syncTimeout: Hn } = G, es = (h, t) => Wn(t, void 0, void 0, L(
+  h.options.allowDecimals,
   // If the tick interval is greater than 0.5, avoid decimals, as
   // linear axes are often used to render discrete values (#3363). If
   // a tick amount is set, allow decimals by default, as it increases
   // the chances for a good fit.
-  t < 0.5 || c.tickAmount !== void 0
-), !!c.tickAmount);
-Le(Bi, { xAxis: fs, yAxis: Pe(fs, no) });
-class Nt {
+  t < 0.5 || h.tickAmount !== void 0
+), !!h.tickAmount);
+ve(Mi, { xAxis: qi, yAxis: Se(qi, $n) });
+class Ut {
   /* *
    *
    *  Constructors
@@ -8836,7 +8835,7 @@ class Nt {
    */
   init(t, e, i = this.coll) {
     const s = i === "xAxis", r = this, n = r.isZAxis || (t.inverted ? !s : s);
-    r.chart = t, r.horiz = n, r.isXAxis = s, r.coll = i, H(this, "init", { userOptions: e }), r.opposite = P(e.opposite, r.opposite), r.side = P(
+    r.chart = t, r.horiz = n, r.isXAxis = s, r.coll = i, W(this, "init", { userOptions: e }), r.opposite = L(e.opposite, r.opposite), r.side = L(
       e.side,
       r.side,
       n ? r.opposite ? 0 : 2 : (
@@ -8846,9 +8845,9 @@ class Nt {
       // Right : left
     ), r.setOptions(e);
     const o = r.options, a = o.labels;
-    r.type ?? (r.type = o.type || "linear"), r.uniqueNames ?? (r.uniqueNames = o.uniqueNames ?? !0), H(r, "afterSetType"), r.userOptions = e, r.minPixelPadding = 0, r.reversed = P(o.reversed, r.reversed), r.visible = o.visible, r.zoomEnabled = o.zoomEnabled, r.hasNames = this.type === "category" || o.categories === !0, r.categories = ms(o.categories) && o.categories || (r.hasNames ? [] : void 0), r.names || (r.names = [], r.names.keys = {}), r.plotLinesAndBandsGroups = {}, r.positiveValuesOnly = !!r.logarithmic, r.isLinked = z(o.linkedTo), r.ticks = {}, r.labelEdge = [], r.minorTicks = {}, r.plotLinesAndBands = [], r.alternateBands = {}, r.len ?? (r.len = 0), r.minRange = r.userMinRange = o.minRange || o.maxZoom, r.range = o.range, r.offset = o.offset || 0, r.max = void 0, r.min = void 0;
-    const l = P(o.crosshair, uo(t.options.tooltip.crosshairs)[s ? 0 : 1]);
-    r.crosshair = l === !0 ? {} : l, t.axes.indexOf(r) === -1 && (s ? t.axes.splice(t.xAxis.length, 0, r) : t.axes.push(r), co(this, t[this.coll])), t.orderItems(r.coll), r.series = r.series || [], t.inverted && !r.isZAxis && s && !z(r.reversed) && (r.reversed = !0), r.labelRotation = T(a.rotation) ? a.rotation : void 0, oo(r, o), H(this, "afterInit");
+    r.type ?? (r.type = o.type || "linear"), r.uniqueNames ?? (r.uniqueNames = o.uniqueNames ?? !0), W(r, "afterSetType"), r.userOptions = e, r.minPixelPadding = 0, r.reversed = L(o.reversed, r.reversed), r.visible = o.visible, r.zoomEnabled = o.zoomEnabled, r.hasNames = this.type === "category" || o.categories === !0, r.categories = Ji(o.categories) && o.categories || (r.hasNames ? [] : void 0), r.names || (r.names = [], r.names.keys = {}), r.plotLinesAndBandsGroups = {}, r.positiveValuesOnly = !!r.logarithmic, r.isLinked = R(o.linkedTo), r.ticks = {}, r.labelEdge = [], r.minorTicks = {}, r.plotLinesAndBands = [], r.alternateBands = {}, r.len ?? (r.len = 0), r.minRange = r.userMinRange = o.minRange || o.maxZoom, r.range = o.range, r.offset = o.offset || 0, r.max = void 0, r.min = void 0;
+    const l = L(o.crosshair, jn(t.options.tooltip.crosshairs)[s ? 0 : 1]);
+    r.crosshair = l === !0 ? {} : l, t.axes.indexOf(r) === -1 && (s ? t.axes.splice(t.xAxis.length, 0, r) : t.axes.push(r), zn(this, t[this.coll])), t.orderItems(r.coll), r.series = r.series || [], t.inverted && !r.isZAxis && s && !R(r.reversed) && (r.reversed = !0), r.labelRotation = C(a.rotation) ? a.rotation : void 0, In(r, o), W(this, "afterInit");
   }
   /**
    * Merge and set options.
@@ -8883,7 +8882,7 @@ class Nt {
         }
       }
     );
-    this.options = Pe(
+    this.options = Se(
       e,
       // Merge in the default title for y-axis, which changes with
       // language settings
@@ -8892,9 +8891,9 @@ class Nt {
           text: this.chart.options.lang.yAxisTitle
         }
       } : {},
-      Bi[this.coll],
+      Mi[this.coll],
       t
-    ), H(this, "afterSetOptions", { userOptions: t });
+    ), W(this, "afterSetOptions", { userOptions: t });
   }
   /**
    * The default label formatter. The context is a special config object for
@@ -8914,20 +8913,20 @@ class Nt {
    * The formatted label content.
    */
   defaultLabelFormatter() {
-    const t = this.axis, e = this.chart, { numberFormatter: i } = e, s = T(this.value) ? this.value : NaN, r = t.chart.time, n = t.categories, o = this.dateTimeLabelFormat, a = Bi.lang, l = a.numericSymbols, h = a.numericSymbolMagnitude || 1e3, d = t.logarithmic ? Math.abs(s) : t.tickInterval;
-    let f = l?.length, p, u;
+    const t = this.axis, e = this.chart, { numberFormatter: i } = e, s = C(this.value) ? this.value : NaN, r = t.chart.time, n = t.categories, o = this.dateTimeLabelFormat, a = Mi.lang, l = a.numericSymbols, c = a.numericSymbolMagnitude || 1e3, f = t.logarithmic ? Math.abs(s) : t.tickInterval;
+    let d = l?.length, p, u;
     if (n)
       u = `${this.value}`;
     else if (o)
       u = r.dateFormat(o, s, !0);
-    else if (f && l && d >= 1e3)
-      for (; f-- && typeof u > "u"; )
-        p = Math.pow(h, f + 1), // Only accept a numeric symbol when the distance is more
+    else if (d && l && f >= 1e3)
+      for (; d-- && typeof u > "u"; )
+        p = Math.pow(c, d + 1), // Only accept a numeric symbol when the distance is more
         // than a full unit. So for example if the symbol is k, we
         // don't accept numbers like 0.5k.
-        d >= p && // Accept one decimal before the symbol. Accepts 0.5k but
+        f >= p && // Accept one decimal before the symbol. Accepts 0.5k but
         // not 0.25k. How does this work with the previous?
-        s * 10 % p === 0 && l[f] !== null && s !== 0 && (u = i(s / p, -1) + l[f]);
+        s * 10 % p === 0 && l[d] !== null && s !== 0 && (u = i(s / p, -1) + l[d]);
     return typeof u > "u" && (Math.abs(s) >= 1e4 ? u = i(s, -1) : u = i(s, -1, void 0, "")), u;
   }
   /**
@@ -8943,21 +8942,21 @@ class Nt {
   getSeriesExtremes() {
     const t = this;
     let e;
-    H(this, "getSeriesExtremes", null, function() {
+    W(this, "getSeriesExtremes", null, function() {
       t.hasVisibleSeries = !1, t.dataMin = t.dataMax = t.threshold = void 0, t.softThreshold = !t.isXAxis, t.series.forEach((i) => {
         if (i.reserveSpace()) {
           const s = i.options;
           let r, n = s.threshold, o, a;
           if (t.hasVisibleSeries = !0, t.positiveValuesOnly && (n || 0) <= 0 && (n = void 0), t.isXAxis)
-            r = i.getColumn("x"), r.length && (r = t.logarithmic ? r.filter((l) => l > 0) : r, e = i.getXExtremes(r), o = e.min, a = e.max, !T(o) && // #5010:
-            !(o instanceof Date) && (r = r.filter(T), e = i.getXExtremes(r), o = e.min, a = e.max), r.length && (t.dataMin = Math.min(P(t.dataMin, o), o), t.dataMax = Math.max(P(t.dataMax, a), a)));
+            r = i.getColumn("x"), r.length && (r = t.logarithmic ? r.filter((l) => l > 0) : r, e = i.getXExtremes(r), o = e.min, a = e.max, !C(o) && // #5010:
+            !(o instanceof Date) && (r = r.filter(C), e = i.getXExtremes(r), o = e.min, a = e.max), r.length && (t.dataMin = Math.min(L(t.dataMin, o), o), t.dataMax = Math.max(L(t.dataMax, a), a)));
           else {
             const l = i.applyExtremes();
-            T(l.dataMin) && (o = l.dataMin, t.dataMin = Math.min(P(t.dataMin, o), o)), T(l.dataMax) && (a = l.dataMax, t.dataMax = Math.max(P(t.dataMax, a), a)), z(n) && (t.threshold = n), (!s.softThreshold || t.positiveValuesOnly) && (t.softThreshold = !1);
+            C(l.dataMin) && (o = l.dataMin, t.dataMin = Math.min(L(t.dataMin, o), o)), C(l.dataMax) && (a = l.dataMax, t.dataMax = Math.max(L(t.dataMax, a), a)), R(n) && (t.threshold = n), (!s.softThreshold || t.positiveValuesOnly) && (t.softThreshold = !1);
           }
         }
       });
-    }), H(this, "afterGetSeriesExtremes");
+    }), W(this, "afterGetSeriesExtremes");
   }
   /**
    * Translate from axis value to pixel position on the chart, or back. Use
@@ -8968,11 +8967,11 @@ class Nt {
    */
   translate(t, e, i, s, r, n) {
     const o = this.linkedParent || this, a = s && o.old ? o.old.min : o.min;
-    if (!T(a))
+    if (!C(a))
       return NaN;
-    const l = o.minPixelPadding, h = (o.isOrdinal || o.brokenAxis?.hasBreaks || o.logarithmic && r) && !!o.lin2val;
-    let d = 1, f = 0, p = s && o.old ? o.old.transA : o.transA, u = 0;
-    return p || (p = o.transA), i && (d *= -1, f = o.len), o.reversed && (d *= -1, f -= d * (o.sector || o.len)), e ? (t = t * d + f, t -= l, u = t / p + a, h && (u = o.lin2val(u))) : (h && (t = o.val2lin(t)), u = d * (t - a) * p + f + d * l + (T(n) ? p * n : 0), o.isRadial || (u = Q(u))), u;
+    const l = o.minPixelPadding, c = (o.isOrdinal || o.brokenAxis?.hasBreaks || o.logarithmic && r) && !!o.lin2val;
+    let f = 1, d = 0, p = s && o.old ? o.old.transA : o.transA, u = 0;
+    return p || (p = o.transA), i && (f *= -1, d = o.len), o.reversed && (f *= -1, d -= f * (o.sector || o.len)), e ? (t = t * f + d, t -= l, u = t / p + a, c && (u = o.lin2val(u))) : (c && (t = o.val2lin(t)), u = f * (t - a) * p + d + f * l + (C(n) ? p * n : 0), o.isRadial || (u = Q(u))), u;
   }
   /**
    * Translate a value in terms of axis units into pixels within the chart.
@@ -9026,10 +9025,10 @@ class Nt {
    * The SVG path definition for the plot line.
    */
   getPlotLinePath(t) {
-    const e = this, i = e.chart, s = e.left, r = e.top, n = t.old, o = t.value, a = t.lineWidth, l = n && i.oldChartHeight || i.chartHeight, h = n && i.oldChartWidth || i.chartWidth, d = e.transB;
-    let f = t.translatedValue, p = t.force, u, g, x, m, b;
-    function y(S, k, w) {
-      return p !== "pass" && (S < k || S > w) && (p ? S = _e(S, k, w) : b = !0), S;
+    const e = this, i = e.chart, s = e.left, r = e.top, n = t.old, o = t.value, a = t.lineWidth, l = n && i.oldChartHeight || i.chartHeight, c = n && i.oldChartWidth || i.chartWidth, f = e.transB;
+    let d = t.translatedValue, p = t.force, u, g, x, m, b;
+    function y(w, S, k) {
+      return p !== "pass" && (w < S || w > k) && (p ? w = je(w, S, k) : b = !0), w;
     }
     const v = {
       value: o,
@@ -9037,10 +9036,10 @@ class Nt {
       old: n,
       force: p,
       acrossPanes: t.acrossPanes,
-      translatedValue: f
+      translatedValue: d
     };
-    return H(this, "getPlotLinePath", v, function(S) {
-      f = P(f, e.translate(o, void 0, void 0, n)), f = _e(f, -1e9, 1e9), u = x = f + d, g = m = l - f - d, T(f) ? e.horiz ? (g = r, m = l - e.bottom + (e.options.isInternal ? 0 : i.scrollablePixelsY || 0), u = x = y(u, s, s + e.width)) : (u = s, x = h - e.right + (i.scrollablePixelsX || 0), g = m = y(g, r, r + e.height)) : (b = !0, p = !1), S.path = b && !p ? void 0 : i.renderer.crispLine([["M", u, g], ["L", x, m]], a || 1);
+    return W(this, "getPlotLinePath", v, function(w) {
+      d = L(d, e.translate(o, void 0, void 0, n)), d = je(d, -1e9, 1e9), u = x = d + f, g = m = l - d - f, C(d) ? e.horiz ? (g = r, m = l - e.bottom + (e.options.isInternal ? 0 : i.scrollablePixelsY || 0), u = x = y(u, s, s + e.width)) : (u = s, x = c - e.right + (i.scrollablePixelsX || 0), g = m = y(g, r, r + e.height)) : (b = !0, p = !1), w.path = b && !p ? void 0 : i.renderer.crispLine([["M", u, g], ["L", x, m]], a || 1);
     }), v.path;
   }
   /**
@@ -9082,7 +9081,7 @@ class Nt {
   getMinorTickInterval() {
     const { minorTicks: t, minorTickInterval: e } = this.options;
     if (t === !0)
-      return P(e, "auto");
+      return L(e, "auto");
     if (t !== !1)
       return e;
   }
@@ -9097,18 +9096,18 @@ class Nt {
    */
   getMinorTickPositions() {
     const t = this, e = t.options, i = t.tickPositions, s = t.minorTickInterval, r = t.pointRangePadding || 0, n = (t.min || 0) - r, o = (t.max || 0) + r, a = t.brokenAxis?.hasBreaks ? t.brokenAxis.unitLength : o - n;
-    let l = [], h;
+    let l = [], c;
     if (a && a / s < t.len / 3) {
-      const d = t.logarithmic;
-      if (d)
-        this.paddedTicks.forEach(function(f, p, u) {
-          p && l.push.apply(l, d.getLogTickPositions(s, u[p - 1], u[p], !0));
+      const f = t.logarithmic;
+      if (f)
+        this.paddedTicks.forEach(function(d, p, u) {
+          p && l.push.apply(l, f.getLogTickPositions(s, u[p - 1], u[p], !0));
         });
       else if (t.dateTime && this.getMinorTickInterval() === "auto")
         l = l.concat(t.getTimeTicks(t.dateTime.normalizeTimeTickInterval(s), n, o, e.startOfWeek));
       else
-        for (h = n + (i[0] - n) % s; h <= o && h !== l[0]; h += s)
-          l.push(h);
+        for (c = n + (i[0] - n) % s; c <= o && c !== l[0]; c += s)
+          l.push(c);
     }
     return l.length !== 0 && t.trimTicks(l), l;
   }
@@ -9124,17 +9123,17 @@ class Nt {
    */
   adjustForMinRange() {
     const t = this, e = t.options, i = t.logarithmic, s = t.chart.time;
-    let { max: r, min: n, minRange: o } = t, a, l, h, d, f;
-    t.isXAxis && typeof o > "u" && !i && (z(e.min) || z(e.max) || z(e.floor) || z(e.ceiling) ? o = null : (h = gs(t.series.map((p) => {
+    let { max: r, min: n, minRange: o } = t, a, l, c, f, d;
+    t.isXAxis && typeof o > "u" && !i && (R(e.min) || R(e.max) || R(e.floor) || R(e.ceiling) ? o = null : (c = Qi(t.series.map((p) => {
       const u = p.getColumn("x");
       return p.xIncrement ? u.slice(0, 2) : u;
-    })) || 0, o = Math.min(h * 5, t.dataMax - t.dataMin))), T(r) && T(n) && T(o) && r - n < o && (l = t.dataMax - t.dataMin >= o, a = (o - r + n) / 2, d = [
+    })) || 0, o = Math.min(c * 5, t.dataMax - t.dataMin))), C(r) && C(n) && C(o) && r - n < o && (l = t.dataMax - t.dataMin >= o, a = (o - r + n) / 2, f = [
       n - a,
       s.parse(e.min) ?? n - a
-    ], l && (d[2] = i ? i.log2lin(t.dataMin) : t.dataMin), n = ps(d), f = [
+    ], l && (f[2] = i ? i.log2lin(t.dataMin) : t.dataMin), n = Zi(f), d = [
       n + o,
       s.parse(e.max) ?? n + o
-    ], l && (f[2] = i ? i.log2lin(t.dataMax) : t.dataMax), r = lo(f), r - n < o && (d[0] = r - o, d[1] = s.parse(e.min) ?? r - o, n = ps(d))), t.minRange = o, t.min = n, t.max = r;
+    ], l && (d[2] = i ? i.log2lin(t.dataMax) : t.dataMax), r = Nn(d), r - n < o && (f[0] = r - o, f[1] = s.parse(e.min) ?? r - o, n = Zi(f))), t.minRange = o, t.min = n, t.max = r;
   }
   /**
    * Find the closestPointRange across all series, including the single data
@@ -9151,8 +9150,8 @@ class Nt {
       const i = [];
       this.series.forEach(function(s) {
         const r = s.closestPointRange, n = s.getColumn("x");
-        n.length === 1 ? i.push(n[0]) : s.sorted && z(r) && s.reserveSpace() && (e = z(e) ? Math.min(e, r) : r);
-      }), i.length && (i.sort((s, r) => s - r), t = gs([i]));
+        n.length === 1 ? i.push(n[0]) : s.sorted && R(r) && s.reserveSpace() && (e = R(e) ? Math.min(e, r) : r);
+      }), i.length && (i.sort((s, r) => s - r), t = Qi([i]));
     }
     return t && e ? Math.min(t, e) : t || e;
   }
@@ -9171,9 +9170,9 @@ class Nt {
    * The X value that the point is given.
    */
   nameToX(t) {
-    const e = ms(this.options.categories), i = e ? this.categories : this.names;
+    const e = Ji(this.options.categories), i = e ? this.categories : this.names;
     let s = t.options.x, r;
-    return t.series.requireSorting = !1, z(s) || (s = this.uniqueNames && i ? e ? i.indexOf(t.name) : P(i.keys[t.name], -1) : t.series.autoIncrement()), s === -1 ? !e && i && (r = i.length) : T(s) && (r = s), typeof r < "u" ? (this.names[r] = t.name, this.names.keys[t.name] = r) : t.x && (r = t.x), r;
+    return t.series.requireSorting = !1, R(s) || (s = this.uniqueNames && i ? e ? i.indexOf(t.name) : L(i.keys[t.name], -1) : t.series.autoIncrement()), s === -1 ? !e && i && (r = i.length) : C(s) && (r = s), typeof r < "u" ? (this.names[r] = t.name, this.names.keys[t.name] = r) : t.x && (r = t.x), r;
   }
   /**
    * When changes have been done to series data, update the axis.names.
@@ -9204,14 +9203,14 @@ class Nt {
    */
   setAxisTranslation() {
     const t = this, e = t.max - t.min, i = t.linkedParent, s = !!t.categories, r = t.isXAxis;
-    let n = t.axisPointRange || 0, o, a = 0, l = 0, h, d = t.transA;
-    (r || s || n) && (o = t.getClosest(), i ? (a = i.minPointOffset, l = i.pointRangePadding) : t.series.forEach(function(f) {
-      const p = s ? 1 : r ? P(f.options.pointRange, o, 0) : t.axisPointRange || 0, u = f.options.pointPlacement;
+    let n = t.axisPointRange || 0, o, a = 0, l = 0, c, f = t.transA;
+    (r || s || n) && (o = t.getClosest(), i ? (a = i.minPointOffset, l = i.pointRangePadding) : t.series.forEach(function(d) {
+      const p = s ? 1 : r ? L(d.options.pointRange, o, 0) : t.axisPointRange || 0, u = d.options.pointPlacement;
       if (n = Math.max(n, p), !t.single || s) {
-        const g = f.is("xrange") ? !r : r;
-        a = Math.max(a, g && xs(u) ? 0 : p / 2), l = Math.max(l, g && u === "on" ? 0 : p);
+        const g = d.is("xrange") ? !r : r;
+        a = Math.max(a, g && ts(u) ? 0 : p / 2), l = Math.max(l, g && u === "on" ? 0 : p);
       }
-    }), h = t.ordinal?.slope && o ? t.ordinal.slope / o : 1, t.minPointOffset = a = a * h, t.pointRangePadding = l = l * h, t.pointRange = Math.min(n, t.single && s ? 1 : e), r && (t.closestPointRange = o)), t.translationSlope = t.transA = d = t.staticScale || t.len / (e + l || 1), t.transB = t.horiz ? t.left : t.bottom, t.minPixelPadding = d * a, H(this, "afterSetAxisTranslation");
+    }), c = t.ordinal?.slope && o ? t.ordinal.slope / o : 1, t.minPointOffset = a = a * c, t.pointRangePadding = l = l * c, t.pointRange = Math.min(n, t.single && s ? 1 : e), r && (t.closestPointRange = o)), t.translationSlope = t.transA = f = t.staticScale || t.len / (e + l || 1), t.transB = t.horiz ? t.left : t.bottom, t.minPixelPadding = f * a, W(this, "afterSetAxisTranslation");
   }
   /**
    * @private
@@ -9219,7 +9218,7 @@ class Nt {
    */
   minFromRange() {
     const { max: t, min: e } = this;
-    return T(t) && T(e) && t - e || void 0;
+    return C(t) && C(e) && t - e || void 0;
   }
   /**
    * Set the tick positions to round values and optionally extend the extremes
@@ -9234,38 +9233,38 @@ class Nt {
    * @emits Highcharts.Axis#event:foundExtremes
    */
   setTickInterval(t) {
-    const e = this, { categories: i, chart: s, dataMax: r, dataMin: n, dateTime: o, isXAxis: a, logarithmic: l, options: h, softThreshold: d } = e, f = s.time, p = T(e.threshold) ? e.threshold : void 0, u = e.minRange || 0, { ceiling: g, floor: x, linkedTo: m, softMax: b, softMin: y } = h, v = T(m) && s[e.coll]?.[m], S = h.tickPixelInterval;
-    let k = h.maxPadding, w = h.minPadding, M = 0, C, A = T(h.tickInterval) && h.tickInterval >= 0 ? h.tickInterval : void 0, O, L, E, D;
-    if (!o && !i && !v && this.getTickAmount(), E = P(e.userMin, f.parse(h.min)), D = P(e.userMax, f.parse(h.max)), v ? (e.linkedParent = v, C = v.getExtremes(), e.min = P(C.min, C.dataMin), e.max = P(C.max, C.dataMax), this.type !== v.type && Je(11, !0, s)) : (d && z(p) && T(r) && T(n) && (n >= p ? (O = p, w = 0) : r <= p && (L = p, k = 0)), e.min = P(E, O, n), e.max = P(D, L, r)), T(e.max) && T(e.min) && (l && (e.positiveValuesOnly && !t && Math.min(e.min, P(n, e.min)) <= 0 && Je(10, !0, s), e.min = Q(l.log2lin(e.min), 16), e.max = Q(l.log2lin(e.max), 16)), e.range && T(n) && (e.userMin = e.min = E = Math.max(n, e.minFromRange() || 0), e.userMax = D = e.max, e.range = void 0)), H(e, "foundExtremes"), e.adjustForMinRange(), T(e.min) && T(e.max)) {
-      if (!T(e.userMin) && T(y) && y < e.min && (e.min = E = y), !T(e.userMax) && T(b) && b > e.max && (e.max = D = b), !i && !e.axisPointRange && !e.stacking?.usePercentage && !v && (M = e.max - e.min, M && (!z(E) && w && (e.min -= M * w), !z(D) && k && (e.max += M * k))), !T(e.userMin) && T(x) && (e.min = Math.max(e.min, x)), !T(e.userMax) && T(g) && (e.max = Math.min(e.max, g)), d && T(n) && T(r)) {
-        const B = p || 0;
-        !z(E) && e.min < B && n >= B ? e.min = h.minRange ? Math.min(B, e.max - u) : B : !z(D) && e.max > B && r <= B && (e.max = h.minRange ? Math.max(B, e.min + u) : B);
+    const e = this, { categories: i, chart: s, dataMax: r, dataMin: n, dateTime: o, isXAxis: a, logarithmic: l, options: c, softThreshold: f } = e, d = s.time, p = C(e.threshold) ? e.threshold : void 0, u = e.minRange || 0, { ceiling: g, floor: x, linkedTo: m, softMax: b, softMin: y } = c, v = C(m) && s[e.coll]?.[m], w = c.tickPixelInterval;
+    let S = c.maxPadding, k = c.minPadding, M = 0, A, T = C(c.tickInterval) && c.tickInterval >= 0 ? c.tickInterval : void 0, O, B, $, N;
+    if (!o && !i && !v && this.getTickAmount(), $ = L(e.userMin, d.parse(c.min)), N = L(e.userMax, d.parse(c.max)), v ? (e.linkedParent = v, A = v.getExtremes(), e.min = L(A.min, A.dataMin), e.max = L(A.max, A.dataMax), this.type !== v.type && He(11, !0, s)) : (f && R(p) && C(r) && C(n) && (n >= p ? (O = p, k = 0) : r <= p && (B = p, S = 0)), e.min = L($, O, n), e.max = L(N, B, r)), C(e.max) && C(e.min) && (l && (e.positiveValuesOnly && !t && Math.min(e.min, L(n, e.min)) <= 0 && He(10, !0, s), e.min = Q(l.log2lin(e.min), 16), e.max = Q(l.log2lin(e.max), 16)), e.range && C(n) && (e.userMin = e.min = $ = Math.max(n, e.minFromRange() || 0), e.userMax = N = e.max, e.range = void 0)), W(e, "foundExtremes"), e.adjustForMinRange(), C(e.min) && C(e.max)) {
+      if (!C(e.userMin) && C(y) && y < e.min && (e.min = $ = y), !C(e.userMax) && C(b) && b > e.max && (e.max = N = b), !i && !e.axisPointRange && !e.stacking?.usePercentage && !v && (M = e.max - e.min, M && (!R($) && k && (e.min -= M * k), !R(N) && S && (e.max += M * S))), !C(e.userMin) && C(x) && (e.min = Math.max(e.min, x)), !C(e.userMax) && C(g) && (e.max = Math.min(e.max, g)), f && C(n) && C(r)) {
+        const D = p || 0;
+        !R($) && e.min < D && n >= D ? e.min = c.minRange ? Math.min(D, e.max - u) : D : !R(N) && e.max > D && r <= D && (e.max = c.minRange ? Math.max(D, e.min + u) : D);
       }
-      !s.polar && e.min > e.max && (z(h.min) ? e.max = e.min : z(h.max) && (e.min = e.max)), M = e.max - e.min;
+      !s.polar && e.min > e.max && (R(c.min) ? e.max = e.min : R(c.max) && (e.min = e.max)), M = e.max - e.min;
     }
-    if (e.min === e.max || !T(e.min) || !T(e.max) ? e.tickInterval = 1 : v && !A && S === v.options.tickPixelInterval ? e.tickInterval = A = v.tickInterval : e.tickInterval = P(
-      A,
+    if (e.min === e.max || !C(e.min) || !C(e.max) ? e.tickInterval = 1 : v && !T && w === v.options.tickPixelInterval ? e.tickInterval = T = v.tickInterval : e.tickInterval = L(
+      T,
       this.tickAmount ? M / Math.max(this.tickAmount - 1, 1) : void 0,
       // For categorized axis, 1 is default, for linear axis use
       // tickPix
       i ? 1 : (
         // Don't let it be more than the data range
-        M * S / Math.max(e.len, S)
+        M * w / Math.max(e.len, w)
       )
     ), a && !t) {
-      const B = e.min !== e.old?.min || e.max !== e.old?.max;
-      e.series.forEach(function(W) {
-        W.forceCrop = W.forceCropping?.(), W.processData(B);
-      }), H(this, "postProcessData", { hasExtremesChanged: B });
+      const D = e.min !== e.old?.min || e.max !== e.old?.max;
+      e.series.forEach(function(z) {
+        z.forceCrop = z.forceCropping?.(), z.processData(D);
+      }), W(this, "postProcessData", { hasExtremesChanged: D });
     }
-    e.setAxisTranslation(), H(this, "initialAxisTranslation"), e.pointRange && !A && (e.tickInterval = Math.max(e.pointRange, e.tickInterval));
-    const I = P(
-      h.minTickInterval,
+    e.setAxisTranslation(), W(this, "initialAxisTranslation"), e.pointRange && !T && (e.tickInterval = Math.max(e.pointRange, e.tickInterval));
+    const P = L(
+      c.minTickInterval,
       // In datetime axes, don't go below the data interval, except when
       // there are scatter-like series involved (#13369).
-      o && !e.series.some((B) => !B.sorted) ? e.closestPointRange : 0
+      o && !e.series.some((D) => !D.sorted) ? e.closestPointRange : 0
     );
-    !A && I && e.tickInterval < I && (e.tickInterval = I), !o && !l && !A && (e.tickInterval = ys(e, e.tickInterval)), this.tickAmount || (e.tickInterval = e.unsquish()), this.setTickPositions();
+    !T && P && e.tickInterval < P && (e.tickInterval = P), !o && !l && !T && (e.tickInterval = es(e, e.tickInterval)), this.tickAmount || (e.tickInterval = e.unsquish()), this.setTickPositions();
   }
   /**
    * Now we have computed the normalized tickInterval, get the tick positions.
@@ -9277,30 +9276,30 @@ class Nt {
    */
   setTickPositions() {
     const t = this, e = this.options, i = e.tickPositions, s = e.tickPositioner, r = this.getMinorTickInterval(), n = !this.isPanning, o = n && e.startOnTick, a = n && e.endOnTick;
-    let l = [], h;
-    if (this.tickmarkOffset = this.categories && e.tickmarkPlacement === "between" && this.tickInterval === 1 ? 0.5 : 0, this.single = this.min === this.max && z(this.min) && !this.tickAmount && // Data is on integer (#6563)
+    let l = [], c;
+    if (this.tickmarkOffset = this.categories && e.tickmarkPlacement === "between" && this.tickInterval === 1 ? 0.5 : 0, this.single = this.min === this.max && R(this.min) && !this.tickAmount && // Data is on integer (#6563)
     (this.min % 1 === 0 || // Between integers and decimals are not allowed (#6274)
     e.allowDecimals !== !1), i)
       l = i.slice();
-    else if (T(this.min) && T(this.max)) {
+    else if (C(this.min) && C(this.max)) {
       if (!t.ordinal?.positions && (this.max - this.min) / this.tickInterval > Math.max(2 * this.len, 200))
-        l = [this.min, this.max], Je(19, !1, this.chart);
+        l = [this.min, this.max], He(19, !1, this.chart);
       else if (t.dateTime)
         l = t.getTimeTicks(t.dateTime.normalizeTimeTickInterval(this.tickInterval, e.units), this.min, this.max, e.startOfWeek, t.ordinal?.positions, this.closestPointRange, !0);
       else if (t.logarithmic)
         l = t.logarithmic.getLogTickPositions(this.tickInterval, this.min, this.max);
       else {
-        const d = this.tickInterval;
-        let f = d;
-        for (; f <= d * 2 && (l = this.getLinearTickPositions(this.tickInterval, this.min, this.max), this.tickAmount && l.length > this.tickAmount); )
-          this.tickInterval = ys(this, f *= 1.1);
+        const f = this.tickInterval;
+        let d = f;
+        for (; d <= f * 2 && (l = this.getLinearTickPositions(this.tickInterval, this.min, this.max), this.tickAmount && l.length > this.tickAmount); )
+          this.tickInterval = es(this, d *= 1.1);
       }
       l.length > this.len && (l = [
         l[0],
         l[l.length - 1]
-      ], l[0] === l[1] && (l.length = 1)), s && (this.tickPositions = l, h = s.apply(t, [this.min, this.max]), h && (l = h));
+      ], l[0] === l[1] && (l.length = 1)), s && (this.tickPositions = l, c = s.apply(t, [this.min, this.max]), c && (l = c));
     }
-    this.tickPositions = l, this.minorTickInterval = r === "auto" && this.tickInterval ? this.tickInterval / e.minorTicksPerMajor : r, this.paddedTicks = l.slice(0), this.trimTicks(l, o, a), !this.isLinked && T(this.min) && T(this.max) && (this.single && l.length < 2 && !this.categories && !this.series.some((d) => d.is("heatmap") && d.options.pointPlacement === "between") && (this.min -= 0.5, this.max += 0.5), !i && !h && this.adjustTickAmount()), H(this, "afterSetTickPositions");
+    this.tickPositions = l, this.minorTickInterval = r === "auto" && this.tickInterval ? this.tickInterval / e.minorTicksPerMajor : r, this.paddedTicks = l.slice(0), this.trimTicks(l, o, a), !this.isLinked && C(this.min) && C(this.max) && (this.single && l.length < 2 && !this.categories && !this.series.some((f) => f.is("heatmap") && f.options.pointPlacement === "between") && (this.min -= 0.5, this.max += 0.5), !i && !c && this.adjustTickAmount()), W(this, "afterSetTickPositions");
   }
   /**
    * Handle startOnTick and endOnTick by either adapting to padding min/max or
@@ -9320,7 +9319,7 @@ class Nt {
    */
   trimTicks(t, e, i) {
     const s = t[0], r = t[t.length - 1], n = !this.isOrdinal && this.minPointOffset || 0;
-    if (H(this, "trimTicks"), !this.isLinked || // Linked non-grid axes should trim ticks, #21743.
+    if (W(this, "trimTicks"), !this.isLinked || // Linked non-grid axes should trim ticks, #21743.
     // Grid axis has custom handling of ticks.
     !this.grid) {
       if (e && s !== -1 / 0)
@@ -9333,7 +9332,7 @@ class Nt {
       else
         for (; this.max + n < t[t.length - 1]; )
           t.pop();
-      t.length === 0 && z(s) && !this.options.tickPositions && t.push((r + s) / 2);
+      t.length === 0 && R(s) && !this.options.tickPositions && t.push((r + s) / 2);
     }
   }
   /**
@@ -9353,29 +9352,29 @@ class Nt {
     s.startOnTick !== !1 && s.endOnTick !== !1 && // Don't try to align ticks on a log axis, they are not evenly
     // spaced (#6021)
     !t.logarithmic) {
-      const l = (d) => {
-        const { horiz: f, options: p } = d;
+      const l = (f) => {
+        const { horiz: d, options: p } = f;
         return [
-          f ? p.left : p.top,
+          d ? p.left : p.top,
           p.width,
           p.height,
           p.pane
         ].join(",");
-      }, h = l(this);
-      e[this.coll].forEach(function(d) {
-        const { series: f } = d;
+      }, c = l(this);
+      e[this.coll].forEach(function(f) {
+        const { series: d } = f;
         // #4442
-        f.length && f.some((p) => p.visible) && d !== t && l(d) === h && (a = !0, i.push(d));
+        d.length && d.some((p) => p.visible) && f !== t && l(f) === c && (a = !0, i.push(f));
       });
     }
     if (a && n) {
-      i.forEach((h) => {
-        const d = h.getThresholdAlignment(t);
-        T(d) && o.push(d);
+      i.forEach((c) => {
+        const f = c.getThresholdAlignment(t);
+        C(f) && o.push(f);
       });
-      const l = o.length > 1 ? o.reduce((h, d) => h += d, 0) / o.length : void 0;
-      i.forEach((h) => {
-        h.thresholdAlignment = l;
+      const l = o.length > 1 ? o.reduce((c, f) => c += f, 0) / o.length : void 0;
+      i.forEach((c) => {
+        c.thresholdAlignment = l;
       });
     }
     return a;
@@ -9388,8 +9387,8 @@ class Nt {
    * @function Highcharts.Axis#getThresholdAlignment
    */
   getThresholdAlignment(t) {
-    if ((!T(this.dataMin) || this !== t && this.series.some((e) => e.isDirty || e.isDirtyData)) && this.getSeriesExtremes(), T(this.threshold)) {
-      let e = _e((this.threshold - (this.dataMin || 0)) / ((this.dataMax || 0) - (this.dataMin || 0)), 0, 1);
+    if ((!C(this.dataMin) || this !== t && this.series.some((e) => e.isDirty || e.isDirtyData)) && this.getSeriesExtremes(), C(this.threshold)) {
+      let e = je((this.threshold - (this.dataMin || 0)) / ((this.dataMax || 0) - (this.dataMin || 0)), 0, 1);
       return this.options.reversed && (e = 1 - e), e;
     }
   }
@@ -9403,7 +9402,7 @@ class Nt {
   getTickAmount() {
     const t = this, e = this.options, i = e.tickPixelInterval;
     let s = e.tickAmount;
-    !z(e.tickInterval) && !s && this.len < i && !this.isRadial && !t.logarithmic && e.startOnTick && e.endOnTick && (s = 2), !s && this.alignToOthers() && (s = Math.ceil(this.len / i) + 1), s < 4 && (this.finalTickAmt = s, s = 5), this.tickAmount = s;
+    !R(e.tickInterval) && !s && this.len < i && !this.isRadial && !t.logarithmic && e.startOnTick && e.endOnTick && (s = 2), !s && this.alignToOthers() && (s = Math.ceil(this.len / i) + 1), s < 4 && (this.finalTickAmt = s, s = 5), this.tickAmount = s;
   }
   /**
    * When using multiple axes, adjust the number of ticks to match the highest
@@ -9413,15 +9412,15 @@ class Nt {
    * @function Highcharts.Axis#adjustTickAmount
    */
   adjustTickAmount() {
-    const t = this, { finalTickAmt: e, max: i, min: s, options: r, tickPositions: n, tickAmount: o, thresholdAlignment: a } = t, l = n?.length, h = P(t.threshold, t.softThreshold ? 0 : null);
-    let d, f, p = t.tickInterval, u;
+    const t = this, { finalTickAmt: e, max: i, min: s, options: r, tickPositions: n, tickAmount: o, thresholdAlignment: a } = t, l = n?.length, c = L(t.threshold, t.softThreshold ? 0 : null);
+    let f, d, p = t.tickInterval, u;
     const g = () => n.push(Q(n[n.length - 1] + p)), x = () => n.unshift(Q(n[0] - p));
-    if (T(a) && (u = a < 0.5 ? Math.ceil(a * (o - 1)) : Math.floor(a * (o - 1)), r.reversed && (u = o - 1 - u)), t.hasData() && T(s) && T(i)) {
+    if (C(a) && (u = a < 0.5 ? Math.ceil(a * (o - 1)) : Math.floor(a * (o - 1)), r.reversed && (u = o - 1 - u)), t.hasData() && C(s) && C(i)) {
       const m = () => {
         t.transA *= (l - 1) / (o - 1), t.min = r.startOnTick ? n[0] : Math.min(s, n[0]), t.max = r.endOnTick ? n[n.length - 1] : Math.max(i, n[n.length - 1]);
       };
-      if (T(u) && T(t.threshold)) {
-        for (; n[u] !== h || n.length !== o || n[0] > s || n[n.length - 1] < i; ) {
+      if (C(u) && C(t.threshold)) {
+        for (; n[u] !== c || n.length !== o || n[0] > s || n[n.length - 1] < i; ) {
           for (n.length = 0, n.push(t.threshold); n.length < o; )
             // Start by prepending positions until the threshold
             // is at the required index...
@@ -9433,14 +9432,14 @@ class Nt {
         m();
       } else if (l < o) {
         for (; n.length < o; )
-          n.length % 2 || s === h ? g() : x();
+          n.length % 2 || s === c ? g() : x();
         m();
       }
-      if (z(e)) {
-        for (f = d = n.length; f--; )
+      if (R(e)) {
+        for (d = f = n.length; d--; )
           // Remove every other tick
-          (e === 3 && f % 2 === 1 || // Remove all but first and last
-          e <= 2 && f > 0 && f < d - 1) && n.splice(f, 1);
+          (e === 3 && d % 2 === 1 || // Remove all but first and last
+          e <= 2 && d > 0 && d < f - 1) && n.splice(d, 1);
         t.finalTickAmt = void 0;
       }
     }
@@ -9460,7 +9459,7 @@ class Nt {
       s = s || o.isDirtyData || o.isDirty, r = r || o.xAxis?.isDirty || !1;
     }), t.setAxisSize();
     const n = t.len !== t.old?.len;
-    n || s || r || t.isLinked || t.forceRedraw || t.userMin !== t.old?.userMin || t.userMax !== t.old?.userMax || t.alignToOthers() ? (i && e === "yAxis" && i.buildStacks(), t.forceRedraw = !1, t.userMinRange || (t.minRange = void 0), t.getSeriesExtremes(), t.setTickInterval(), i && e === "xAxis" && i.buildStacks(), t.isDirty || (t.isDirty = n || t.min !== t.old?.min || t.max !== t.old?.max)) : i && i.cleanStacks(), s && delete t.allExtremes, H(this, "afterSetScale");
+    n || s || r || t.isLinked || t.forceRedraw || t.userMin !== t.old?.userMin || t.userMax !== t.old?.userMax || t.alignToOthers() ? (i && e === "yAxis" && i.buildStacks(), t.forceRedraw = !1, t.userMinRange || (t.minRange = void 0), t.getSeriesExtremes(), t.setTickInterval(), i && e === "xAxis" && i.buildStacks(), t.isDirty || (t.isDirty = n || t.min !== t.old?.min || t.max !== t.old?.max)) : i && i.cleanStacks(), s && delete t.allExtremes, W(this, "afterSetScale");
   }
   /**
    * Set the minimum and maximum of the axes after render time. If the
@@ -9503,7 +9502,7 @@ class Nt {
     const n = this.chart;
     this.series.forEach((o) => {
       delete o.kdTree;
-    }), t = n.time.parse(t), e = n.time.parse(e), r = Le(r, { min: t, max: e }), H(this, "setExtremes", r, (o) => {
+    }), t = n.time.parse(t), e = n.time.parse(e), r = ve(r, { min: t, max: e }), W(this, "setExtremes", r, (o) => {
       this.userMin = o.min, this.userMax = o.max, this.eventArgs = o, i && n.redraw(s);
     });
   }
@@ -9514,7 +9513,7 @@ class Nt {
    * @function Highcharts.Axis#setAxisSize
    */
   setAxisSize() {
-    const t = this.chart, e = this.options, i = e.offsets || [0, 0, 0, 0], s = this.horiz, r = this.width = Math.round(ce(P(e.width, t.plotWidth - i[3] + i[1]), t.plotWidth)), n = this.height = Math.round(ce(P(e.height, t.plotHeight - i[0] + i[2]), t.plotHeight)), o = this.top = Math.round(ce(P(e.top, t.plotTop + i[0]), t.plotHeight, t.plotTop)), a = this.left = Math.round(ce(P(e.left, t.plotLeft + i[3]), t.plotWidth, t.plotLeft));
+    const t = this.chart, e = this.options, i = e.offsets || [0, 0, 0, 0], s = this.horiz, r = this.width = Math.round(ne(L(e.width, t.plotWidth - i[3] + i[1]), t.plotWidth)), n = this.height = Math.round(ne(L(e.height, t.plotHeight - i[0] + i[2]), t.plotHeight)), o = this.top = Math.round(ne(L(e.top, t.plotTop + i[0]), t.plotHeight, t.plotTop)), a = this.left = Math.round(ne(L(e.left, t.plotLeft + i[3]), t.plotWidth, t.plotLeft));
     this.bottom = t.chartHeight - n - o, this.right = t.chartWidth - r - a, this.len = Math.max(s ? r : n, 0), this.pos = s ? a : o;
   }
   /**
@@ -9571,8 +9570,8 @@ class Nt {
    * Can be `"center"`, `"left"` or `"right"`.
    */
   autoLabelAlign(t) {
-    const e = (P(t, 0) - this.side * 90 + 720) % 360, i = { align: "center" };
-    return H(this, "autoLabelAlign", i, function(s) {
+    const e = (L(t, 0) - this.side * 90 + 720) % 360, i = { align: "center" };
+    return W(this, "autoLabelAlign", i, function(s) {
       e > 15 && e < 165 ? s.align = "right" : e > 195 && e < 345 && (s.align = "left");
     }), i.align;
   }
@@ -9589,7 +9588,7 @@ class Nt {
    * An array of tickLength and tickWidth
    */
   tickSize(t) {
-    const e = this.options, i = P(
+    const e = this.options, i = L(
       e[t === "tick" ? "tickWidth" : "minorTickWidth"],
       // Default to 1 on linear and datetime X axes
       t === "tick" && this.isXAxis && !this.categories ? 1 : 0
@@ -9597,7 +9596,7 @@ class Nt {
     let s = e[t === "tick" ? "tickLength" : "minorTickLength"], r;
     i && s && (e[t + "Position"] === "inside" && (s = -s), r = [s, i]);
     const n = { tickSize: r };
-    return H(this, "afterTickSize", n), n.tickSize;
+    return W(this, "afterTickSize", n), n.tickSize;
   }
   /**
    * Return the size of the labels.
@@ -9622,16 +9621,16 @@ class Nt {
       let g = (u + 2 * e) / (r || 1);
       return g = g > 1 ? Math.ceil(g) : 1, g * s > a && u !== 1 / 0 && r !== 1 / 0 && a && (g = Math.ceil(a / s)), Q(g * s);
     };
-    let h = s, d, f = Number.MAX_VALUE, p;
+    let c = s, f, d = Number.MAX_VALUE, p;
     if (i) {
-      if (t.staggerLines || (T(n) ? p = [n] : r < t.autoRotationLimit && (p = t.autoRotation)), p) {
+      if (t.staggerLines || (C(n) ? p = [n] : r < t.autoRotationLimit && (p = t.autoRotation)), p) {
         let u, g;
         for (const x of p)
-          (x === n || x && x >= -90 && x <= 90) && (u = l(Math.abs(o / Math.sin(ao * x))), g = u + Math.abs(x / 360), g < f && (f = g, d = x, h = u));
+          (x === n || x && x >= -90 && x <= 90) && (u = l(Math.abs(o / Math.sin(Bn * x))), g = u + Math.abs(x / 360), g < d && (d = g, f = x, c = u));
       }
     } else
-      h = l(o * 0.75);
-    return this.autoRotation = p, this.labelRotation = P(d, T(n) ? n : 0), t.step ? s : h;
+      c = l(o * 0.75);
+    return this.autoRotation = p, this.labelRotation = L(f, C(n) ? n : 0), t.step ? s : c;
   }
   /**
    * Get the general slot width for labels/categories on this axis. This may
@@ -9650,7 +9649,7 @@ class Nt {
    */
   getSlotWidth(t) {
     const e = this.chart, i = this.horiz, s = this.options.labels, r = Math.max(this.tickPositions.length - (this.categories ? 0 : 1), 1), n = e.margin[3];
-    if (t && T(t.slotWidth))
+    if (t && C(t.slotWidth))
       return t.slotWidth;
     if (i && s.step < 2 && !this.isRadial)
       return s.rotation ? 0 : (this.staggerLines || 1) * this.len / r;
@@ -9671,24 +9670,24 @@ class Nt {
    * @function Highcharts.Axis#renderUnsquish
    */
   renderUnsquish() {
-    const t = this.chart, e = t.renderer, i = this.tickPositions, s = this.ticks, r = this.options.labels, n = r.style, o = this.horiz, a = this.getSlotWidth(), l = Math.max(1, Math.round(a - (o ? 2 * (r.padding || 0) : r.distance || 0))), h = {}, d = this.labelMetrics(), f = n.lineClamp;
-    let p, u = f ?? (Math.floor(this.len / (i.length * d.h)) || 1), g = 0;
-    xs(r.rotation) || (h.rotation = r.rotation || 0), i.forEach(function(x) {
+    const t = this.chart, e = t.renderer, i = this.tickPositions, s = this.ticks, r = this.options.labels, n = r.style, o = this.horiz, a = this.getSlotWidth(), l = Math.max(1, Math.round(a - (o ? 2 * (r.padding || 0) : r.distance || 0))), c = {}, f = this.labelMetrics(), d = n.lineClamp;
+    let p, u = d ?? (Math.floor(this.len / (i.length * f.h)) || 1), g = 0;
+    ts(r.rotation) || (c.rotation = r.rotation || 0), i.forEach(function(x) {
       const m = s[x];
       m.movedLabel && m.replaceMovedLabel();
       const b = m.label?.textPxLength || 0;
       b > g && (g = b);
-    }), this.maxLabelLength = g, this.autoRotation ? g > l && g > d.h ? h.rotation = this.labelRotation : this.labelRotation = 0 : a && (p = l), h.rotation && (p = g > t.chartHeight * 0.5 ? t.chartHeight * 0.33 : g, f || (u = 1)), this.labelAlign = r.align || this.autoLabelAlign(this.labelRotation), this.labelAlign && (h.align = this.labelAlign), i.forEach(function(x) {
+    }), this.maxLabelLength = g, this.autoRotation ? g > l && g > f.h ? c.rotation = this.labelRotation : this.labelRotation = 0 : a && (p = l), c.rotation && (p = g > t.chartHeight * 0.5 ? t.chartHeight * 0.33 : g, d || (u = 1)), this.labelAlign = r.align || this.autoLabelAlign(this.labelRotation), this.labelAlign && (c.align = this.labelAlign), i.forEach(function(x) {
       const m = s[x], b = m?.label, y = n.width, v = {};
-      b && (b.attr(h), m.shortenLabel ? m.shortenLabel() : p && !y && // Setting width in this case messes with the bounding box
+      b && (b.attr(c), m.shortenLabel ? m.shortenLabel() : p && !y && // Setting width in this case messes with the bounding box
       // (#7975)
       n.whiteSpace !== "nowrap" && // Speed optimizing, #7656
       (p < (b.textPxLength || 0) || // Resetting CSS, #4928
-      b.element.tagName === "SPAN") ? b.css(Le(v, {
+      b.element.tagName === "SPAN") ? b.css(ve(v, {
         width: `${p}px`,
         lineClamp: u
-      })) : b.styles.width && !v.width && !y && b.css({ width: "auto" }), m.rotation = h.rotation);
-    }, this), this.tickRotCorr = e.rotCorr(d.b, this.labelRotation || 0, this.side !== 0);
+      })) : b.styles.width && !v.width && !y && b.css({ width: "auto" }), m.rotation = c.rotation);
+    }, this), this.tickRotCorr = e.rotCorr(f.b, this.labelRotation || 0, this.side !== 0);
   }
   /**
    * Return true if the axis has associated data.
@@ -9702,7 +9701,7 @@ class Nt {
   hasData() {
     return this.series.some(function(t) {
       return t.hasData();
-    }) || this.options.showEmpty && z(this.min) && z(this.max);
+    }) || this.options.showEmpty && R(this.min) && R(this.max);
   }
   /**
    * Adds the title defined in axis.options.title.
@@ -9727,7 +9726,7 @@ class Nt {
       zIndex: 7,
       rotation: o.rotation || 0,
       align: l
-    }).addClass("highcharts-axis-title"), a || e.axisTitle.css(Pe(o.style)), e.axisTitle.add(e.axisGroup), e.axisTitle.isNew = !0), !a && !o.style.width && !e.isRadial && e.axisTitle.css({
+    }).addClass("highcharts-axis-title"), a || e.axisTitle.css(Se(o.style)), e.axisTitle.add(e.axisGroup), e.axisTitle.isNew = !0), !a && !o.style.width && !e.isRadial && e.axisTitle.css({
       width: e.len + "px"
     }), e.axisTitle[t ? "show" : "hide"](t);
   }
@@ -9745,7 +9744,7 @@ class Nt {
    */
   generateTick(t) {
     const e = this, i = e.ticks;
-    i[t] ? i[t].addLabel() : i[t] = new _t(e, t);
+    i[t] ? i[t].addLabel() : i[t] = new Gt(e, t);
   }
   /**
    * Create the axisGroup and gridGroup elements on first iteration.
@@ -9774,31 +9773,31 @@ class Nt {
    * @emits Highcharts.Axis#event:afterGetOffset
    */
   getOffset() {
-    const t = this, { chart: e, horiz: i, options: s, side: r, ticks: n, tickPositions: o, coll: a } = t, l = e.inverted && !t.isZAxis ? [1, 0, 3, 2][r] : r, h = t.hasData(), d = s.title, f = s.labels, p = T(s.crossing), u = e.axisOffset, g = e.clipOffset, x = [-1, 1, 1, -1][r];
-    let m, b = 0, y, v = 0, S = 0, k, w;
-    if (t.showAxis = m = h || s.showEmpty, t.staggerLines = t.horiz && f.staggerLines || void 0, t.createGroups(), h || t.isLinked ? (o.forEach(function(M) {
+    const t = this, { chart: e, horiz: i, options: s, side: r, ticks: n, tickPositions: o, coll: a } = t, l = e.inverted && !t.isZAxis ? [1, 0, 3, 2][r] : r, c = t.hasData(), f = s.title, d = s.labels, p = C(s.crossing), u = e.axisOffset, g = e.clipOffset, x = [-1, 1, 1, -1][r];
+    let m, b = 0, y, v = 0, w = 0, S, k;
+    if (t.showAxis = m = c || s.showEmpty, t.staggerLines = t.horiz && d.staggerLines || void 0, t.createGroups(), c || t.isLinked ? (o.forEach(function(M) {
       t.generateTick(M);
-    }), t.renderUnsquish(), t.reserveSpaceDefault = r === 0 || r === 2 || { 1: "left", 3: "right" }[r] === t.labelAlign, P(f.reserveSpace, p ? !1 : null, t.labelAlign === "center" ? !0 : null, t.reserveSpaceDefault) && o.forEach(function(M) {
-      S = Math.max(n[M].getLabelSize(), S);
-    }), t.staggerLines && (S *= t.staggerLines), t.labelOffset = S * (t.opposite ? -1 : 1)) : he(n, function(M, C) {
-      M.destroy(), delete n[C];
-    }), d?.text && d.enabled !== !1 && (t.addTitle(m), m && !p && d.reserveSpace !== !1 && (t.titleOffset = b = t.axisTitle.getBBox()[i ? "height" : "width"], y = d.offset, v = z(y) ? 0 : P(d.margin, i ? 5 : 10))), t.renderLine(), t.offset = x * P(s.offset, u[r] ? u[r] + (s.margin || 0) : 0), t.tickRotCorr = t.tickRotCorr || { x: 0, y: 0 }, r === 0 ? w = -t.labelMetrics().h : r === 2 ? w = t.tickRotCorr.y : w = 0, k = Math.abs(S) + v, S && (k -= w, k += x * (i ? P(f.y, t.tickRotCorr.y + x * f.distance) : P(f.x, x * f.distance))), t.axisTitleMargin = P(y, k), t.getMaxLabelDimensions && (t.maxLabelDimensions = t.getMaxLabelDimensions(n, o)), a !== "colorAxis" && g) {
+    }), t.renderUnsquish(), t.reserveSpaceDefault = r === 0 || r === 2 || { 1: "left", 3: "right" }[r] === t.labelAlign, L(d.reserveSpace, p ? !1 : null, t.labelAlign === "center" ? !0 : null, t.reserveSpaceDefault) && o.forEach(function(M) {
+      w = Math.max(n[M].getLabelSize(), w);
+    }), t.staggerLines && (w *= t.staggerLines), t.labelOffset = w * (t.opposite ? -1 : 1)) : re(n, function(M, A) {
+      M.destroy(), delete n[A];
+    }), f?.text && f.enabled !== !1 && (t.addTitle(m), m && !p && f.reserveSpace !== !1 && (t.titleOffset = b = t.axisTitle.getBBox()[i ? "height" : "width"], y = f.offset, v = R(y) ? 0 : L(f.margin, i ? 5 : 10))), t.renderLine(), t.offset = x * L(s.offset, u[r] ? u[r] + (s.margin || 0) : 0), t.tickRotCorr = t.tickRotCorr || { x: 0, y: 0 }, r === 0 ? k = -t.labelMetrics().h : r === 2 ? k = t.tickRotCorr.y : k = 0, S = Math.abs(w) + v, w && (S -= k, S += x * (i ? L(d.y, t.tickRotCorr.y + x * d.distance) : L(d.x, x * d.distance))), t.axisTitleMargin = L(y, S), t.getMaxLabelDimensions && (t.maxLabelDimensions = t.getMaxLabelDimensions(n, o)), a !== "colorAxis" && g) {
       const M = this.tickSize("tick");
       u[r] = Math.max(
         u[r],
         (t.axisTitleMargin || 0) + b + x * t.offset,
-        k,
+        S,
         // #3027
         o?.length && M ? M[0] + x * t.offset : 0
         // #4866
       );
-      const C = !t.axisLine || s.offset ? 0 : (
+      const A = !t.axisLine || s.offset ? 0 : (
         // #4308, #4371
         t.axisLine.strokeWidth() / 2
       );
-      g[l] = Math.max(g[l], C);
+      g[l] = Math.max(g[l], A);
     }
-    H(this, "afterGetOffset");
+    W(this, "afterGetOffset");
   }
   /**
    * Internal function to get the path for the axis line. Extended for polar
@@ -9850,7 +9849,7 @@ class Nt {
    * X and Y positions for the title.
    */
   getTitlePosition(t) {
-    const e = this.horiz, i = this.left, s = this.top, r = this.len, n = this.options.title, o = e ? i : s, a = this.opposite, l = this.offset, h = n.x, d = n.y, f = this.chart.renderer.fontMetrics(t), p = t ? Math.max(t.getBBox(!1, 0).height - f.h - 1, 0) : 0, u = {
+    const e = this.horiz, i = this.left, s = this.top, r = this.len, n = this.options.title, o = e ? i : s, a = this.opposite, l = this.offset, c = n.x, f = n.y, d = this.chart.renderer.fontMetrics(t), p = t ? Math.max(t.getBBox(!1, 0).height - d.h - 1, 0) : 0, u = {
       low: o + (e ? 0 : r),
       middle: o + r / 2,
       high: o + (e ? r : 0)
@@ -9861,15 +9860,15 @@ class Nt {
       // Top
       p,
       // Right
-      f.f,
+      d.f,
       // Bottom
       -p
       // Left
     ][this.side], x = {
-      x: e ? u + h : g + (a ? this.width : 0) + l + h,
-      y: e ? g + d - (a ? this.height : 0) + l : u + d
+      x: e ? u + c : g + (a ? this.width : 0) + l + c,
+      y: e ? g + f - (a ? this.height : 0) + l : u + f
     };
-    return H(this, "afterGetTitlePosition", { titlePosition: x }), x;
+    return W(this, "afterGetTitlePosition", { titlePosition: x }), x;
   }
   /**
    * Render a minor tick into the given position. If a minor tick already
@@ -9885,7 +9884,7 @@ class Nt {
    */
   renderMinorTick(t, e) {
     const i = this, s = i.minorTicks;
-    s[t] || (s[t] = new _t(i, t, "minor")), e && s[t].isNew && s[t].render(null, !0), s[t].render(null, !1, 1);
+    s[t] || (s[t] = new Gt(i, t, "minor")), e && s[t].isNew && s[t].render(null, !0), s[t].render(null, !1, 1);
   }
   /**
    * Render a major tick into the given position. If a tick already exists
@@ -9904,7 +9903,7 @@ class Nt {
    */
   renderTick(t, e, i) {
     const s = this, r = s.isLinked, n = s.ticks;
-    (!r || t >= s.min && t <= s.max || s.grid?.isColumn) && (n[t] || (n[t] = new _t(s, t)), i && n[t].isNew && n[t].render(e, !0, -1), n[t].render(e));
+    (!r || t >= s.min && t <= s.max || s.grid?.isColumn) && (n[t] || (n[t] = new Gt(s, t)), i && n[t].isNew && n[t].render(e, !0, -1), n[t].render(e));
   }
   /**
    * Render the axis.
@@ -9915,55 +9914,55 @@ class Nt {
    * @emits Highcharts.Axis#event:afterRender
    */
   render() {
-    const t = this, e = t.chart, i = t.logarithmic, s = e.renderer, r = t.options, n = t.isLinked, o = t.tickPositions, a = t.axisTitle, l = t.ticks, h = t.minorTicks, d = t.alternateBands, f = r.stackLabels, p = r.alternateGridColor, u = r.crossing, g = t.tickmarkOffset, x = t.axisLine, m = t.showAxis, b = ro(s.globalAnimation);
+    const t = this, e = t.chart, i = t.logarithmic, s = e.renderer, r = t.options, n = t.isLinked, o = t.tickPositions, a = t.axisTitle, l = t.ticks, c = t.minorTicks, f = t.alternateBands, d = r.stackLabels, p = r.alternateGridColor, u = r.crossing, g = t.tickmarkOffset, x = t.axisLine, m = t.showAxis, b = Dn(s.globalAnimation);
     let y, v;
-    if (t.labelEdge.length = 0, t.overlap = !1, [l, h, d].forEach(function(S) {
-      he(S, function(k) {
-        k.isActive = !1;
+    if (t.labelEdge.length = 0, t.overlap = !1, [l, c, f].forEach(function(w) {
+      re(w, function(S) {
+        S.isActive = !1;
       });
-    }), T(u)) {
-      const S = this.isXAxis ? e.yAxis[0] : e.xAxis[0], k = [1, -1, -1, 1][this.side];
-      if (S) {
-        let w = S.toPixels(u, !0);
-        t.horiz && (w = S.len - w), t.offset = k * w;
+    }), C(u)) {
+      const w = this.isXAxis ? e.yAxis[0] : e.xAxis[0], S = [1, -1, -1, 1][this.side];
+      if (w) {
+        let k = w.toPixels(u, !0);
+        t.horiz && (k = w.len - k), t.offset = S * k;
       }
     }
     if (t.hasData() || n) {
-      const S = t.chart.hasRendered && t.old && T(t.old.min);
-      t.minorTickInterval && !t.categories && t.getMinorTickPositions().forEach(function(k) {
-        t.renderMinorTick(k, S);
-      }), o.length && (o.forEach(function(k, w) {
-        t.renderTick(k, w, S);
-      }), g && (t.min === 0 || t.single) && (l[-1] || (l[-1] = new _t(t, -1, null, !0)), l[-1].render(-1))), p && o.forEach(function(k, w) {
-        v = typeof o[w + 1] < "u" ? o[w + 1] + g : t.max - g, w % 2 === 0 && k < t.max && v <= t.max + (e.polar ? -g : g) && (d[k] || (d[k] = new N.PlotLineOrBand(t, {})), y = k + g, d[k].options = {
+      const w = t.chart.hasRendered && t.old && C(t.old.min);
+      t.minorTickInterval && !t.categories && t.getMinorTickPositions().forEach(function(S) {
+        t.renderMinorTick(S, w);
+      }), o.length && (o.forEach(function(S, k) {
+        t.renderTick(S, k, w);
+      }), g && (t.min === 0 || t.single) && (l[-1] || (l[-1] = new Gt(t, -1, null, !0)), l[-1].render(-1))), p && o.forEach(function(S, k) {
+        v = typeof o[k + 1] < "u" ? o[k + 1] + g : t.max - g, k % 2 === 0 && S < t.max && v <= t.max + (e.polar ? -g : g) && (f[S] || (f[S] = new I.PlotLineOrBand(t, {})), y = S + g, f[S].options = {
           from: i ? i.lin2log(y) : y,
           to: i ? i.lin2log(v) : v,
           color: p,
           className: "highcharts-alternate-grid"
-        }, d[k].render(), d[k].isActive = !0);
-      }), t._addedPlotLB || (t._addedPlotLB = !0, (r.plotLines || []).concat(r.plotBands || []).forEach(function(k) {
-        t.addPlotBandOrLine(k);
+        }, f[S].render(), f[S].isActive = !0);
+      }), t._addedPlotLB || (t._addedPlotLB = !0, (r.plotLines || []).concat(r.plotBands || []).forEach(function(S) {
+        t.addPlotBandOrLine(S);
       }));
     }
-    [l, h, d].forEach(function(S) {
-      const k = [], w = b.duration, M = function() {
-        let C = k.length;
-        for (; C--; )
-          S[k[C]] && !S[k[C]].isActive && (S[k[C]].destroy(), delete S[k[C]]);
+    [l, c, f].forEach(function(w) {
+      const S = [], k = b.duration, M = function() {
+        let A = S.length;
+        for (; A--; )
+          w[S[A]] && !w[S[A]].isActive && (w[S[A]].destroy(), delete w[S[A]]);
       };
-      he(S, function(C, A) {
-        C.isActive || (C.render(A, !1, 0), C.isActive = !1, k.push(A));
-      }), go(M, S === d || !e.hasRendered || !w ? 0 : w);
+      re(w, function(A, T) {
+        A.isActive || (A.render(T, !1, 0), A.isActive = !1, S.push(T));
+      }), Hn(M, w === f || !e.hasRendered || !k ? 0 : k);
     }), x && (x[x.isPlaced ? "animate" : "attr"]({
       d: this.getLinePath(x.strokeWidth())
-    }), x.isPlaced = !0, x[m ? "show" : "hide"](m)), a && m && (a[a.isNew ? "attr" : "animate"](t.getTitlePosition(a)), a.isNew = !1), f?.enabled && t.stacking && t.stacking.renderStackTotals(), t.old = {
+    }), x.isPlaced = !0, x[m ? "show" : "hide"](m)), a && m && (a[a.isNew ? "attr" : "animate"](t.getTitlePosition(a)), a.isNew = !1), d?.enabled && t.stacking && t.stacking.renderStackTotals(), t.old = {
       len: t.len,
       max: t.max,
       min: t.min,
       transA: t.transA,
       userMax: t.userMax,
       userMin: t.userMin
-    }, t.isDirty = !1, H(this, "afterRender");
+    }, t.isDirty = !1, W(this, "afterRender");
   }
   /**
    * Redraw the axis to reflect changes in the data or axis extremes. Called
@@ -9987,7 +9986,7 @@ class Nt {
    * @function Highcharts.Axis#getKeepProps
    */
   getKeepProps() {
-    return this.keepProps || Nt.keepProps;
+    return this.keepProps || Ut.keepProps;
   }
   /**
    * Destroys an Axis instance. See {@link Axis#remove} for the API endpoint
@@ -10001,8 +10000,8 @@ class Nt {
    */
   destroy(t) {
     const e = this, i = e.plotLinesAndBands, s = this.eventOptions;
-    if (H(this, "destroy", { keepEvents: t }), t || po(e), [e.ticks, e.minorTicks, e.alternateBands].forEach(function(r) {
-      ho(r);
+    if (W(this, "destroy", { keepEvents: t }), t || Fn(e), [e.ticks, e.minorTicks, e.alternateBands].forEach(function(r) {
+      Rn(r);
     }), i) {
       let r = i.length;
       for (; r--; )
@@ -10021,7 +10020,7 @@ class Nt {
     });
     for (const r in e.plotLinesAndBandsGroups)
       e.plotLinesAndBandsGroups[r] = e.plotLinesAndBandsGroups[r].destroy();
-    he(e, function(r, n) {
+    re(e, function(r, n) {
       e.getKeepProps().indexOf(n) === -1 && delete e[n];
     }), this.eventOptions = s;
   }
@@ -10042,36 +10041,36 @@ class Nt {
    */
   drawCrosshair(t, e) {
     const i = this.crosshair, s = i?.snap ?? !0, r = this.chart;
-    let n, o, a, l = this.cross, h;
-    if (H(this, "drawCrosshair", { e: t, point: e }), t || (t = this.cross?.e), // Disabled in options
+    let n, o, a, l = this.cross, c;
+    if (W(this, "drawCrosshair", { e: t, point: e }), t || (t = this.cross?.e), // Disabled in options
     !i || // Snap
-    (z(e) || !s) === !1)
+    (R(e) || !s) === !1)
       this.hideCrosshair();
     else {
-      if (s ? z(e) && (o = P(this.coll !== "colorAxis" ? e.crosshairPos : (
+      if (s ? R(e) && (o = L(this.coll !== "colorAxis" ? e.crosshairPos : (
         // 3D axis extension
         null
-      ), this.isXAxis ? e.plotX : this.len - e.plotY)) : o = t && (this.horiz ? t.chartX - this.pos : this.len - t.chartY + this.pos), z(o) && (h = {
+      ), this.isXAxis ? e.plotX : this.len - e.plotY)) : o = t && (this.horiz ? t.chartX - this.pos : this.len - t.chartY + this.pos), R(o) && (c = {
         // Value, only used on radial
-        value: e && (this.isXAxis ? e.x : P(e.stackY, e.y)),
+        value: e && (this.isXAxis ? e.x : L(e.stackY, e.y)),
         translatedValue: o
-      }, r.polar && Le(h, {
+      }, r.polar && ve(c, {
         isCrosshair: !0,
         chartX: t?.chartX,
         chartY: t?.chartY,
         point: e
-      }), n = this.getPlotLinePath(h) || null), !z(n)) {
+      }), n = this.getPlotLinePath(c) || null), !R(n)) {
         this.hideCrosshair();
         return;
       }
       a = this.categories && !this.isRadial, l || (this.cross = l = r.renderer.path().addClass("highcharts-crosshair highcharts-crosshair-" + (a ? "category " : "thin ") + (i.className || "")).attr({
-        zIndex: P(i.zIndex, 2)
+        zIndex: L(i.zIndex, 2)
       }).add(), r.styledMode || (l.attr({
-        stroke: i.color || (a ? V.parse(
+        stroke: i.color || (a ? U.parse(
           "#ccd3ff"
           /* Palette.highlightColor20 */
         ).setOpacity(0.25).get() : "#cccccc"),
-        "stroke-width": P(i.width, 1)
+        "stroke-width": L(i.width, 1)
       }).css({
         "pointer-events": "none"
       }), i.dashStyle && l.attr({
@@ -10082,7 +10081,7 @@ class Nt {
         "stroke-width": this.transA
       }), this.cross.e = t;
     }
-    H(this, "afterDrawCrosshair", { e: t, point: e });
+    W(this, "afterDrawCrosshair", { e: t, point: e });
   }
   /**
    * Hide the crosshair if visible.
@@ -10090,7 +10089,7 @@ class Nt {
    * @function Highcharts.Axis#hideCrosshair
    */
   hideCrosshair() {
-    this.cross && this.cross.hide(), H(this, "afterHideCrosshair");
+    this.cross && this.cross.hide(), W(this, "afterHideCrosshair");
   }
   /**
    * Update an axis object with a new set of options. The options are merged
@@ -10112,7 +10111,7 @@ class Nt {
    */
   update(t, e) {
     const i = this.chart;
-    t = Pe(this.userOptions, t), this.destroy(!0), this.init(i, t), i.isDirtyBox = !0, P(e, !0) && i.redraw();
+    t = Se(this.userOptions, t), this.destroy(!0), this.init(i, t), i.isDirtyBox = !0, L(e, !0) && i.redraw();
   }
   /**
    * Remove the axis from the chart.
@@ -10130,7 +10129,7 @@ class Nt {
     let r = s.length;
     for (; r--; )
       s[r] && s[r].remove(!1);
-    us(e.axes, this), us(e[i] || [], this), e.orderItems(i), this.destroy(), e.isDirtyBox = !0, P(t, !0) && e.redraw();
+    _i(e.axes, this), _i(e[i] || [], this), e.orderItems(i), this.destroy(), e.isDirtyBox = !0, L(t, !0) && e.redraw();
   }
   /**
    * Update the axis title by options after render time.
@@ -10167,7 +10166,7 @@ class Nt {
     this.update({ categories: t }, e);
   }
 }
-Nt.keepProps = [
+Ut.keepProps = [
   "coll",
   "extKey",
   "hcEvents",
@@ -10177,42 +10176,42 @@ Nt.keepProps = [
   "userMax",
   "userMin"
 ];
-var Ni;
-(function(c) {
-  c.rendererTypes = {};
+var ki;
+(function(h) {
+  h.rendererTypes = {};
   let t;
   function e(s = t) {
-    return c.rendererTypes[s] || c.rendererTypes[t];
+    return h.rendererTypes[s] || h.rendererTypes[t];
   }
-  c.getRendererType = e;
+  h.getRendererType = e;
   function i(s, r, n) {
-    c.rendererTypes[s] = r, (!t || n) && (t = s, N.Renderer = r);
+    h.rendererTypes[s] = r, (!t || n) && (t = s, I.Renderer = r);
   }
-  c.registerRendererType = i;
-})(Ni || (Ni = {}));
-const Or = Ni;
-var zi;
-(function(c) {
+  h.registerRendererType = i;
+})(ki || (ki = {}));
+const nr = ki;
+var Ai;
+(function(h) {
   function t(i, s, r) {
     return Array.isArray(i) ? (i.length = s, i) : i[r ? "subarray" : "slice"](0, s);
   }
-  c.setLength = t;
+  h.setLength = t;
   function e(i, s, r, n, o = []) {
     if (Array.isArray(i))
       return Array.isArray(o) || (o = Array.from(o)), {
         removed: i.splice(s, r, ...o),
         array: i
       };
-    const a = Object.getPrototypeOf(i).constructor, l = i[n ? "subarray" : "slice"](s, s + r), h = i.length - r + o.length, d = new a(h);
-    return d.set(i.subarray(0, s), 0), d.set(o, s), d.set(i.subarray(s + r), s + o.length), {
+    const a = Object.getPrototypeOf(i).constructor, l = i[n ? "subarray" : "slice"](s, s + r), c = i.length - r + o.length, f = new a(c);
+    return f.set(i.subarray(0, s), 0), f.set(o, s), f.set(i.subarray(s + r), s + o.length), {
       removed: l,
-      array: d
+      array: f
     };
   }
-  c.splice = e;
-})(zi || (zi = {}));
-const mo = zi, { setLength: xo, splice: bs } = mo, { fireEvent: Qe, objectEach: Ft, uniqueKey: Xt } = R;
-class ti {
+  h.splice = e;
+})(Ai || (Ai = {}));
+const Xn = Ai, { setLength: Gn, splice: is } = Xn, { fireEvent: Xe, objectEach: Bt, uniqueKey: Nt } = G;
+class Ge {
   /**
        * Constructs an instance of the DataTable class.
        *
@@ -10230,9 +10229,9 @@ class ti {
        * Options to initialize the new DataTable instance.
        */
   constructor(t = {}) {
-    this.autoId = !t.id, this.columns = {}, this.id = t.id || Xt(), this.modified = this, this.rowCount = 0, this.versionTag = Xt();
+    this.autoId = !t.id, this.columns = {}, this.id = t.id || Nt(), this.modified = this, this.rowCount = 0, this.versionTag = Nt();
     let e = 0;
-    Ft(t.columns || {}, (i, s) => {
+    Bt(t.columns || {}, (i, s) => {
       this.columns[s] = i.slice(), e = Math.max(e, i.length);
     }), this.applyRowCount(e);
   }
@@ -10249,8 +10248,8 @@ class ti {
    * @param {number} rowCount The new row count.
    */
   applyRowCount(t) {
-    this.rowCount = t, Ft(this.columns, (e, i) => {
-      e.length !== t && (this.columns[i] = xo(e, t));
+    this.rowCount = t, Bt(this.columns, (e, i) => {
+      e.length !== t && (this.columns[i] = Gn(e, t));
     });
   }
   /**
@@ -10270,11 +10269,11 @@ class ti {
   deleteRows(t, e = 1) {
     if (e > 0 && t < this.rowCount) {
       let i = 0;
-      Ft(this.columns, (s, r) => {
-        this.columns[r] = bs(s, t, e).array, i = s.length;
+      Bt(this.columns, (s, r) => {
+        this.columns[r] = is(s, t, e).array, i = s.length;
       }), this.rowCount = i;
     }
-    Qe(this, "afterDeleteRows", { rowIndex: t, rowCount: e }), this.versionTag = Xt();
+    Xe(this, "afterDeleteRows", { rowIndex: t, rowCount: e }), this.versionTag = Nt();
   }
   /**
    * Fetches the given column by the canonical column name. Simplified version
@@ -10359,9 +10358,9 @@ class ti {
    */
   setColumns(t, e, i) {
     let s = this.rowCount;
-    Ft(t, (r, n) => {
+    Bt(t, (r, n) => {
       this.columns[n] = r.slice(), s = r.length;
-    }), this.applyRowCount(s), i?.silent || (Qe(this, "afterSetColumns"), this.versionTag = Xt());
+    }), this.applyRowCount(s), i?.silent || (Xe(this, "afterSetColumns"), this.versionTag = Nt());
   }
   /**
    * Sets cell values of a row. Will insert a new row if no index was
@@ -10384,65 +10383,65 @@ class ti {
    */
   setRow(t, e = this.rowCount, i, s) {
     const { columns: r } = this, n = i ? this.rowCount + 1 : e + 1;
-    Ft(t, (o, a) => {
+    Bt(t, (o, a) => {
       let l = r[a] || s?.addColumns !== !1 && new Array(n);
-      l && (i ? l = bs(l, e, 0, !0, [o]).array : l[e] = o, r[a] = l);
-    }), n > this.rowCount && this.applyRowCount(n), s?.silent || (Qe(this, "afterSetRows"), this.versionTag = Xt());
+      l && (i ? l = is(l, e, 0, !0, [o]).array : l[e] = o, r[a] = l);
+    }), n > this.rowCount && this.applyRowCount(n), s?.silent || (Xe(this, "afterSetRows"), this.versionTag = Nt());
   }
 }
-const { extend: yo, merge: bo, pick: vs } = R;
-var Ri;
-(function(c) {
+const { extend: Yn, merge: Vn, pick: ss } = G;
+var Ci;
+(function(h) {
   function t(s, r) {
     e.call(this, s, r, !0);
   }
-  c.areaMarker = t;
+  h.areaMarker = t;
   function e(s, r, n) {
-    const o = this.legendItem = this.legendItem || {}, { chart: a, options: l } = this, { baseline: h = 0, symbolWidth: d, symbolHeight: f } = s, p = this.symbol || "circle", u = f / 2, g = a.renderer, x = o.group, m = h - Math.round((s.fontMetrics?.b || f) * // Render line and marker slightly higher to make room for the
+    const o = this.legendItem = this.legendItem || {}, { chart: a, options: l } = this, { baseline: c = 0, symbolWidth: f, symbolHeight: d } = s, p = this.symbol || "circle", u = d / 2, g = a.renderer, x = o.group, m = c - Math.round((s.fontMetrics?.b || d) * // Render line and marker slightly higher to make room for the
     // area
     (n ? 0.4 : 0.3)), b = {};
-    let y, v = l.marker, S = 0;
-    if (a.styledMode || (b["stroke-width"] = Math.min(l.lineWidth || 0, 24), l.dashStyle ? b.dashstyle = l.dashStyle : l.linecap !== "square" && (b["stroke-linecap"] = "round")), o.line = g.path().addClass("highcharts-graph").attr(b).add(x), n && (o.area = g.path().addClass("highcharts-area").add(x)), b["stroke-linecap"] && (S = Math.min(o.line.strokeWidth(), d) / 2), d) {
-      const k = [
-        ["M", S, m],
-        ["L", d - S, m]
+    let y, v = l.marker, w = 0;
+    if (a.styledMode || (b["stroke-width"] = Math.min(l.lineWidth || 0, 24), l.dashStyle ? b.dashstyle = l.dashStyle : l.linecap !== "square" && (b["stroke-linecap"] = "round")), o.line = g.path().addClass("highcharts-graph").attr(b).add(x), n && (o.area = g.path().addClass("highcharts-area").add(x)), b["stroke-linecap"] && (w = Math.min(o.line.strokeWidth(), f) / 2), f) {
+      const S = [
+        ["M", w, m],
+        ["L", f - w, m]
       ];
-      o.line.attr({ d: k }), o.area?.attr({
+      o.line.attr({ d: S }), o.area?.attr({
         d: [
-          ...k,
-          ["L", d - S, h],
-          ["L", S, h]
+          ...S,
+          ["L", f - w, c],
+          ["L", w, c]
         ]
       });
     }
-    if (v && v.enabled !== !1 && d) {
-      let k = Math.min(vs(v.radius, u), u);
-      p.indexOf("url") === 0 && (v = bo(v, {
-        width: f,
-        height: f
-      }), k = 0), o.symbol = y = g.symbol(p, d / 2 - k, m - k, 2 * k, 2 * k, yo({ context: "legend" }, v)).addClass("highcharts-point").add(x), y.isMarker = !0;
+    if (v && v.enabled !== !1 && f) {
+      let S = Math.min(ss(v.radius, u), u);
+      p.indexOf("url") === 0 && (v = Vn(v, {
+        width: d,
+        height: d
+      }), S = 0), o.symbol = y = g.symbol(p, f / 2 - S, m - S, 2 * S, 2 * S, Yn({ context: "legend" }, v)).addClass("highcharts-point").add(x), y.isMarker = !0;
     }
   }
-  c.lineMarker = e;
+  h.lineMarker = e;
   function i(s, r) {
-    const n = r.legendItem || {}, o = s.options, a = s.symbolHeight, l = o.squareSymbol, h = l ? a : s.symbolWidth;
+    const n = r.legendItem || {}, o = s.options, a = s.symbolHeight, l = o.squareSymbol, c = l ? a : s.symbolWidth;
     n.symbol = this.chart.renderer.rect(
       l ? (s.symbolWidth - a) / 2 : 0,
       s.baseline - a + 1,
       // #3988
-      h,
+      c,
       a,
-      vs(s.options.symbolRadius, a / 2)
+      ss(s.options.symbolRadius, a / 2)
     ).addClass("highcharts-point").attr({
       zIndex: 3
     }).add(n.group);
   }
-  c.rectangle = i;
-})(Ri || (Ri = {}));
-const vo = Ri, { SVG_NS: ks, win: ko } = N, { attr: So, createElement: Mo, css: wo, error: Ss, isFunction: Co, isString: Ms, objectEach: ws, splat: Ao } = R, { trustedTypes: ei } = ko, Be = ei && Co(ei.createPolicy) && ei.createPolicy("highcharts", {
-  createHTML: (c) => c
-}), To = Be ? Be.createHTML("") : "";
-class G {
+  h.rectangle = i;
+})(Ci || (Ci = {}));
+const Un = Ci, { SVG_NS: rs, win: Kn } = I, { attr: qn, createElement: Zn, css: _n, error: ns, isFunction: Qn, isString: os, objectEach: as, splat: Jn } = G, { trustedTypes: Ye } = Kn, Ae = Ye && Qn(Ye.createPolicy) && Ye.createPolicy("highcharts", {
+  createHTML: (h) => h
+}), to = Ae ? Ae.createHTML("") : "";
+class X {
   /* *
    *
    *  Static Functions
@@ -10461,11 +10460,11 @@ class G {
    * The filtered attributes
    */
   static filterUserAttributes(t) {
-    return ws(t, (e, i) => {
+    return as(t, (e, i) => {
       let s = !0;
-      G.allowedAttributes.indexOf(i) === -1 && (s = !1), ["background", "dynsrc", "href", "lowsrc", "src"].indexOf(i) !== -1 && (s = Ms(e) && G.allowedReferences.some((r) => e.indexOf(r) === 0)), s || (Ss(33, !1, void 0, {
+      X.allowedAttributes.indexOf(i) === -1 && (s = !1), ["background", "dynsrc", "href", "lowsrc", "src"].indexOf(i) !== -1 && (s = os(e) && X.allowedReferences.some((r) => e.indexOf(r) === 0)), s || (ns(33, !1, void 0, {
         "Invalid attribute in config": `${i}`
-      }), delete t[i]), Ms(e) && t[i] && (t[i] = e.replace(/</g, "&lt;"));
+      }), delete t[i]), os(e) && t[i] && (t[i] = e.replace(/</g, "&lt;"));
     }), t;
   }
   static parseStyle(t) {
@@ -10490,7 +10489,7 @@ class G {
    * Markup string
    */
   static setElementHTML(t, e) {
-    t.innerHTML = G.emptyHTML, e && new G(e).addToDOM(t);
+    t.innerHTML = X.emptyHTML, e && new X(e).addToDOM(t);
   }
   /* *
    *
@@ -10520,22 +10519,22 @@ class G {
   addToDOM(t) {
     function e(i, s) {
       let r;
-      return Ao(i).forEach(function(n) {
-        const o = n.tagName, a = n.textContent ? N.doc.createTextNode(n.textContent) : void 0, l = G.bypassHTMLFiltering;
-        let h;
+      return Jn(i).forEach(function(n) {
+        const o = n.tagName, a = n.textContent ? I.doc.createTextNode(n.textContent) : void 0, l = X.bypassHTMLFiltering;
+        let c;
         if (o)
           if (o === "#text")
-            h = a;
-          else if (G.allowedTags.indexOf(o) !== -1 || l) {
-            const d = o === "svg" ? ks : s.namespaceURI || ks, f = N.doc.createElementNS(d, o), p = n.attributes || {};
-            ws(n, function(u, g) {
+            c = a;
+          else if (X.allowedTags.indexOf(o) !== -1 || l) {
+            const f = o === "svg" ? rs : s.namespaceURI || rs, d = I.doc.createElementNS(f, o), p = n.attributes || {};
+            as(n, function(u, g) {
               g !== "tagName" && g !== "attributes" && g !== "children" && g !== "style" && g !== "textContent" && (p[g] = u);
-            }), So(f, l ? p : G.filterUserAttributes(p)), n.style && wo(f, n.style), a && f.appendChild(a), e(n.children || [], f), h = f;
+            }), qn(d, l ? p : X.filterUserAttributes(p)), n.style && _n(d, n.style), a && d.appendChild(a), e(n.children || [], d), c = d;
           } else
-            Ss(33, !1, void 0, {
+            ns(33, !1, void 0, {
               "Invalid tagName in config": o
             });
-        h && s.appendChild(h), r = h;
+        c && s.appendChild(c), r = c;
       }), r;
     }
     return e(this.nodes, t);
@@ -10557,11 +10556,11 @@ class G {
     t = t.trim().replace(/ style=(["'])/g, " data-style=$1");
     let i;
     try {
-      i = new DOMParser().parseFromString(Be ? Be.createHTML(t) : t, "text/html");
+      i = new DOMParser().parseFromString(Ae ? Ae.createHTML(t) : t, "text/html");
     } catch {
     }
     if (!i) {
-      const r = Mo("div");
+      const r = Zn("div");
       r.innerHTML = t, i = { body: r };
     }
     const s = (r, n) => {
@@ -10571,23 +10570,23 @@ class G {
       o === "#text" && (a.textContent = r.textContent || "");
       const l = r.attributes;
       if (l) {
-        const h = {};
-        [].forEach.call(l, (d) => {
-          d.name === "data-style" ? a.style = G.parseStyle(d.value) : h[d.name] = d.value;
-        }), a.attributes = h;
+        const c = {};
+        [].forEach.call(l, (f) => {
+          f.name === "data-style" ? a.style = X.parseStyle(f.value) : c[f.name] = f.value;
+        }), a.attributes = c;
       }
       if (r.childNodes.length) {
-        const h = [];
-        [].forEach.call(r.childNodes, (d) => {
-          s(d, h);
-        }), h.length && (a.children = h);
+        const c = [];
+        [].forEach.call(r.childNodes, (f) => {
+          s(f, c);
+        }), c.length && (a.children = c);
       }
       n.push(a);
     };
     return [].forEach.call(i.body.childNodes, (r) => s(r, e)), e;
   }
 }
-G.allowedAttributes = [
+X.allowedAttributes = [
   "alt",
   "aria-controls",
   "aria-describedby",
@@ -10667,7 +10666,7 @@ G.allowedAttributes = [
   "y2",
   "zIndex"
 ];
-G.allowedReferences = [
+X.allowedReferences = [
   "https://",
   "http://",
   "mailto:",
@@ -10676,7 +10675,7 @@ G.allowedReferences = [
   "./",
   "#"
 ];
-G.allowedTags = [
+X.allowedTags = [
   "#text",
   "a",
   "abbr",
@@ -10746,10 +10745,10 @@ G.allowedTags = [
   "u",
   "ul"
 ];
-G.emptyHTML = To;
-G.bypassHTMLFiltering = !1;
-const { animObject: Oo } = At, { defaultOptions: Lo } = Ct, { format: Po } = ee, { addEvent: Eo, crisp: Io, erase: $o, extend: de, fireEvent: ii, getNestedProperty: Do, isArray: Bo, isFunction: No, isNumber: pt, isObject: fe, merge: Cs, pick: ut, syncTimeout: zo, removeEvent: As, uniqueKey: Ro } = R;
-class lt {
+X.emptyHTML = to;
+X.bypassHTMLFiltering = !1;
+const { animObject: eo } = qt, { defaultOptions: io } = St, { format: so } = Te, { addEvent: ro, crisp: no, erase: oo, extend: oe, fireEvent: Ve, getNestedProperty: ao, isArray: lo, isFunction: ho, isNumber: lt, isObject: ae, merge: ls, pick: ht, syncTimeout: co, removeEvent: hs, uniqueKey: fo } = G;
+class ft {
   /**
    * For categorized axes this property holds the category name for the
    * point. For other axes it holds the X value.
@@ -10875,7 +10874,7 @@ class lt {
       } : e);
     }), i.plural.forEach(function(s) {
       t[s].forEach(function(r) {
-        r.element && r.animate(de({ x: t.startXPos }, r.startYPos ? {
+        r.element && r.animate(oe({ x: t.startXPos }, r.startYPos ? {
           x: r.startXPos,
           y: r.startYPos
         } : {}));
@@ -10900,7 +10899,7 @@ class lt {
    */
   applyOptions(t, e) {
     const i = this, s = i.series, r = s.options.pointValKey || s.pointValKey;
-    return t = lt.prototype.optionsToObject.call(this, t), de(i, t), i.options = i.options ? de(i.options, t) : t, t.group && delete i.group, t.dataLabels && delete i.dataLabels, r && (i.y = lt.prototype.getNestedProperty.call(i, r)), i.selected && (i.state = "select"), "name" in i && typeof e > "u" && s.xAxis && s.xAxis.hasNames && (i.x = s.xAxis.nameToX(i)), typeof i.x > "u" && s ? i.x = e ?? s.autoIncrement() : pt(t.x) && s.options.relativeXValue ? i.x = s.autoIncrement(t.x) : typeof i.x == "string" && (e ?? (e = s.chart.time.parse(i.x)), pt(e) && (i.x = e)), i.isNull = this.isValid && !this.isValid(), i.formatPrefix = i.isNull ? "null" : "point", i;
+    return t = ft.prototype.optionsToObject.call(this, t), oe(i, t), i.options = i.options ? oe(i.options, t) : t, t.group && delete i.group, t.dataLabels && delete i.dataLabels, r && (i.y = ft.prototype.getNestedProperty.call(i, r)), i.selected && (i.state = "select"), "name" in i && typeof e > "u" && s.xAxis && s.xAxis.hasNames && (i.x = s.xAxis.nameToX(i)), typeof i.x > "u" && s ? i.x = e ?? s.autoIncrement() : lt(t.x) && s.options.relativeXValue ? i.x = s.autoIncrement(t.x) : typeof i.x == "string" && (e ?? (e = s.chart.time.parse(i.x)), lt(e) && (i.x = e)), i.isNull = this.isValid && !this.isValid(), i.formatPrefix = i.isNull ? "null" : "point", i;
   }
   /**
    * Destroy a point to clear memory. Its reference still stays in
@@ -10911,12 +10910,12 @@ class lt {
    */
   destroy() {
     if (!this.destroyed) {
-      const t = this, e = t.series, i = e.chart, s = e.options.dataSorting, r = i.hoverPoints, n = t.series.chart.renderer.globalAnimation, o = Oo(n), a = () => {
-        (t.graphic || t.graphics || t.dataLabel || t.dataLabels) && (As(t), t.destroyElements());
+      const t = this, e = t.series, i = e.chart, s = e.options.dataSorting, r = i.hoverPoints, n = t.series.chart.renderer.globalAnimation, o = eo(n), a = () => {
+        (t.graphic || t.graphics || t.dataLabel || t.dataLabels) && (hs(t), t.destroyElements());
         for (const l in t)
           delete t[l];
       };
-      t.legendItem && i.legend.destroyItem(t), r && (t.setState(), $o(r, t), r.length || (i.hoverPoints = null)), t === i.hoverPoint && t.onMouseOut(), s?.enabled ? (this.animateBeforeDestroy(), zo(a, o.duration)) : a(), i.pointCount--;
+      t.legendItem && i.legend.destroyItem(t), r && (t.setState(), oo(r, t), r.length || (i.hoverPoints = null)), t === i.hoverPoint && t.onMouseOut(), s?.enabled ? (this.animateBeforeDestroy(), co(a, o.duration)) : a(), i.pointCount--;
     }
     this.destroyed = !0;
   }
@@ -10958,7 +10957,7 @@ class lt {
     const s = this, r = this.series, n = r.options;
     s.manageEvent(t), t === "click" && n.allowPointSelect && (i = function(o) {
       !s.destroyed && s.select && s.select(null, o.ctrlKey || o.metaKey || o.shiftKey);
-    }), ii(s, t, e, i);
+    }), Ve(s, t, e, i);
   }
   /**
    * Get the CSS class names for individual points. Used internally where the
@@ -11002,7 +11001,7 @@ class lt {
    */
   getNestedProperty(t) {
     if (t)
-      return t.indexOf("custom.") === 0 ? Do(t, this.options) : this[t];
+      return t.indexOf("custom.") === 0 ? ao(t, this.options) : this[t];
   }
   /**
    * In a series with `zones`, return the zone that the point belongs to.
@@ -11049,7 +11048,7 @@ class lt {
    * @emits Highcharts.Point#event:afterInit
    */
   constructor(t, e, i) {
-    this.formatPrefix = "point", this.visible = !0, this.point = this, this.series = t, this.applyOptions(e, i), this.id ?? (this.id = Ro()), this.resolveColor(), this.dataLabelOnNull ?? (this.dataLabelOnNull = t.options.nullInteraction), t.chart.pointCount++, ii(this, "afterInit");
+    this.formatPrefix = "point", this.visible = !0, this.point = this, this.series = t, this.applyOptions(e, i), this.id ?? (this.id = fo()), this.resolveColor(), this.dataLabelOnNull ?? (this.dataLabelOnNull = t.options.nullInteraction), t.chart.pointCount++, Ve(this, "afterInit");
   }
   /**
    * Determine if point is valid.
@@ -11057,7 +11056,7 @@ class lt {
    * @function Highcharts.Point#isValid
    */
   isValid() {
-    return (pt(this.x) || this.x instanceof Date) && pt(this.y);
+    return (lt(this.x) || this.x instanceof Date) && lt(this.y);
   }
   /**
    * Transform number or array configs into objects. Also called for object
@@ -11077,11 +11076,11 @@ class lt {
   optionsToObject(t) {
     const e = this.series, i = e.options.keys, s = i || e.pointArrayMap || ["y"], r = s.length;
     let n = {}, o, a = 0, l = 0;
-    if (pt(t) || t === null)
+    if (lt(t) || t === null)
       n[s[0]] = t;
-    else if (Bo(t))
+    else if (lo(t))
       for (!i && t.length > r && (o = typeof t[0], o === "string" ? e.xAxis?.dateTime ? n.x = e.chart.time.parse(t[0]) : n.name = t[0] : o === "number" && (n.x = t[0]), a++); l < r; )
-        (!i || typeof t[a] < "u") && (s[l].indexOf(".") > 0 ? lt.prototype.setNestedProperty(n, t[a], s[l]) : n[s[l]] = t[a]), a++, l++;
+        (!i || typeof t[a] < "u") && (s[l].indexOf(".") > 0 ? ft.prototype.setNestedProperty(n, t[a], s[l]) : n[s[l]] = t[a]), a++, l++;
     else typeof t == "object" && (n = t, t.dataLabels && (e.hasDataLabels = () => !0), t.marker && (e._hasPointMarkers = !0));
     return n;
   }
@@ -11108,7 +11107,7 @@ class lt {
     if (!this.destroyed) {
       const { plotX: i, series: s } = this, { chart: r, xAxis: n, yAxis: o } = s;
       let a = 0, l = 0;
-      if (pt(i) && pt(e))
+      if (lt(i) && lt(e))
         return t && (a = n ? n.pos : r.plotLeft, l = o ? o.pos : r.plotTop), r.inverted && n && o ? [o.len - e + l, n.len - i + a] : [i + a, e + l];
     }
   }
@@ -11119,7 +11118,7 @@ class lt {
   resolveColor() {
     const t = this.series, e = t.chart.options.chart, i = t.chart.styledMode;
     let s, r, n = e.colorCount, o;
-    delete this.nonZonedColor, t.options.colorByPoint ? (i || (r = t.options.colors || t.chart.options.colors, s = r[t.colorCounter], n = r.length), o = t.colorCounter, t.colorCounter++, t.colorCounter === n && (t.colorCounter = 0)) : (i || (s = t.color), o = t.colorIndex), this.colorIndex = ut(this.options.colorIndex, o), this.color = ut(this.options.color, s);
+    delete this.nonZonedColor, t.options.colorByPoint ? (i || (r = t.options.colors || t.chart.options.colors, s = r[t.colorCounter], n = r.length), o = t.colorCounter, t.colorCounter++, t.colorCounter === n && (t.colorCounter = 0)) : (i || (s = t.color), o = t.colorIndex), this.colorIndex = ht(this.options.colorIndex, o), this.color = ht(this.options.color, s);
   }
   /**
    * Set a value in an object, on the property defined by key. The key
@@ -11143,7 +11142,7 @@ class lt {
   setNestedProperty(t, e, i) {
     return i.split(".").reduce(function(r, n, o, a) {
       const l = a.length - 1 === o;
-      return r[n] = l ? e : fe(r[n], !0) ? r[n] : {}, r[n];
+      return r[n] = l ? e : ae(r[n], !0) ? r[n] : {}, r[n];
     }, t), t;
   }
   shouldDraw() {
@@ -11164,7 +11163,7 @@ class lt {
     const { chart: e, pointArrayMap: i = ["y"], tooltipOptions: s } = this.series, { valueDecimals: r = "", valuePrefix: n = "", valueSuffix: o = "" } = s;
     return e.styledMode && (t = e.tooltip?.styledModeFormat(t) || t), i.forEach((a) => {
       a = "{point." + a, (n || o) && (t = t.replace(RegExp(a + "}", "g"), n + a + "}" + o)), t = t.replace(RegExp(a + "}", "g"), a + ":,." + r + "f}");
-    }), Po(t, this, e);
+    }), so(t, this, e);
   }
   /**
    * Update point with new options (typically x/y data) and optionally redraw
@@ -11200,18 +11199,18 @@ class lt {
    */
   update(t, e, i, s) {
     const r = this, n = r.series, o = r.graphic, a = n.chart, l = n.options;
-    let h;
-    e = ut(e, !0);
-    function d() {
+    let c;
+    e = ht(e, !0);
+    function f() {
       r.applyOptions(t);
-      const f = o && r.hasMockGraphic, p = r.y === null ? !f : f;
-      o && p && (r.graphic = o.destroy(), delete r.hasMockGraphic), fe(t, !0) && (o?.element && t && t.marker && typeof t.marker.symbol < "u" && (r.graphic = o.destroy()), t?.dataLabels && r.dataLabel && (r.dataLabel = r.dataLabel.destroy())), h = r.index;
+      const d = o && r.hasMockGraphic, p = r.y === null ? !d : d;
+      o && p && (r.graphic = o.destroy(), delete r.hasMockGraphic), ae(t, !0) && (o?.element && t && t.marker && typeof t.marker.symbol < "u" && (r.graphic = o.destroy()), t?.dataLabels && r.dataLabel && (r.dataLabel = r.dataLabel.destroy())), c = r.index;
       const u = {};
       for (const g of n.dataColumnKeys())
         u[g] = r[g];
-      n.dataTable.setRow(u, h), l.data[h] = fe(l.data[h], !0) || fe(t, !0) ? r.options : ut(t, l.data[h]), n.isDirty = n.isDirtyData = !0, !n.fixedBox && n.hasCartesianSeries && (a.isDirtyBox = !0), l.legendType === "point" && (a.isDirtyLegend = !0), e && a.redraw(i);
+      n.dataTable.setRow(u, c), l.data[c] = ae(l.data[c], !0) || ae(t, !0) ? r.options : ht(t, l.data[c]), n.isDirty = n.isDirtyData = !0, !n.fixedBox && n.hasCartesianSeries && (a.isDirtyBox = !0), l.legendType === "point" && (a.isDirtyLegend = !0), e && a.redraw(i);
     }
-    s === !1 ? d() : r.firePointEvent("update", { options: t }, d);
+    s === !1 ? f() : r.firePointEvent("update", { options: t }, f);
   }
   /**
    * Remove a point and optionally redraw the series and if necessary the axes
@@ -11271,7 +11270,7 @@ class lt {
    */
   select(t, e) {
     const i = this, s = i.series, r = s.chart;
-    t = ut(t, !i.selected), this.selectedStaging = t, i.firePointEvent(t ? "select" : "unselect", { accumulate: e }, function() {
+    t = ht(t, !i.selected), this.selectedStaging = t, i.firePointEvent(t ? "select" : "unselect", { accumulate: e }, function() {
       i.selected = i.options.selected = t, s.options.data[s.data.indexOf(i)] = i.options, i.setState(t && "select"), e || r.getSelectedPoints().forEach(function(n) {
         const o = n.series;
         n.selected && n !== i && (n.selected = n.options.selected = !1, o.options.data[o.data.indexOf(n)] = n.options, n.setState(r.hoverPoints && o.options.inactiveOtherPoints ? "inactive" : ""), n.firePointEvent("unselect"));
@@ -11316,11 +11315,11 @@ class lt {
    * @function Highcharts.Point#importEvents
    */
   manageEvent(t) {
-    const e = this, i = Cs(e.series.options.point, e.options), s = i.events?.[t];
-    No(s) && (!e.hcEvents?.[t] || // Some HC modules, like marker-clusters, draggable-poins etc.
+    const e = this, i = ls(e.series.options.point, e.options), s = i.events?.[t];
+    ho(s) && (!e.hcEvents?.[t] || // Some HC modules, like marker-clusters, draggable-poins etc.
     // use events in their logic, so we need to be sure, that
     // callback function is different
-    e.hcEvents?.[t]?.map((r) => r.fn).indexOf(s) === -1) ? (e.importedUserEvent?.(), e.importedUserEvent = Eo(e, t, s), e.hcEvents && (e.hcEvents[t].userEvent = !0)) : e.importedUserEvent && !s && e.hcEvents?.[t] && e.hcEvents?.[t].userEvent && (As(e, t), delete e.hcEvents[t], Object.keys(e.hcEvents) || delete e.importedUserEvent);
+    e.hcEvents?.[t]?.map((r) => r.fn).indexOf(s) === -1) ? (e.importedUserEvent?.(), e.importedUserEvent = ro(e, t, s), e.hcEvents && (e.hcEvents[t].userEvent = !0)) : e.importedUserEvent && !s && e.hcEvents?.[t] && e.hcEvents?.[t].userEvent && (hs(e, t), delete e.hcEvents[t], Object.keys(e.hcEvents) || delete e.importedUserEvent);
   }
   /**
    * Set the point's state.
@@ -11337,52 +11336,52 @@ class lt {
    * @emits Highcharts.Point#event:afterSetState
    */
   setState(t, e) {
-    const i = this, s = i.series, r = i.state, n = s.options.states[t || "normal"] || {}, o = Lo.plotOptions[s.type].marker && s.options.marker, a = o && o.enabled === !1, l = o?.states?.[t || "normal"] || {}, h = l.enabled === !1, d = i.marker || {}, f = s.chart, p = o && s.markerAttribs;
+    const i = this, s = i.series, r = i.state, n = s.options.states[t || "normal"] || {}, o = io.plotOptions[s.type].marker && s.options.marker, a = o && o.enabled === !1, l = o?.states?.[t || "normal"] || {}, c = l.enabled === !1, f = i.marker || {}, d = s.chart, p = o && s.markerAttribs;
     let u = s.halo, g, x, m, b = s.stateMarkerGraphic, y;
     if (t = t || "", // Already has this state
     t === i.state && !e || // Selected points don't respond to hover
     i.selected && t !== "select" || // Series' state options is disabled
     n.enabled === !1 || // General point marker's state options is disabled
-    t && (h || a && l.enabled === !1) || // Individual point marker's state options is disabled
-    t && d.states && d.states[t] && d.states[t].enabled === !1)
+    t && (c || a && l.enabled === !1) || // Individual point marker's state options is disabled
+    t && f.states && f.states[t] && f.states[t].enabled === !1)
       return;
     if (i.state = t, p && (g = s.markerAttribs(i, t)), i.graphic && !i.hasMockGraphic) {
-      if (r && i.graphic.removeClass("highcharts-point-" + r), t && i.graphic.addClass("highcharts-point-" + t), !f.styledMode) {
-        x = s.pointAttribs(i, t), m = ut(f.options.chart.animation, n.animation);
-        const w = x.opacity;
-        s.options.inactiveOtherPoints && pt(w) && (i.dataLabels || []).forEach(function(M) {
-          M && !M.hasClass("highcharts-data-label-hidden") && (M.animate({ opacity: w }, m), M.connector && M.connector.animate({ opacity: w }, m));
+      if (r && i.graphic.removeClass("highcharts-point-" + r), t && i.graphic.addClass("highcharts-point-" + t), !d.styledMode) {
+        x = s.pointAttribs(i, t), m = ht(d.options.chart.animation, n.animation);
+        const k = x.opacity;
+        s.options.inactiveOtherPoints && lt(k) && (i.dataLabels || []).forEach(function(M) {
+          M && !M.hasClass("highcharts-data-label-hidden") && (M.animate({ opacity: k }, m), M.connector && M.connector.animate({ opacity: k }, m));
         }), i.graphic.animate(x, m);
       }
-      g && i.graphic.animate(g, ut(
+      g && i.graphic.animate(g, ht(
         // Turn off globally:
-        f.options.chart.animation,
+        d.options.chart.animation,
         l.animation,
         o.animation
       )), b && b.hide();
     } else
-      t && l && (y = d.symbol || s.symbol, b && b.currentSymbol !== y && (b = b.destroy()), g && (b ? b[e ? "animate" : "attr"]({
+      t && l && (y = f.symbol || s.symbol, b && b.currentSymbol !== y && (b = b.destroy()), g && (b ? b[e ? "animate" : "attr"]({
         x: g.x,
         y: g.y
-      }) : y && (s.stateMarkerGraphic = b = f.renderer.symbol(y, g.x, g.y, g.width, g.height, Cs(o, l)).add(s.markerGroup), b.currentSymbol = y)), !f.styledMode && b && i.state !== "inactive" && b.attr(s.pointAttribs(i, t))), b && (b[t && i.isInside ? "show" : "hide"](), b.element.point = i, b.addClass(i.getClassName(), !0));
-    const v = n.halo, S = i.graphic || b, k = S?.visibility || "inherit";
-    v?.size && S && k !== "hidden" && !i.isCluster ? (u || (s.halo = u = f.renderer.path().add(S.parentGroup)), u.show()[e ? "animate" : "attr"]({
+      }) : y && (s.stateMarkerGraphic = b = d.renderer.symbol(y, g.x, g.y, g.width, g.height, ls(o, l)).add(s.markerGroup), b.currentSymbol = y)), !d.styledMode && b && i.state !== "inactive" && b.attr(s.pointAttribs(i, t))), b && (b[t && i.isInside ? "show" : "hide"](), b.element.point = i, b.addClass(i.getClassName(), !0));
+    const v = n.halo, w = i.graphic || b, S = w?.visibility || "inherit";
+    v?.size && w && S !== "hidden" && !i.isCluster ? (u || (s.halo = u = d.renderer.path().add(w.parentGroup)), u.show()[e ? "animate" : "attr"]({
       d: i.haloPath(v.size)
     }), u.attr({
-      class: "highcharts-halo highcharts-color-" + ut(i.colorIndex, s.colorIndex) + (i.className ? " " + i.className : ""),
-      visibility: k,
+      class: "highcharts-halo highcharts-color-" + ht(i.colorIndex, s.colorIndex) + (i.className ? " " + i.className : ""),
+      visibility: S,
       zIndex: -1
       // #4929, #8276
-    }), u.point = i, f.styledMode || u.attr(de({
+    }), u.point = i, d.styledMode || u.attr(oe({
       fill: i.color || s.color,
       "fill-opacity": v.opacity
-    }, G.filterUserAttributes(v.attributes || {})))) : u?.point?.haloPath && !u.point.destroyed && u.animate(
+    }, X.filterUserAttributes(v.attributes || {})))) : u?.point?.haloPath && !u.point.destroyed && u.animate(
       { d: u.point.haloPath(0) },
       null,
       // Hide after unhovering. The `complete` callback runs in the
       // halo's context (#7681).
       u.hide
-    ), ii(i, "afterSetState", { state: t });
+    ), Ve(i, "afterSetState", { state: t });
   }
   /**
    * Get the path definition for the halo, which is usually a shadow-like
@@ -11398,10 +11397,10 @@ class lt {
    */
   haloPath(t) {
     const e = this.pos();
-    return e ? this.series.chart.renderer.symbols.circle(Io(e[0], 1) - t, e[1] - t, t * 2, t * 2) : [];
+    return e ? this.series.chart.renderer.symbols.circle(no(e[0], 1) - t, e[1] - t, t * 2, t * 2) : [];
   }
 }
-const Wo = {
+const po = {
   // Base series options
   /**
    * The SVG value used for the `stroke-linecap` and `stroke-linejoin`
@@ -13082,8 +13081,8 @@ const Wo = {
      * @type {Highcharts.DataLabelsFormatterCallbackFunction}
      */
     formatter: function() {
-      const { numberFormatter: c } = this.series.chart;
-      return typeof this.y != "number" ? "" : c(this.y, -1);
+      const { numberFormatter: h } = this.series.chart;
+      return typeof this.y != "number" ? "" : h(this.y, -1);
     },
     /**
      * For points with an extent, like columns or map areas, whether to
@@ -13812,30 +13811,30 @@ const Wo = {
    * @private
    */
   findNearestPointBy: "x"
-}, { defaultOptions: Ts } = Ct, { extend: Ho, extendClass: Fo, merge: Xo } = R;
-var Wi;
-(function(c) {
-  c.seriesTypes = N.seriesTypes;
+}, { defaultOptions: cs } = St, { extend: uo, extendClass: go, merge: mo } = G;
+var Ti;
+(function(h) {
+  h.seriesTypes = I.seriesTypes;
   function t(i, s) {
-    const r = Ts.plotOptions || {}, n = s.defaultOptions, o = s.prototype;
-    return o.type = i, o.pointClass || (o.pointClass = lt), c.seriesTypes[i] ? !1 : (n && (r[i] = n), c.seriesTypes[i] = s, !0);
+    const r = cs.plotOptions || {}, n = s.defaultOptions, o = s.prototype;
+    return o.type = i, o.pointClass || (o.pointClass = ft), h.seriesTypes[i] ? !1 : (n && (r[i] = n), h.seriesTypes[i] = s, !0);
   }
-  c.registerSeriesType = t;
+  h.registerSeriesType = t;
   function e(i, s, r, n, o) {
-    const a = Ts.plotOptions || {};
-    s = s || "", a[i] = Xo(a[s], r), delete c.seriesTypes[i];
-    const l = c.seriesTypes[s] || K, h = Fo(l, n);
-    if (t(i, h), c.seriesTypes[i].prototype.type = i, o) {
-      class d extends lt {
+    const a = cs.plotOptions || {};
+    s = s || "", a[i] = mo(a[s], r), delete h.seriesTypes[i];
+    const l = h.seriesTypes[s] || et, c = go(l, n);
+    if (t(i, c), h.seriesTypes[i].prototype.type = i, o) {
+      class f extends ft {
       }
-      Ho(d.prototype, o), c.seriesTypes[i].prototype.pointClass = d;
+      uo(f.prototype, o), h.seriesTypes[i].prototype.pointClass = f;
     }
-    return c.seriesTypes[i];
+    return h.seriesTypes[i];
   }
-  c.seriesType = e;
-})(Wi || (Wi = {}));
-const dt = Wi, { animate: jo, animObject: Go, stop: Os } = At, { deg2rad: Ls, doc: Ot, svg: Yo, SVG_NS: pe, win: Vo, isFirefox: Uo } = N, { addEvent: Ko, attr: si, createElement: qo, crisp: ue, css: Ps, defined: ot, erase: Zo, extend: jt, fireEvent: ri, getAlignFactor: ni, isArray: Es, isFunction: Is, isNumber: _o, isObject: Jo, isString: $s, merge: oi, objectEach: Lt, pick: ht, pInt: ge, pushUnique: Qo, replaceNested: ta, syncTimeout: ea, uniqueKey: Ds } = R;
-class j {
+  h.seriesType = e;
+})(Ti || (Ti = {}));
+const Zt = Ti, { animate: xo, animObject: yo, stop: ds } = qt, { deg2rad: fs, doc: Mt, svg: bo, SVG_NS: le, win: vo, isFirefox: So } = I, { addEvent: wo, attr: Ue, createElement: Mo, crisp: he, css: ps, defined: rt, erase: ko, extend: Rt, fireEvent: Ke, getAlignFactor: qe, isArray: us, isFunction: gs, isNumber: Ao, isObject: Co, isString: ms, merge: Ze, objectEach: kt, pick: ot, pInt: ce, pushUnique: To, replaceNested: Oo, syncTimeout: Lo, uniqueKey: xs } = G;
+class H {
   // @todo public zIndex?: number;
   /* *
    *
@@ -13857,7 +13856,7 @@ class j {
    *         Property value.
    */
   _defaultGetter(t) {
-    let e = ht(
+    let e = ot(
       this[t + "Value"],
       // Align getter
       this[t],
@@ -13961,12 +13960,12 @@ class j {
   align(t, e, i, s = !0) {
     const r = this.renderer, n = r.alignedObjects, o = !!t;
     t ? (this.alignOptions = t, this.alignByTranslate = e, this.alignTo = i) : (t = this.alignOptions || {}, e = this.alignByTranslate, i = this.alignTo);
-    const a = !i || $s(i) ? i || "renderer" : void 0;
-    a && (o && Qo(n, this), i = void 0);
-    const l = ht(i, r[a], r), h = (l.x || 0) + (t.x || 0) + ((l.width || 0) - (t.width || 0)) * ni(t.align), d = (l.y || 0) + (t.y || 0) + ((l.height || 0) - (t.height || 0)) * ni(t.verticalAlign), f = {
+    const a = !i || ms(i) ? i || "renderer" : void 0;
+    a && (o && To(n, this), i = void 0);
+    const l = ot(i, r[a], r), c = (l.x || 0) + (t.x || 0) + ((l.width || 0) - (t.width || 0)) * qe(t.align), f = (l.y || 0) + (t.y || 0) + ((l.height || 0) - (t.height || 0)) * qe(t.verticalAlign), d = {
       "text-align": t?.align
     };
-    return f[e ? "translateX" : "x"] = Math.round(h), f[e ? "translateY" : "y"] = Math.round(d), s && (this[this.placed ? "animate" : "attr"](f), this.placed = !0), this.alignAttr = f, this;
+    return d[e ? "translateX" : "x"] = Math.round(c), d[e ? "translateY" : "y"] = Math.round(f), s && (this[this.placed ? "animate" : "attr"](d), this.placed = !0), this.alignAttr = d, this;
   }
   /**
    * @private
@@ -14002,10 +14001,10 @@ class j {
    *         Returns the SVGElement for chaining.
    */
   animate(t, e, i) {
-    const s = Go(ht(e, this.renderer.globalAnimation, !0)), r = s.defer;
-    return Ot.hidden && (s.duration = 0), s.duration !== 0 ? (i && (s.complete = i), ea(() => {
-      this.element && jo(this, t, s);
-    }, r)) : (this.attr(t, void 0, i || s.complete), Lt(t, function(n, o) {
+    const s = yo(ot(e, this.renderer.globalAnimation, !0)), r = s.defer;
+    return Mt.hidden && (s.duration = 0), s.duration !== 0 ? (i && (s.complete = i), Lo(() => {
+      this.element && xo(this, t, s);
+    }, r)) : (this.attr(t, void 0, i || s.complete), kt(t, function(n, o) {
       s.step && s.step.call(this, n, { prop: o, pos: 1, elem: this });
     }, this)), this;
   }
@@ -14036,12 +14035,12 @@ class j {
     t.indexOf("contrast") !== -1 && (t = t.replace(/contrast/g, this.renderer.getContrast(e.style.fill)));
     const s = t.indexOf(" "), r = t.substring(s + 1);
     let n = t.substring(0, s);
-    if (n && n !== "none" && N.svg) {
-      this.fakeTS = !0, n = n.replace(/(^[\d\.]+)(.*?)$/g, function(d, f, p) {
-        return 2 * Number(f) + p;
+    if (n && n !== "none" && I.svg) {
+      this.fakeTS = !0, n = n.replace(/(^[\d\.]+)(.*?)$/g, function(f, d, p) {
+        return 2 * Number(d) + p;
       }), this.removeTextOutline();
-      const o = Ot.createElementNS(pe, "tspan");
-      si(o, {
+      const o = Mt.createElementNS(le, "tspan");
+      Ue(o, {
         class: "highcharts-text-outline",
         fill: r,
         stroke: r,
@@ -14049,19 +14048,19 @@ class j {
         "stroke-linejoin": "round"
       });
       const a = e.querySelector("textPath") || e;
-      [].forEach.call(a.childNodes, (d) => {
-        const f = d.cloneNode(!0);
-        f.removeAttribute && ["fill", "stroke", "stroke-width", "stroke"].forEach((p) => f.removeAttribute(p)), o.appendChild(f);
+      [].forEach.call(a.childNodes, (f) => {
+        const d = f.cloneNode(!0);
+        d.removeAttribute && ["fill", "stroke", "stroke-width", "stroke"].forEach((p) => d.removeAttribute(p)), o.appendChild(d);
       });
       let l = 0;
-      [].forEach.call(a.querySelectorAll("text tspan"), (d) => {
-        l += Number(d.getAttribute("dy"));
+      [].forEach.call(a.querySelectorAll("text tspan"), (f) => {
+        l += Number(f.getAttribute("dy"));
       });
-      const h = Ot.createElementNS(pe, "tspan");
-      h.textContent = "​", si(h, {
+      const c = Mt.createElementNS(le, "tspan");
+      c.textContent = "​", Ue(c, {
         x: Number(e.getAttribute("x")),
         dy: -l
-      }), o.appendChild(h), a.insertBefore(o, a.firstChild);
+      }), o.appendChild(c), a.insertBefore(o, a.firstChild);
     }
   }
   /**
@@ -14125,10 +14124,10 @@ class j {
   *         used as a getter, the current value of the attribute is returned.
   */
   attr(t, e, i, s) {
-    const { element: r } = this, n = j.symbolCustomAttribs;
-    let o, a, l = this, h, d;
-    return typeof t == "string" && typeof e < "u" && (o = t, t = {}, t[o] = e), typeof t == "string" ? l = (this[t + "Getter"] || this._defaultGetter).call(this, t, r) : (Lt(t, function(p, u) {
-      h = !1, s || Os(this, u), this.symbolName && n.indexOf(u) !== -1 && (a || (this.symbolAttr(t), a = !0), h = !0), this.rotation && (u === "x" || u === "y") && (this.doTransform = !0), h || (d = this[u + "Setter"] || this._defaultSetter, d.call(this, p, u, r));
+    const { element: r } = this, n = H.symbolCustomAttribs;
+    let o, a, l = this, c, f;
+    return typeof t == "string" && typeof e < "u" && (o = t, t = {}, t[o] = e), typeof t == "string" ? l = (this[t + "Getter"] || this._defaultGetter).call(this, t, r) : (kt(t, function(p, u) {
+      c = !1, s || ds(this, u), this.symbolName && n.indexOf(u) !== -1 && (a || (this.symbolAttr(t), a = !0), c = !0), this.rotation && (u === "x" || u === "y") && (this.doTransform = !0), c || (f = this[u + "Setter"] || this._defaultSetter, f.call(this, p, u, r));
     }, this), this.afterSetters()), i && i.call(this), l;
   }
   /**
@@ -14144,8 +14143,8 @@ class j {
    */
   clip(t) {
     if (t && !t.clipPath) {
-      const e = Ds() + "-", i = this.renderer.createElement("clipPath").attr({ id: e }).add(this.renderer.defs);
-      jt(t, { clipPath: i, id: e, count: 0 }), t.add(i);
+      const e = xs() + "-", i = this.renderer.createElement("clipPath").attr({ id: e }).add(this.renderer.defs);
+      Rt(t, { clipPath: i, id: e, count: 0 }), t.add(i);
     }
     return this.attr("clip-path", t ? `url(${this.renderer.url}#${t.id})` : "none");
   }
@@ -14167,13 +14166,13 @@ class j {
    */
   crisp(t, e) {
     e = Math.round(e || t.strokeWidth || 0);
-    const i = t.x || this.x || 0, s = t.y || this.y || 0, r = (t.width || this.width || 0) + i, n = (t.height || this.height || 0) + s, o = ue(i, e), a = ue(s, e), l = ue(r, e), h = ue(n, e);
-    return jt(t, {
+    const i = t.x || this.x || 0, s = t.y || this.y || 0, r = (t.width || this.width || 0) + i, n = (t.height || this.height || 0) + s, o = he(i, e), a = he(s, e), l = he(r, e), c = he(n, e);
+    return Rt(t, {
       x: o,
       y: a,
       width: l - o,
-      height: h - a
-    }), ot(t.strokeWidth) && (t.strokeWidth = e), t;
+      height: c - a
+    }), rt(t.strokeWidth) && (t.strokeWidth = e), t;
   }
   /**
    * Build and apply an SVG gradient out of a common JavaScript configuration
@@ -14194,32 +14193,32 @@ class j {
    */
   complexColor(t, e, i) {
     const s = this.renderer;
-    let r, n, o, a, l, h, d, f, p, u, g = [], x;
-    ri(this.renderer, "complexColor", {
+    let r, n, o, a, l, c, f, d, p, u, g = [], x;
+    Ke(this.renderer, "complexColor", {
       args: arguments
     }, function() {
       if (t.radialGradient ? n = "radialGradient" : t.linearGradient && (n = "linearGradient"), n) {
-        if (o = t[n], l = s.gradients, h = t.stops, p = i.radialReference, Es(o) && (t[n] = o = {
+        if (o = t[n], l = s.gradients, c = t.stops, p = i.radialReference, us(o) && (t[n] = o = {
           x1: o[0],
           y1: o[1],
           x2: o[2],
           y2: o[3],
           gradientUnits: "userSpaceOnUse"
-        }), n === "radialGradient" && p && !ot(o.gradientUnits) && (a = o, o = oi(o, s.getRadialAttr(p, a), { gradientUnits: "userSpaceOnUse" })), Lt(o, function(m, b) {
+        }), n === "radialGradient" && p && !rt(o.gradientUnits) && (a = o, o = Ze(o, s.getRadialAttr(p, a), { gradientUnits: "userSpaceOnUse" })), kt(o, function(m, b) {
           b !== "id" && g.push(b, m);
-        }), Lt(h, function(m) {
+        }), kt(c, function(m) {
           g.push(m);
         }), g = g.join(","), l[g])
           u = l[g].attr("id");
         else {
-          o.id = u = Ds();
+          o.id = u = xs();
           const m = l[g] = s.createElement(n).attr(o).add(s.defs);
-          m.radAttr = a, m.stops = [], h.forEach(function(b) {
-            b[1].indexOf("rgba") === 0 ? (r = V.parse(b[1]), d = r.get("rgb"), f = r.get("a")) : (d = b[1], f = 1);
+          m.radAttr = a, m.stops = [], c.forEach(function(b) {
+            b[1].indexOf("rgba") === 0 ? (r = U.parse(b[1]), f = r.get("rgb"), d = r.get("a")) : (f = b[1], d = 1);
             const y = s.createElement("stop").attr({
               offset: b[0],
-              "stop-color": d,
-              "stop-opacity": f
+              "stop-color": f,
+              "stop-opacity": d
             }).add(m);
             m.stops.push(y);
           });
@@ -14250,14 +14249,14 @@ class j {
   css(t) {
     const e = this.styles, i = {}, s = this.element;
     let r, n = !e;
-    if (e && Lt(t, function(o, a) {
+    if (e && kt(t, function(o, a) {
       e && e[a] !== o && (i[a] = o, n = !0);
     }), n) {
-      e && (t = jt(e, i)), t.width === null || t.width === "auto" ? delete this.textWidth : s.nodeName.toLowerCase() === "text" && t.width && (r = this.textWidth = ge(t.width)), jt(this.styles, t), r && !Yo && this.renderer.forExport && delete t.width;
-      const o = Uo && t.fontSize || null;
-      o && (_o(o) || /^\d+$/.test(o)) && (t.fontSize += "px");
-      const a = oi(t);
-      s.namespaceURI === this.SVG_NS && (["textOutline", "textOverflow", "whiteSpace", "width"].forEach((l) => a && delete a[l]), a.color && (a.fill = a.color, delete a.color)), Ps(s, a);
+      e && (t = Rt(e, i)), t.width === null || t.width === "auto" ? delete this.textWidth : s.nodeName.toLowerCase() === "text" && t.width && (r = this.textWidth = ce(t.width)), Rt(this.styles, t), r && !bo && this.renderer.forExport && delete t.width;
+      const o = So && t.fontSize || null;
+      o && (Ao(o) || /^\d+$/.test(o)) && (t.fontSize += "px");
+      const a = Ze(t);
+      s.namespaceURI === this.SVG_NS && (["textOutline", "textOverflow", "whiteSpace", "width"].forEach((l) => a && delete a[l]), a.color && (a.fill = a.color, delete a.color)), ps(s, a);
     }
     return this.added && (this.element.nodeName === "text" && this.renderer.buildText(this), t.textOutline && this.applyTextOutline(t.textOutline)), this;
   }
@@ -14272,7 +14271,7 @@ class j {
       t = t.toLowerCase();
       const s = t.replace("shortdashdotdot", "3,1,1,1,1,1,").replace("shortdashdot", "3,1,1,1").replace("shortdot", "1,1,").replace("shortdash", "3,1,").replace("longdash", "8,3,").replace(/dot/g, "1,3,").replace("dash", "4,3,").replace(/,$/, "").split(",");
       for (e = s.length; e--; )
-        s[e] = "" + ge(s[e]) * ht(i, NaN);
+        s[e] = "" + ce(s[e]) * ot(i, NaN);
       t = s.join(",").replace(/NaN/g, "none"), this.element.setAttribute("stroke-dasharray", t);
     }
   }
@@ -14285,7 +14284,7 @@ class j {
   destroy() {
     const t = this, e = t.element || {}, i = t.renderer, s = e.ownerSVGElement;
     let r = e.nodeName === "SPAN" && t.parentGroup || void 0, n, o;
-    if (e.onclick = e.onmouseout = e.onmouseover = e.onmousemove = e.point = null, Os(t), t.clipPath && s) {
+    if (e.onclick = e.onmouseout = e.onmouseover = e.onmousemove = e.point = null, ds(t), t.clipPath && s) {
       const a = t.clipPath;
       [].forEach.call(s.querySelectorAll("[clip-path],[CLIP-PATH]"), function(l) {
         l.getAttribute("clip-path").indexOf(a.element.id) > -1 && l.removeAttribute("clip-path");
@@ -14298,7 +14297,7 @@ class j {
     }
     for (t.safeRemoveChild(e); r?.div && r.div.childNodes.length === 0; )
       n = r.parentGroup, t.safeRemoveChild(r.div), delete r.div, r = n;
-    t.alignOptions && Zo(i.alignedObjects, t), Lt(t, (a, l) => {
+    t.alignOptions && ko(i.alignedObjects, t), kt(t, (a, l) => {
       // Destroy child elements of a group
       (t[l]?.parentGroup === t || // Destroy own elements
       ["connector", "foreignObject"].indexOf(l) !== -1) && t[l]?.destroy?.(), delete t[l];
@@ -14312,7 +14311,7 @@ class j {
    * @param {Highcharts.SVGDOMElement} element
    */
   dSetter(t, e, i) {
-    Es(t) && (typeof t[0] == "string" && (t = this.renderer.pathToSegments(t)), this.pathArray = t, t = t.reduce((s, r, n) => r?.join ? (n ? s + " " : "") + r.join(" ") : (r || "").toString(), "")), /(NaN| {2}|^$)/.test(t) && (t = "M 0 0"), this[e] !== t && (i.setAttribute(e, t), this[e] = t);
+    us(t) && (typeof t[0] == "string" && (t = this.renderer.pathToSegments(t)), this.pathArray = t, t = t.reduce((s, r, n) => r?.join ? (n ? s + " " : "") + r.join(" ") : (r || "").toString(), "")), /(NaN| {2}|^$)/.test(t) && (t = "M 0 0"), this[e] !== t && (i.setAttribute(e, t), this[e] = t);
   }
   /**
    * @private
@@ -14359,13 +14358,13 @@ class j {
    *         The bounding box with `x`, `y`, `width` and `height` properties.
    */
   getBBox(t, e) {
-    const i = this, { alignValue: s, element: r, renderer: n, styles: o, textStr: a } = i, { cache: l, cacheKeys: h } = n, d = r.namespaceURI === i.SVG_NS, f = ht(e, i.rotation, 0), p = n.styledMode ? r && j.prototype.getStyle.call(r, "font-size") : o.fontSize;
+    const i = this, { alignValue: s, element: r, renderer: n, styles: o, textStr: a } = i, { cache: l, cacheKeys: c } = n, f = r.namespaceURI === i.SVG_NS, d = ot(e, i.rotation, 0), p = n.styledMode ? r && H.prototype.getStyle.call(r, "font-size") : o.fontSize;
     let u, g, x, m;
-    if (ot(a) && (m = a.toString(), m.indexOf("<") === -1 && (m = m.replace(/\d/g, "0")), m += [
+    if (rt(a) && (m = a.toString(), m.indexOf("<") === -1 && (m = m.replace(/\d/g, "0")), m += [
       "",
       n.rootFontSize,
       p,
-      f,
+      d,
       i.textWidth,
       // #7874, also useHTML
       s,
@@ -14375,15 +14374,15 @@ class j {
       o.fontWeight
       // #12163
     ].join(",")), m && !t && (u = l[m]), !u || u.polygon) {
-      if (d || n.forExport) {
+      if (f || n.forExport) {
         try {
           x = this.fakeTS && function(y) {
             const v = r.querySelector(".highcharts-text-outline");
-            v && Ps(v, { display: y });
-          }, Is(x) && x("none"), u = r.getBBox ? (
+            v && ps(v, { display: y });
+          }, gs(x) && x("none"), u = r.getBBox ? (
             // SVG: use extend because IE9 is not allowed to change
             // width and height in case of rotation (below)
-            jt({}, r.getBBox())
+            Rt({}, r.getBBox())
           ) : {
             // HTML elements with `exporting.allowHTML` and
             // legacy IE in export mode
@@ -14391,23 +14390,23 @@ class j {
             height: r.offsetHeight,
             x: 0,
             y: 0
-          }, Is(x) && x("");
+          }, gs(x) && x("");
         } catch {
         }
         (!u || u.width < 0) && (u = { x: 0, y: 0, width: 0, height: 0 });
       } else
         u = i.htmlGetBBox();
-      g = u.height, d && (u.height = g = {
+      g = u.height, f && (u.height = g = {
         "11px,17": 14,
         "13px,20": 16
-      }[`${p || ""},${Math.round(g)}`] || g), f && (u = this.getRotatedBox(u, f));
+      }[`${p || ""},${Math.round(g)}`] || g), d && (u = this.getRotatedBox(u, d));
       const b = { bBox: u };
-      ri(this, "afterGetBBox", b), u = b.bBox;
+      Ke(this, "afterGetBBox", b), u = b.bBox;
     }
     if (m && (a === "" || u.height > 0)) {
-      for (; h.length > 250; )
-        delete l[h.shift()];
-      l[m] || h.push(m), l[m] = u;
+      for (; c.length > 250; )
+        delete l[c.shift()];
+      l[m] || c.push(m), l[m] = u;
     }
     return u;
   }
@@ -14416,23 +14415,23 @@ class j {
    * @private
    */
   getRotatedBox(t, e) {
-    const { x: i, y: s, width: r, height: n } = t, { alignValue: o, translateY: a, rotationOriginX: l = 0, rotationOriginY: h = 0 } = this, d = ni(o), f = Number(this.element.getAttribute("y") || 0) - (a ? 0 : s), p = e * Ls, u = (e - 90) * Ls, g = Math.cos(p), x = Math.sin(p), m = r * g, b = r * x, y = Math.cos(u), v = Math.sin(u), [[S, k], [w, M]] = [
+    const { x: i, y: s, width: r, height: n } = t, { alignValue: o, translateY: a, rotationOriginX: l = 0, rotationOriginY: c = 0 } = this, f = qe(o), d = Number(this.element.getAttribute("y") || 0) - (a ? 0 : s), p = e * fs, u = (e - 90) * fs, g = Math.cos(p), x = Math.sin(p), m = r * g, b = r * x, y = Math.cos(u), v = Math.sin(u), [[w, S], [k, M]] = [
       l,
-      h
-    ].map((Tt) => [
-      Tt - Tt * g,
-      Tt * x
-    ]), C = i + d * (r - m) + S + M, A = s + f - d * b - k + w, O = C + f * y, L = O + m, E = L - n * y, D = E - m, I = A + f * v, B = I + b, W = B - n * v, Z = W - b, et = Math.min(O, L, E, D), ie = Math.min(I, B, W, Z), Re = Math.max(O, L, E, D) - et, se = Math.max(I, B, W, Z) - ie;
+      c
+    ].map((wt) => [
+      wt - wt * g,
+      wt * x
+    ]), A = i + f * (r - m) + w + M, T = s + d - f * b - S + k, O = A + d * y, B = O + m, $ = B - n * y, N = $ - m, P = T + d * v, D = P + b, z = D - n * v, q = z - b, tt = Math.min(O, B, $, N), _t = Math.min(P, D, z, q), Oe = Math.max(O, B, $, N) - tt, Qt = Math.max(P, D, z, q) - _t;
     return {
-      x: et,
-      y: ie,
-      width: Re,
-      height: se,
+      x: tt,
+      y: _t,
+      width: Oe,
+      height: Qt,
       polygon: [
-        [O, I],
-        [L, B],
-        [E, W],
-        [D, Z]
+        [O, P],
+        [B, D],
+        [$, z],
+        [N, q]
       ]
     };
   }
@@ -14451,7 +14450,7 @@ class j {
    *         The current computed value.
    */
   getStyle(t) {
-    return Vo.getComputedStyle(this.element || this, "").getPropertyValue(t);
+    return vo.getComputedStyle(this.element || this, "").getPropertyValue(t);
   }
   /**
    * Check if an element has the given class name.
@@ -14498,7 +14497,7 @@ class j {
    * The SVG node name.
    */
   constructor(t, e) {
-    this.onEvents = {}, this.opacity = 1, this.SVG_NS = pe, this.element = e === "span" || e === "body" ? qo(e) : Ot.createElementNS(this.SVG_NS, e), this.renderer = t, this.styles = {}, ri(this, "afterInit");
+    this.onEvents = {}, this.opacity = 1, this.SVG_NS = le, this.element = e === "span" || e === "body" ? Mo(e) : Mt.createElementNS(this.SVG_NS, e), this.renderer = t, this.styles = {}, Ke(this, "afterInit");
   }
   /**
    * Add an event listener. This is a simple setter that replaces the
@@ -14521,7 +14520,7 @@ class j {
    */
   on(t, e) {
     const { onEvents: i } = this;
-    return i[t] && i[t](), i[t] = Ko(this.element, t, e), this;
+    return i[t] && i[t](), i[t] = wo(this.element, t, e), this;
   }
   /**
    * @private
@@ -14555,7 +14554,7 @@ class j {
    * @return {Highcharts.SVGElement} Returns the SVG element for chainability.
    */
   removeClass(t) {
-    return this.attr("class", ("" + this.attr("class")).replace($s(t) ? new RegExp(`(^| )${t}( |$)`) : (
+    return this.attr("class", ("" + this.attr("class")).replace(ms(t) ? new RegExp(`(^| )${t}( |$)`) : (
       // #12064, #13590
       t
     ), " ").replace(/ +/g, " ").trim());
@@ -14617,10 +14616,10 @@ class j {
    * @return {Highcharts.SVGElement} Returns the SVGElement for chaining.
    */
   shadow(t) {
-    const { renderer: e } = this, i = oi(this.parentGroup?.rotation === 90 ? {
+    const { renderer: e } = this, i = Ze(this.parentGroup?.rotation === 90 ? {
       offsetX: -1,
       offsetY: -1
-    } : {}, Jo(t) ? t : {}), s = e.shadowDefinition(i);
+    } : {}, Co(t) ? t : {}), s = e.shadowDefinition(i);
     return this.attr({
       filter: t ? `url(${e.url}#${s})` : "none"
     });
@@ -14679,7 +14678,7 @@ class j {
       return this["stroke-width"] || 0;
     const t = this.getStyle("stroke-width");
     let e = 0, i;
-    return /px$/.test(t) ? e = ge(t) : t !== "" && (i = Ot.createElementNS(pe, "rect"), si(i, {
+    return /px$/.test(t) ? e = ce(t) : t !== "" && (i = Mt.createElementNS(le, "rect"), Ue(i, {
       width: t,
       "stroke-width": 0
     }), this.element.parentNode.appendChild(i), e = i.getBBox().width, i.parentNode.removeChild(i)), e;
@@ -14697,8 +14696,8 @@ class j {
    */
   symbolAttr(t) {
     const e = this;
-    j.symbolCustomAttribs.forEach(function(i) {
-      e[i] = ht(t[i], e[i]);
+    H.symbolCustomAttribs.forEach(function(i) {
+      e[i] = ot(t[i], e[i]);
     }), e.attr({
       d: e.renderer.symbols[e.symbolName](e.x, e.y, e.width, e.height, e)
     });
@@ -14717,10 +14716,10 @@ class j {
    * @param {string} value
    */
   titleSetter(t) {
-    const e = this.element, i = e.getElementsByTagName("title")[0] || Ot.createElementNS(this.SVG_NS, "title");
-    e.insertBefore ? e.insertBefore(i, e.firstChild) : e.appendChild(i), i.textContent = ta(
+    const e = this.element, i = e.getElementsByTagName("title")[0] || Mt.createElementNS(this.SVG_NS, "title");
+    e.insertBefore ? e.insertBefore(i, e.firstChild) : e.appendChild(i), i.textContent = Oo(
       // Scan #[73]
-      ht(t, ""),
+      ot(t, ""),
       // #3276, #3895
       [/<[^>]*>/g, ""]
     ).replace(/&lt;/g, "<").replace(/&gt;/g, ">");
@@ -14769,12 +14768,12 @@ class j {
    * @function Highcharts.SVGElement#updateTransform
    */
   updateTransform(t = "transform") {
-    const { element: e, foreignObject: i, matrix: s, padding: r, rotation: n = 0, rotationOriginX: o, rotationOriginY: a, scaleX: l, scaleY: h, text: d, translateX: f = 0, translateY: p = 0 } = this, u = ["translate(" + f + "," + p + ")"];
-    ot(s) && u.push("matrix(" + s.join(",") + ")"), n && (u.push("rotate(" + n + " " + (o ?? e.getAttribute("x") ?? this.x ?? 0) + " " + (a ?? e.getAttribute("y") ?? this.y ?? 0) + ")"), d?.element.tagName === "SPAN" && !d?.foreignObject && d.attr({
+    const { element: e, foreignObject: i, matrix: s, padding: r, rotation: n = 0, rotationOriginX: o, rotationOriginY: a, scaleX: l, scaleY: c, text: f, translateX: d = 0, translateY: p = 0 } = this, u = ["translate(" + d + "," + p + ")"];
+    rt(s) && u.push("matrix(" + s.join(",") + ")"), n && (u.push("rotate(" + n + " " + (o ?? e.getAttribute("x") ?? this.x ?? 0) + " " + (a ?? e.getAttribute("y") ?? this.y ?? 0) + ")"), f?.element.tagName === "SPAN" && !f?.foreignObject && f.attr({
       rotation: n,
       rotationOriginX: (o || 0) - r,
       rotationOriginY: (a || 0) - r
-    })), (ot(l) || ot(h)) && u.push("scale(" + ht(l, 1) + " " + ht(h, 1) + ")"), u.length && !(d || this).textPath && (i?.element || e).setAttribute(t, u.join(" "));
+    })), (rt(l) || rt(c)) && u.push("scale(" + ot(l, 1) + " " + ot(c, 1) + ")"), u.length && !(f || this).textPath && (i?.element || e).setAttribute(t, u.join(" "));
   }
   /**
    * @private
@@ -14803,25 +14802,25 @@ class j {
    */
   zIndexSetter(t, e) {
     const i = this.renderer, s = this.parentGroup, r = s || i, n = r.element || i.box, o = this.element, a = n === i.box;
-    let l, h, d, f = !1, p, u = this.added, g;
-    if (ot(t) ? (o.setAttribute("data-z-index", t), t = +t, this[e] === t && (u = !1)) : ot(this[e]) && o.removeAttribute("data-z-index"), this[e] = t, u) {
-      for (t = this.zIndex, t && s && (s.handleZ = !0), l = n.childNodes, g = l.length - 1; g >= 0 && !f; g--)
-        h = l[g], d = h.getAttribute("data-z-index"), p = !ot(d), h !== o && (// Negative zIndex versus no zIndex:
+    let l, c, f, d = !1, p, u = this.added, g;
+    if (rt(t) ? (o.setAttribute("data-z-index", t), t = +t, this[e] === t && (u = !1)) : rt(this[e]) && o.removeAttribute("data-z-index"), this[e] = t, u) {
+      for (t = this.zIndex, t && s && (s.handleZ = !0), l = n.childNodes, g = l.length - 1; g >= 0 && !d; g--)
+        c = l[g], f = c.getAttribute("data-z-index"), p = !rt(f), c !== o && (// Negative zIndex versus no zIndex:
         // On all levels except the highest. If the parent is
         // <svg>, then we don't want to put items before <desc>
         // or <defs>
-        t < 0 && p && !a && !g ? (n.insertBefore(o, l[g]), f = !0) : (
+        t < 0 && p && !a && !g ? (n.insertBefore(o, l[g]), d = !0) : (
           // Insert after the first element with a lower zIndex
-          (ge(d) <= t || // If negative zIndex, add this before first undefined
+          (ce(f) <= t || // If negative zIndex, add this before first undefined
           // zIndex element
-          p && (!ot(t) || t >= 0)) && (n.insertBefore(o, l[g + 1]), f = !0)
+          p && (!rt(t) || t >= 0)) && (n.insertBefore(o, l[g + 1]), d = !0)
         ));
-      f || (n.insertBefore(o, l[a ? 3 : 0]), f = !0);
+      d || (n.insertBefore(o, l[a ? 3 : 0]), d = !0);
     }
-    return f;
+    return d;
   }
 }
-j.symbolCustomAttribs = [
+H.symbolCustomAttribs = [
   "anchorX",
   "anchorY",
   "clockwise",
@@ -14834,13 +14833,13 @@ j.symbolCustomAttribs = [
   "x",
   "y"
 ];
-j.prototype.strokeSetter = j.prototype.fillSetter;
-j.prototype.yGetter = j.prototype.xGetter;
-j.prototype.matrixSetter = j.prototype.rotationOriginXSetter = j.prototype.rotationOriginYSetter = j.prototype.rotationSetter = j.prototype.scaleXSetter = j.prototype.scaleYSetter = j.prototype.translateXSetter = j.prototype.translateYSetter = j.prototype.verticalAlignSetter = function(c, t) {
-  this[t] = c, this.doTransform = !0;
+H.prototype.strokeSetter = H.prototype.fillSetter;
+H.prototype.yGetter = H.prototype.xGetter;
+H.prototype.matrixSetter = H.prototype.rotationOriginXSetter = H.prototype.rotationOriginYSetter = H.prototype.rotationSetter = H.prototype.scaleXSetter = H.prototype.scaleYSetter = H.prototype.translateXSetter = H.prototype.translateYSetter = H.prototype.verticalAlignSetter = function(h, t) {
+  this[t] = h, this.doTransform = !0;
 };
-const { animObject: Bs, setAnimation: ia } = At, { defaultOptions: me } = Ct, { registerEventOptions: sa } = ze, { svg: ra, win: na } = N, { seriesTypes: Pt } = dt, { format: oa } = ee, { arrayMax: ai, arrayMin: Ns, clamp: zs, correctFloat: Rs, crisp: aa, defined: U, destroyObjectProperties: la, diffObjects: ha, erase: Ws, error: xe, extend: $t, find: ca, fireEvent: F, getClosestDistance: da, getNestedProperty: Hs, insertItem: Fs, isArray: Xs, isNumber: q, isString: fa, merge: Gt, objectEach: li, pick: X, removeEvent: pa, syncTimeout: js } = R;
-class K {
+const { animObject: ys, setAnimation: Eo } = qt, { defaultOptions: de } = St, { registerEventOptions: Po } = Ei, { svg: Do, win: $o } = I, { seriesTypes: At } = Zt, { format: Io } = Te, { arrayMax: _e, arrayMin: bs, clamp: vs, correctFloat: Ss, crisp: Bo, defined: V, destroyObjectProperties: No, diffObjects: Ro, erase: ws, error: fe, extend: Ot, find: zo, fireEvent: F, getClosestDistance: Wo, getNestedProperty: Ms, insertItem: ks, isArray: As, isNumber: K, isString: Fo, merge: zt, objectEach: Qe, pick: j, removeEvent: jo, syncTimeout: Cs } = G;
+class et {
   constructor() {
     this.zoneAxis = "y";
   }
@@ -14851,11 +14850,11 @@ class K {
    * */
   /* eslint-disable valid-jsdoc */
   init(t, e) {
-    F(this, "init", { options: e }), this.dataTable ?? (this.dataTable = new ti());
+    F(this, "init", { options: e }), this.dataTable ?? (this.dataTable = new Ge());
     const i = this, s = t.series;
     this.eventsToUnbind = [], i.chart = t, i.options = i.setOptions(e);
     const r = i.options, n = r.visible !== !1;
-    i.linkedSeries = [], i.bindAxes(), $t(i, {
+    i.linkedSeries = [], i.bindAxes(), Ot(i, {
       /**
        * The series name as given in the options. Defaults to
        * "Series {n}".
@@ -14884,9 +14883,9 @@ class K {
        */
       selected: r.selected === !0
       // False by default
-    }), sa(this, r), (r.events?.click || r.point?.events?.click || r.allowPointSelect) && (t.runTrackerClick = !0), i.getColor(), i.getSymbol(), i.isCartesian && (t.hasCartesianSeries = !0);
+    }), Po(this, r), (r.events?.click || r.point?.events?.click || r.allowPointSelect) && (t.runTrackerClick = !0), i.getColor(), i.getSymbol(), i.isCartesian && (t.hasCartesianSeries = !0);
     let a;
-    s.length && (a = s[s.length - 1]), i._i = X(a?._i, -1) + 1, i.opacity = i.options.opacity, t.orderItems("series", Fs(this, s)), r.dataSorting?.enabled ? i.setDataSortingOptions() : !i.points && !i.data && i.setData(r.data, !1), F(this, "afterInit");
+    s.length && (a = s[s.length - 1]), i._i = j(a?._i, -1) + 1, i.opacity = i.options.opacity, t.orderItems("series", ks(this, s)), r.dataSorting?.enabled ? i.setDataSortingOptions() : !i.points && !i.data && i.setData(r.data, !1), F(this, "afterInit");
   }
   /**
    * Check whether the series item is itself or inherits from a certain
@@ -14901,7 +14900,7 @@ class K {
    *        True if this item is or inherits from the given type.
    */
   is(t) {
-    return Pt[t] && this instanceof Pt[t];
+    return At[t] && this instanceof At[t];
   }
   /**
    * Set the xAxis and yAxis properties of cartesian series, and register
@@ -14916,8 +14915,8 @@ class K {
     F(this, "bindAxes", null, function() {
       (t.axisTypes || []).forEach(function(r) {
         (i[r] || []).forEach(function(n) {
-          s = n.options, (X(e[r], 0) === n.index || typeof e[r] < "u" && e[r] === s.id) && (Fs(t, n.series), t[r] = n, n.isDirty = !0);
-        }), !t[r] && t.optionalAxis !== r && xe(18, !0, i);
+          s = n.options, (j(e[r], 0) === n.index || typeof e[r] < "u" && e[r] === s.id) && (ks(t, n.series), t[r] = n, n.isDirty = !0);
+        }), !t[r] && t.optionalAxis !== r && fe(18, !0, i);
       });
     }), F(this, "afterBindAxes");
   }
@@ -14955,11 +14954,11 @@ class K {
   autoIncrement(t) {
     const e = this.options, { pointIntervalUnit: i, relativeXValue: s } = this.options, r = this.chart.time, n = this.xIncrement ?? r.parse(e.pointStart) ?? 0;
     let o;
-    if (this.pointInterval = o = X(this.pointInterval, e.pointInterval, 1), s && q(t) && (o *= t), i) {
+    if (this.pointInterval = o = j(this.pointInterval, e.pointInterval, 1), s && K(t) && (o *= t), i) {
       const a = r.toParts(n);
       i === "day" ? a[2] += o : i === "month" ? a[1] += o : i === "year" && (a[0] += o), o = r.makeTime.apply(r, a) - n;
     }
-    return s && q(t) ? n + o : (this.xIncrement = n + o, n);
+    return s && K(t) ? n + o : (this.xIncrement = n + o, n);
   }
   /**
    * Internal function to set properties for series if data sorting is
@@ -14970,12 +14969,12 @@ class K {
    */
   setDataSortingOptions() {
     const t = this.options;
-    $t(this, {
+    Ot(this, {
       requireSorting: !1,
       sorted: !1,
       enabledDataSorting: !0,
       allowDG: !1
-    }), U(t.pointRange) || (t.pointRange = 1);
+    }), V(t.pointRange) || (t.pointRange = 1);
   }
   /**
    * Set the series options by merging from the options tree. Called
@@ -14988,44 +14987,44 @@ class K {
    * @emits Highcharts.Series#event:afterSetOptions
    */
   setOptions(t) {
-    const e = this.chart, i = e.options, s = i.plotOptions, r = e.userOptions || {}, n = Gt(t), o = e.styledMode, a = {
+    const e = this.chart, i = e.options, s = i.plotOptions, r = e.userOptions || {}, n = zt(t), o = e.styledMode, a = {
       plotOptions: s,
       userOptions: n
     };
     let l;
     F(this, "setOptions", a);
-    const h = a.plotOptions[this.type], d = r.plotOptions || {}, f = d.series || {}, p = me.plotOptions[this.type] || {}, u = d[this.type] || {};
-    h.dataLabels = this.mergeArrays(p.dataLabels, h.dataLabels), this.userOptions = a.userOptions;
-    const g = Gt(
-      h,
+    const c = a.plotOptions[this.type], f = r.plotOptions || {}, d = f.series || {}, p = de.plotOptions[this.type] || {}, u = f[this.type] || {};
+    c.dataLabels = this.mergeArrays(p.dataLabels, c.dataLabels), this.userOptions = a.userOptions;
+    const g = zt(
+      c,
       s.series,
       // #3881, chart instance plotOptions[type] should trump
       // plotOptions.series
       u,
       n
     );
-    this.tooltipOptions = Gt(
-      me.tooltip,
+    this.tooltipOptions = zt(
+      de.tooltip,
       // 1
-      me.plotOptions.series?.tooltip,
+      de.plotOptions.series?.tooltip,
       // 2
       p?.tooltip,
       // 3
       e.userOptions.tooltip,
       // 4
-      d.series?.tooltip,
+      f.series?.tooltip,
       // 5
       u.tooltip,
       // 6
       n.tooltip
       // 7
-    ), this.stickyTracking = X(n.stickyTracking, u.stickyTracking, f.stickyTracking, this.tooltipOptions.shared && !this.noSharedTooltip ? !0 : g.stickyTracking), h.marker === null && delete g.marker, this.zoneAxis = g.zoneAxis || "y";
+    ), this.stickyTracking = j(n.stickyTracking, u.stickyTracking, d.stickyTracking, this.tooltipOptions.shared && !this.noSharedTooltip ? !0 : g.stickyTracking), c.marker === null && delete g.marker, this.zoneAxis = g.zoneAxis || "y";
     const x = this.zones = // #20440, create deep copy of zones options
     (g.zones || []).map((m) => ({ ...m }));
     return (g.negativeColor || g.negativeFillColor) && !g.zones && (l = {
       value: g[this.zoneAxis + "Threshold"] || g.threshold || 0,
       className: "highcharts-negative"
-    }, o || (l.color = g.negativeColor, l.fillColor = g.negativeFillColor), x.push(l)), x.length && U(x[x.length - 1].value) && x.push(o ? {} : {
+    }, o || (l.color = g.negativeColor, l.fillColor = g.negativeFillColor), x.push(l)), x.length && V(x[x.length - 1].value) && x.push(o ? {} : {
       color: this.color,
       fillColor: this.fillColor
     }), F(this, "afterSetOptions", { options: g }), g;
@@ -15041,7 +15040,7 @@ class K {
    * The series name.
    */
   getName() {
-    return this.options.name ?? oa(this.chart.options.lang.seriesName, this, this.chart);
+    return this.options.name ?? Io(this.chart.options.lang.seriesName, this, this.chart);
   }
   /**
    * @private
@@ -15054,7 +15053,7 @@ class K {
       s.options.chart.colorCount
     );
     let a, l;
-    e || (l = X(t === "color" ? this.options.colorIndex : void 0, this[r]), U(l) ? a = l : (s.series.length || (s[n] = 0), a = s[n] % o, s[n] += 1), i && (e = i[a])), typeof a < "u" && (this[r] = a), this[t] = e;
+    e || (l = j(t === "color" ? this.options.colorIndex : void 0, this[r]), V(l) ? a = l : (s.series.length || (s[n] = 0), a = s[n] % o, s[n] += 1), i && (e = i[a])), typeof a < "u" && (this[r] = a), this[t] = e;
   }
   /**
    * Get the series' color based on either the options or pulled from
@@ -15064,7 +15063,7 @@ class K {
    * @function Highcharts.Series#getColor
    */
   getColor() {
-    this.chart.styledMode ? this.getCyclic("color") : this.options.colorByPoint ? this.color = "#cccccc" : this.getCyclic("color", this.options.color || me.plotOptions[this.type].color, this.chart.options.colors);
+    this.chart.styledMode ? this.getCyclic("color") : this.options.colorByPoint ? this.color = "#cccccc" : this.getCyclic("color", this.options.color || de.plotOptions[this.type].color, this.chart.options.colors);
   }
   /**
    * Get all points' instances created for this series.
@@ -15111,16 +15110,16 @@ class K {
    */
   findPointIndex(t, e) {
     const { id: i, x: s } = t, r = this.points, n = this.options.dataSorting, o = this.cropStart || 0;
-    let a, l, h;
+    let a, l, c;
     if (i) {
-      const d = this.chart.get(i);
-      d instanceof lt && (a = d);
+      const f = this.chart.get(i);
+      f instanceof ft && (a = f);
     } else if (this.linkedParent || this.enabledDataSorting || this.options.relativeXValue) {
-      let d = (f) => !f.touched && f.index === t.index;
-      if (n?.matchByName ? d = (f) => !f.touched && f.name === t.name : this.options.relativeXValue && (d = (f) => !f.touched && f.options.x === t.x), a = ca(r, d), !a)
+      let f = (d) => !d.touched && d.index === t.index;
+      if (n?.matchByName ? f = (d) => !d.touched && d.name === t.name : this.options.relativeXValue && (f = (d) => !d.touched && d.options.x === t.x), a = zo(r, f), !a)
         return;
     }
-    return a && (h = a?.index, typeof h < "u" && (l = !0)), typeof h > "u" && q(s) && (h = this.getColumn("x").indexOf(s, e)), h !== -1 && typeof h < "u" && this.cropped && (h = h >= o ? h - o : h), !l && q(h) && r[h]?.touched && (h = void 0), h;
+    return a && (c = a?.index, typeof c < "u" && (l = !0)), typeof c > "u" && K(s) && (c = this.getColumn("x").indexOf(s, e)), c !== -1 && typeof c < "u" && this.cropped && (c = c >= o ? c - o : c), !l && K(c) && r[c]?.touched && (c = void 0), c;
   }
   /**
    * Internal function called from setData. If the point count is the same
@@ -15134,14 +15133,14 @@ class K {
    */
   updateData(t, e) {
     const { options: i, requireSorting: s } = this, r = i.dataSorting, n = this.points, o = [], a = t.length === n.length;
-    let l, h, d, f, p = !0;
+    let l, c, f, d, p = !0;
     if (this.xIncrement = null, t.forEach((g, x) => {
-      const m = U(g) && this.pointClass.prototype.optionsToObject.call({ series: this }, g) || {}, { id: b, x: y } = m;
+      const m = V(g) && this.pointClass.prototype.optionsToObject.call({ series: this }, g) || {}, { id: b, x: y } = m;
       let v;
-      b || q(y) ? (v = this.findPointIndex(m, f), v === -1 || typeof v > "u" ? o.push(g) : n[v] && g !== i.data?.[v] ? (n[v].update(g, !1, void 0, !1), n[v].touched = !0, s && (f = v + 1)) : n[v] && (n[v].touched = !0), (!a || x !== v || r?.enabled || this.hasDerivedData) && (l = !0)) : o.push(g);
+      b || K(y) ? (v = this.findPointIndex(m, d), v === -1 || typeof v > "u" ? o.push(g) : n[v] && g !== i.data?.[v] ? (n[v].update(g, !1, void 0, !1), n[v].touched = !0, s && (d = v + 1)) : n[v] && (n[v].touched = !0), (!a || x !== v || r?.enabled || this.hasDerivedData) && (l = !0)) : o.push(g);
     }, this), l)
-      for (h = n.length; h--; )
-        d = n[h], d && !d.touched && d.remove?.(!1, e);
+      for (c = n.length; c--; )
+        f = n[c], f && !f.touched && f.remove?.(!1, e);
     else a && !r?.enabled ? (t.forEach((g, x) => {
       g !== n[x].y && !n[x].destroyed && n[x].update(g, !1, void 0, !1);
     }), o.length = 0) : p = !1;
@@ -15153,7 +15152,7 @@ class K {
       this.addPoint(g, !1, void 0, void 0, !1);
     }, this);
     const u = this.getColumn("x");
-    return this.xIncrement === null && u.length && (this.xIncrement = ai(u), this.autoIncrement()), !0;
+    return this.xIncrement === null && u.length && (this.xIncrement = _e(u), this.autoIncrement()), !0;
   }
   dataColumnKeys() {
     return ["x", ...this.pointArrayMap || ["y"]];
@@ -15206,63 +15205,63 @@ class K {
    *        `false` to prevent.
    */
   setData(t, e = !0, i, s) {
-    const r = this, n = r.points, o = n?.length || 0, a = r.options, l = r.chart, h = a.dataSorting, d = r.xAxis, f = a.turboThreshold, p = this.dataTable, u = this.dataColumnKeys(), g = r.pointValKey || "y", x = r.pointArrayMap || [], m = x.length, b = a.keys;
-    let y, v, S = 0, k = 1, w;
-    l.options.chart.allowMutatingData || (a.data && delete r.options.data, r.userOptions.data && delete r.userOptions.data, w = Gt(!0, t)), t = w || t || [];
+    const r = this, n = r.points, o = n?.length || 0, a = r.options, l = r.chart, c = a.dataSorting, f = r.xAxis, d = a.turboThreshold, p = this.dataTable, u = this.dataColumnKeys(), g = r.pointValKey || "y", x = r.pointArrayMap || [], m = x.length, b = a.keys;
+    let y, v, w = 0, S = 1, k;
+    l.options.chart.allowMutatingData || (a.data && delete r.options.data, r.userOptions.data && delete r.userOptions.data, k = zt(!0, t)), t = k || t || [];
     const M = t.length;
-    if (h?.enabled && (t = this.sortData(t)), l.options.chart.allowMutatingData && s !== !1 && M && o && !r.cropped && !r.hasGroupedData && r.visible && // Soft updating has no benefit in boost, and causes JS error
+    if (c?.enabled && (t = this.sortData(t)), l.options.chart.allowMutatingData && s !== !1 && M && o && !r.cropped && !r.hasGroupedData && r.visible && // Soft updating has no benefit in boost, and causes JS error
     // (#8355)
     !r.boosted && (v = this.updateData(t, i)), !v) {
       r.xIncrement = null, r.colorCounter = 0;
-      let C = f && !a.relativeXValue && M > f;
-      if (C) {
-        const A = r.getFirstValidPoint(t), O = r.getFirstValidPoint(t, M - 1, -1), L = (E) => !!(Xs(E) && (b || q(E[0])));
-        if (q(A) && q(O)) {
-          const E = [], D = [];
-          for (const I of t)
-            E.push(this.autoIncrement()), D.push(I);
+      let A = d && !a.relativeXValue && M > d;
+      if (A) {
+        const T = r.getFirstValidPoint(t), O = r.getFirstValidPoint(t, M - 1, -1), B = ($) => !!(As($) && (b || K($[0])));
+        if (K(T) && K(O)) {
+          const $ = [], N = [];
+          for (const P of t)
+            $.push(this.autoIncrement()), N.push(P);
           p.setColumns({
-            x: E,
-            [g]: D
+            x: $,
+            [g]: N
           });
-        } else if (L(A) && L(O))
+        } else if (B(T) && B(O))
           if (m) {
-            const E = A.length === m ? 1 : 0, D = new Array(u.length).fill(0).map(() => []);
-            for (const I of t) {
-              E && D[0].push(this.autoIncrement());
-              for (let B = E; B <= m; B++)
-                D[B]?.push(I[B - E]);
+            const $ = T.length === m ? 1 : 0, N = new Array(u.length).fill(0).map(() => []);
+            for (const P of t) {
+              $ && N[0].push(this.autoIncrement());
+              for (let D = $; D <= m; D++)
+                N[D]?.push(P[D - $]);
             }
-            p.setColumns(u.reduce((I, B, W) => (I[B] = D[W], I), {}));
+            p.setColumns(u.reduce((P, D, z) => (P[D] = N[z], P), {}));
           } else {
-            b && (S = b.indexOf("x"), k = b.indexOf("y"), S = S >= 0 ? S : 0, k = k >= 0 ? k : 1), A.length === 1 && (k = 0);
-            const E = [], D = [];
-            if (S === k)
-              for (const I of t)
-                E.push(this.autoIncrement()), D.push(I[k]);
+            b && (w = b.indexOf("x"), S = b.indexOf("y"), w = w >= 0 ? w : 0, S = S >= 0 ? S : 1), T.length === 1 && (S = 0);
+            const $ = [], N = [];
+            if (w === S)
+              for (const P of t)
+                $.push(this.autoIncrement()), N.push(P[S]);
             else
-              for (const I of t)
-                E.push(I[S]), D.push(I[k]);
+              for (const P of t)
+                $.push(P[w]), N.push(P[S]);
             p.setColumns({
-              x: E,
-              [g]: D
+              x: $,
+              [g]: N
             });
           }
         else
-          C = !1;
+          A = !1;
       }
-      if (!C) {
-        const A = u.reduce((O, L) => (O[L] = [], O), {});
+      if (!A) {
+        const T = u.reduce((O, B) => (O[B] = [], O), {});
         for (y = 0; y < M; y++) {
           const O = r.pointClass.prototype.applyOptions.apply({ series: r }, [t[y]]);
-          for (const L of u)
-            A[L][y] = O[L];
+          for (const B of u)
+            T[B][y] = O[B];
         }
-        p.setColumns(A);
+        p.setColumns(T);
       }
-      for (fa(this.getColumn("y")[0]) && xe(14, !0, l), r.data = [], r.options.data = r.userOptions.data = t, y = o; y--; )
+      for (Fo(this.getColumn("y")[0]) && fe(14, !0, l), r.data = [], r.options.data = r.userOptions.data = t, y = o; y--; )
         n[y]?.destroy();
-      d && (d.minRange = d.userMinRange), r.isDirty = l.isDirtyBox = !0, r.isDirtyData = !!n, i = !1;
+      f && (f.minRange = f.userMinRange), r.isDirty = l.isDirtyBox = !0, r.isDirtyData = !!n, i = !1;
     }
     a.legendType === "point" && (this.processData(), this.generatePoints()), e && l.redraw(i);
   }
@@ -15276,22 +15275,22 @@ class K {
    */
   sortData(t) {
     const e = this, i = e.options, s = i.dataSorting, r = s.sortKey || "y", n = function(a, l) {
-      return U(l) && a.pointClass.prototype.optionsToObject.call({
+      return V(l) && a.pointClass.prototype.optionsToObject.call({
         series: a
       }, l) || {};
     };
     return t.forEach(function(a, l) {
       t[l] = n(e, a), t[l].index = l;
     }, this), t.concat().sort((a, l) => {
-      const h = Hs(r, a), d = Hs(r, l);
-      return d < h ? -1 : d > h ? 1 : 0;
+      const c = Ms(r, a), f = Ms(r, l);
+      return f < c ? -1 : f > c ? 1 : 0;
     }).forEach(function(a, l) {
       a.x = l;
     }, this), e.linkedSeries && e.linkedSeries.forEach(function(a) {
-      const l = a.options, h = l.data;
-      !l.dataSorting?.enabled && h && (h.forEach(function(d, f) {
-        h[f] = n(a, d), t[f] && (h[f].x = t[f].x, h[f].index = f);
-      }), a.setData(h, !1));
+      const l = a.options, c = l.data;
+      !l.dataSorting?.enabled && c && (c.forEach(function(f, d) {
+        c[d] = n(a, f), t[d] && (c[d].x = t[d].x, c[d].index = d);
+      }), a.setData(c, !1));
     }), t;
   }
   /**
@@ -15306,13 +15305,13 @@ class K {
    */
   getProcessedData(t) {
     const e = this, { dataTable: i, isCartesian: s, options: r, xAxis: n } = e, o = r.cropThreshold, a = t || // X-range series etc, #21003
-    e.getExtremesFromAll, l = n?.logarithmic, h = i.rowCount;
-    let d, f, p = 0, u, g, x, m = e.getColumn("x"), b = i, y = !1;
-    n && (u = n.getExtremes(), g = u.min, x = u.max, y = !!(n.categories && !n.names.length), s && e.sorted && !a && (!o || h > o || e.forceCrop) && (m[h - 1] < g || m[0] > x ? b = new ti() : (
+    e.getExtremesFromAll, l = n?.logarithmic, c = i.rowCount;
+    let f, d, p = 0, u, g, x, m = e.getColumn("x"), b = i, y = !1;
+    n && (u = n.getExtremes(), g = u.min, x = u.max, y = !!(n.categories && !n.names.length), s && e.sorted && !a && (!o || c > o || e.forceCrop) && (m[c - 1] < g || m[0] > x ? b = new Ge() : (
       // Don't understand why this condition is needed
-      e.getColumn(e.pointValKey || "y").length && (m[0] < g || m[h - 1] > x) && (d = this.cropData(i, g, x), b = d.modified, p = d.start, f = !0)
+      e.getColumn(e.pointValKey || "y").length && (m[0] < g || m[c - 1] > x) && (f = this.cropData(i, g, x), b = f.modified, p = f.start, d = !0)
     ))), m = b.getColumn("x") || [];
-    const v = da(
+    const v = Wo(
       [
         l ? m.map(l.log2lin) : m
       ],
@@ -15320,11 +15319,11 @@ class K {
       // data grouping and navigation in Stock charts (#725) and width
       // calculation of columns (#1900). Avoid warning during the
       // premature processing pass in updateNames (#16104).
-      () => e.requireSorting && !y && xe(15, !1, e.chart)
+      () => e.requireSorting && !y && fe(15, !1, e.chart)
     );
     return {
       modified: b,
-      cropped: f,
+      cropped: d,
       cropStart: p,
       closestPointRange: v
     };
@@ -15355,7 +15354,7 @@ class K {
    */
   cropData(t, e, i) {
     const s = t.getColumn("x", !0) || [], r = s.length, n = {};
-    let o, a, l = 0, h = r;
+    let o, a, l = 0, c = r;
     for (o = 0; o < r; o++)
       if (s[o] >= e) {
         l = Math.max(0, o - 1);
@@ -15363,17 +15362,17 @@ class K {
       }
     for (a = o; a < r; a++)
       if (s[a] > i) {
-        h = a + 1;
+        c = a + 1;
         break;
       }
-    for (const d of this.dataColumnKeys()) {
-      const f = t.getColumn(d, !0);
-      f && (n[d] = f.slice(l, h));
+    for (const f of this.dataColumnKeys()) {
+      const d = t.getColumn(f, !0);
+      d && (n[f] = d.slice(l, c));
     }
     return {
-      modified: new ti({ columns: n }),
+      modified: new Ge({ columns: n }),
       start: l,
-      end: h
+      end: c
     };
   }
   /**
@@ -15384,18 +15383,18 @@ class K {
    * @function Highcharts.Series#generatePoints
    */
   generatePoints() {
-    const t = this, e = t.options, i = t.processedData || e.data, s = t.dataTable.modified, r = t.getColumn("x", !0), n = t.pointClass, o = s.rowCount, a = t.cropStart || 0, l = t.hasGroupedData, h = e.keys, d = [], f = e.dataGrouping?.groupAll ? a : 0, p = t.xAxis?.categories, u = t.pointArrayMap || ["y"], g = this.dataColumnKeys();
-    let x, m, b, y, v = t.data, S;
+    const t = this, e = t.options, i = t.processedData || e.data, s = t.dataTable.modified, r = t.getColumn("x", !0), n = t.pointClass, o = s.rowCount, a = t.cropStart || 0, l = t.hasGroupedData, c = e.keys, f = [], d = e.dataGrouping?.groupAll ? a : 0, p = t.xAxis?.categories, u = t.pointArrayMap || ["y"], g = this.dataColumnKeys();
+    let x, m, b, y, v = t.data, w;
     if (!v && !l) {
-      const k = [];
-      k.length = i?.length || 0, v = t.data = k;
+      const S = [];
+      S.length = i?.length || 0, v = t.data = S;
     }
-    for (h && l && (t.options.keys = !1), y = 0; y < o; y++)
-      m = a + y, l ? (b = new n(t, s.getRow(y, g) || []), b.dataGroup = t.groupMap[f + y], b.dataGroup?.options && (b.options = b.dataGroup.options, $t(b, b.dataGroup.options), delete b.dataLabels)) : (b = v[m], S = i ? i[m] : s.getRow(y, u), !b && S !== void 0 && (v[m] = b = new n(t, S, r[y]))), b && (b.index = l ? f + y : m, d[y] = b, b.category = p?.[b.x] ?? b.x, b.key = b.name ?? b.category);
-    if (t.options.keys = h, v && (o !== (x = v.length) || l))
+    for (c && l && (t.options.keys = !1), y = 0; y < o; y++)
+      m = a + y, l ? (b = new n(t, s.getRow(y, g) || []), b.dataGroup = t.groupMap[d + y], b.dataGroup?.options && (b.options = b.dataGroup.options, Ot(b, b.dataGroup.options), delete b.dataLabels)) : (b = v[m], w = i ? i[m] : s.getRow(y, u), !b && w !== void 0 && (v[m] = b = new n(t, w, r[y]))), b && (b.index = l ? d + y : m, f[y] = b, b.category = p?.[b.x] ?? b.x, b.key = b.name ?? b.category);
+    if (t.options.keys = c, v && (o !== (x = v.length) || l))
       for (y = 0; y < x; y++)
         y === a && !l && (y += o), v[y] && (v[y].destroyElements(), v[y].plotX = void 0);
-    t.data = v, t.points = d, F(this, "afterGeneratePoints");
+    t.data = v, t.points = f, F(this, "afterGeneratePoints");
   }
   /**
    * Get current X extremes for the visible data.
@@ -15408,8 +15407,8 @@ class K {
    */
   getXExtremes(t) {
     return {
-      min: Ns(t),
-      max: ai(t)
+      min: bs(t),
+      max: _e(t)
     };
   }
   /**
@@ -15425,19 +15424,19 @@ class K {
    * Force getting extremes of a total series data range.
    */
   getExtremes(t, e) {
-    const { xAxis: i, yAxis: s } = this, r = e || this.getExtremesFromAll || this.options.getExtremesFromAll, n = r && this.cropped ? this.dataTable : this.dataTable.modified, o = n.rowCount, a = t || this.stackedYData, l = a ? [a] : (this.keysAffectYAxis || this.pointArrayMap || ["y"])?.map((S) => n.getColumn(S, !0) || []) || [], h = this.getColumn("x", !0), d = [], f = this.requireSorting && !this.is("column") ? 1 : 0, p = s ? s.positiveValuesOnly : !1, u = r || this.cropped || !i;
+    const { xAxis: i, yAxis: s } = this, r = e || this.getExtremesFromAll || this.options.getExtremesFromAll, n = r && this.cropped ? this.dataTable : this.dataTable.modified, o = n.rowCount, a = t || this.stackedYData, l = a ? [a] : (this.keysAffectYAxis || this.pointArrayMap || ["y"])?.map((w) => n.getColumn(w, !0) || []) || [], c = this.getColumn("x", !0), f = [], d = this.requireSorting && !this.is("column") ? 1 : 0, p = s ? s.positiveValuesOnly : !1, u = r || this.cropped || !i;
     let g, x, m, b = 0, y = 0;
     for (i && (g = i.getExtremes(), b = g.min, y = g.max), m = 0; m < o; m++)
-      if (x = h[m], u || (h[m + f] || x) >= b && (h[m - f] || x) <= y)
-        for (const S of l) {
-          const k = S[m];
-          q(k) && (k > 0 || !p) && d.push(k);
+      if (x = c[m], u || (c[m + d] || x) >= b && (c[m - d] || x) <= y)
+        for (const w of l) {
+          const S = w[m];
+          K(S) && (S > 0 || !p) && f.push(S);
         }
     const v = {
-      activeYData: d,
+      activeYData: f,
       // Needed for Stock Cumulative Sum
-      dataMin: Ns(d),
-      dataMax: ai(d)
+      dataMin: bs(f),
+      dataMax: _e(f)
     };
     return F(this, "afterGetExtremes", { dataExtremes: v }), v;
   }
@@ -15469,7 +15468,7 @@ class K {
     const s = t.length;
     let r = e;
     for (; r >= 0 && r < s; ) {
-      if (U(t[r]))
+      if (V(t[r]))
         return t[r];
       r += i;
     }
@@ -15486,30 +15485,30 @@ class K {
    */
   translate() {
     this.generatePoints();
-    const t = this, e = t.options, i = e.stacking, s = t.xAxis, r = t.enabledDataSorting, n = t.yAxis, o = t.points, a = o.length, l = t.pointPlacementToXValue(), h = !!l, d = e.threshold, f = e.startFromThreshold ? d : 0, p = e?.nullInteraction && n.len;
+    const t = this, e = t.options, i = e.stacking, s = t.xAxis, r = t.enabledDataSorting, n = t.yAxis, o = t.points, a = o.length, l = t.pointPlacementToXValue(), c = !!l, f = e.threshold, d = e.startFromThreshold ? f : 0, p = e?.nullInteraction && n.len;
     let u, g, x, m, b = Number.MAX_VALUE;
     function y(v) {
-      return zs(v, -1e9, 1e9);
+      return vs(v, -1e9, 1e9);
     }
     for (u = 0; u < a; u++) {
-      const v = o[u], S = v.x;
-      let k, w, M = v.y, C = v.low;
-      const A = i && n.stacking?.stacks[(t.negStacks && M < (f ? 0 : d) ? "-" : "") + t.stackKey];
+      const v = o[u], w = v.x;
+      let S, k, M = v.y, A = v.low;
+      const T = i && n.stacking?.stacks[(t.negStacks && M < (d ? 0 : f) ? "-" : "") + t.stackKey];
       g = s.translate(
         // #3923
-        S,
+        w,
         !1,
         !1,
         !1,
         !0,
         l
-      ), v.plotX = q(g) ? Rs(
+      ), v.plotX = K(g) ? Ss(
         // #5236
         y(g)
         // #3923
-      ) : void 0, i && t.visible && A && A[S] && (m = t.getStackIndicator(m, S, t.index), !v.isNull && m.key && (k = A[S], w = k.points[m.key]), k && Xs(w) && (C = w[0], M = w[1], C === f && m.key === A[S].base && (C = X(q(d) ? d : n.min)), n.positiveValuesOnly && U(C) && C <= 0 && (C = void 0), v.total = v.stackTotal = X(k.total), v.percentage = U(v.y) && k.total ? v.y / k.total * 100 : void 0, v.stackY = M, t.irregularWidths || k.setOffset(t.pointXOffset || 0, t.barW || 0, void 0, void 0, void 0, t.xAxis))), v.yBottom = U(C) ? y(n.translate(C, !1, !0, !1, !0)) : void 0, t.dataModify && (M = t.dataModify.modifyValue(M, u));
+      ) : void 0, i && t.visible && T && T[w] && (m = t.getStackIndicator(m, w, t.index), !v.isNull && m.key && (S = T[w], k = S.points[m.key]), S && As(k) && (A = k[0], M = k[1], A === d && m.key === T[w].base && (A = j(K(f) ? f : n.min)), n.positiveValuesOnly && V(A) && A <= 0 && (A = void 0), v.total = v.stackTotal = j(S.total), v.percentage = V(v.y) && S.total ? v.y / S.total * 100 : void 0, v.stackY = M, t.irregularWidths || S.setOffset(t.pointXOffset || 0, t.barW || 0, void 0, void 0, void 0, t.xAxis))), v.yBottom = V(A) ? y(n.translate(A, !1, !0, !1, !0)) : void 0, t.dataModify && (M = t.dataModify.modifyValue(M, u));
       let O;
-      q(M) && v.plotX !== void 0 ? (O = n.translate(M, !1, !0, !1, !0), O = q(O) ? y(O) : void 0) : !q(M) && p && (O = p), v.plotY = O, v.isInside = this.isPointInside(v), v.clientX = h ? Rs(s.translate(S, !1, !1, !1, !0, l)) : g, v.negative = (v.y || 0) < (d || 0), !v.isNull && v.visible !== !1 && (typeof x < "u" && (b = Math.min(b, Math.abs(g - x))), x = g), v.zone = this.zones.length ? v.getZone() : void 0, !v.graphic && t.group && r && (v.isNew = !0);
+      K(M) && v.plotX !== void 0 ? (O = n.translate(M, !1, !0, !1, !0), O = K(O) ? y(O) : void 0) : !K(M) && p && (O = p), v.plotY = O, v.isInside = this.isPointInside(v), v.clientX = c ? Ss(s.translate(w, !1, !1, !1, !0, l)) : g, v.negative = (v.y || 0) < (f || 0), !v.isNull && v.visible !== !1 && (typeof x < "u" && (b = Math.min(b, Math.abs(g - x))), x = g), v.zone = this.zones.length ? v.getZone() : void 0, !v.graphic && t.group && r && (v.isNew = !0);
     }
     t.closestPointRangePx = b, F(this, "afterTranslate");
   }
@@ -15534,7 +15533,7 @@ class K {
     const s = this.chart;
     return (t || this.points || []).filter(function(r) {
       const { plotX: n, plotY: o } = r;
-      return !i && (r.isNull || !q(o)) || e && !s.isInsidePlot(n, o, { inverted: s.inverted }) ? !1 : r.visible !== !1;
+      return !i && (r.isNull || !K(o)) || e && !s.isInsidePlot(n, o, { inverted: s.inverted }) ? !1 : r.visible !== !1;
     });
   }
   /**
@@ -15570,7 +15569,7 @@ class K {
    * Initialize the animation.
    */
   animate(t) {
-    const { chart: e, group: i, markerGroup: s } = this, r = e.inverted, n = Bs(this.options.animation), o = [
+    const { chart: e, group: i, markerGroup: s } = this, r = e.inverted, n = ys(this.options.animation), o = [
       this.getSharedClipKey(),
       n.duration,
       n.easing,
@@ -15578,26 +15577,26 @@ class K {
     ].join(",");
     let a = e.sharedClips[o], l = e.sharedClips[o + "m"];
     if (t && i) {
-      const h = e.getClipBox(this);
+      const c = e.getClipBox(this);
       if (a)
-        a.attr("height", h.height);
+        a.attr("height", c.height);
       else {
-        h.width = 0, r && (h.x = e.plotHeight), a = e.renderer.clipRect(h), e.sharedClips[o] = a;
-        const d = {
+        c.width = 0, r && (c.x = e.plotHeight), a = e.renderer.clipRect(c), e.sharedClips[o] = a;
+        const f = {
           x: -99,
           y: -99,
           width: r ? e.plotWidth + 199 : 99,
           height: r ? 99 : e.plotHeight + 199
         };
-        l = e.renderer.clipRect(d), e.sharedClips[o + "m"] = l;
+        l = e.renderer.clipRect(f), e.sharedClips[o + "m"] = l;
       }
       i.clip(a), s?.clip(l);
     } else if (a && // Only first series in this pane
     !a.hasClass("highcharts-animating")) {
-      const h = e.getClipBox(this), d = n.step;
-      (s?.element.childNodes.length || e.series.length > 1) && (n.step = function(f, p) {
-        d && d.apply(p, arguments), p.prop === "width" && l?.element && l.attr(r ? "height" : "width", f + 99);
-      }), a.addClass("highcharts-animating").animate(h, n);
+      const c = e.getClipBox(this), f = n.step;
+      (s?.element.childNodes.length || e.series.length > 1) && (n.step = function(d, p) {
+        f && f.apply(p, arguments), p.prop === "width" && l?.element && l.attr(r ? "height" : "width", d + 99);
+      }), a.addClass("highcharts-animating").animate(c, n);
     }
   }
   /**
@@ -15609,7 +15608,7 @@ class K {
    * @emits Highcharts.Series#event:afterAnimate
    */
   afterAnimate() {
-    this.setClip(), li(this.chart.sharedClips, (t, e, i) => {
+    this.setClip(), Qe(this.chart.sharedClips, (t, e, i) => {
       t && !this.chart.container.querySelector(`[clip-path="url(#${t.id})"]`) && (t.destroy(), delete i[e]);
     }), this.finishedAnimating = !0, F(this, "afterAnimate");
   }
@@ -15623,28 +15622,28 @@ class K {
    * @function Highcharts.Series#drawPoints
    */
   drawPoints(t = this.points) {
-    const e = this, i = e.chart, s = i.styledMode, { colorAxis: r, options: n } = e, o = n.marker, a = n.nullInteraction, l = e[e.specialGroup || "markerGroup"], h = e.xAxis, d = X(
+    const e = this, i = e.chart, s = i.styledMode, { colorAxis: r, options: n } = e, o = n.marker, a = n.nullInteraction, l = e[e.specialGroup || "markerGroup"], c = e.xAxis, f = j(
       o.enabled,
-      !h || h.isRadial ? !0 : null,
+      !c || c.isRadial ? !0 : null,
       // Use larger or equal as radius is null in bubbles (#6321)
       e.closestPointRangePx >= o.enabledThreshold * o.radius
     );
-    let f, p, u, g, x, m, b;
+    let d, p, u, g, x, m, b;
     if (o.enabled !== !1 || e._hasPointMarkers)
-      for (f = 0; f < t.length; f++) {
-        p = t[f], u = p.graphic, g = u ? "animate" : "attr", x = p.marker || {}, m = !!p.marker;
+      for (d = 0; d < t.length; d++) {
+        p = t[d], u = p.graphic, g = u ? "animate" : "attr", x = p.marker || {}, m = !!p.marker;
         const y = p.isNull;
-        if ((d && !U(x.enabled) || x.enabled) && (!y || a) && p.visible !== !1) {
-          const S = X(x.symbol, e.symbol, "rect");
-          b = e.markerAttribs(p, p.selected && "select"), e.enabledDataSorting && (p.startXPos = h.reversed ? -(b.width || 0) : h.width);
-          const k = p.isInside !== !1;
-          if (!u && k && ((b.width || 0) > 0 || p.hasImage) && (p.graphic = u = i.renderer.symbol(S, b.x, b.y, b.width, b.height, m ? x : o).add(l), e.enabledDataSorting && i.hasRendered && (u.attr({
+        if ((f && !V(x.enabled) || x.enabled) && (!y || a) && p.visible !== !1) {
+          const w = j(x.symbol, e.symbol, "rect");
+          b = e.markerAttribs(p, p.selected && "select"), e.enabledDataSorting && (p.startXPos = c.reversed ? -(b.width || 0) : c.width);
+          const S = p.isInside !== !1;
+          if (!u && S && ((b.width || 0) > 0 || p.hasImage) && (p.graphic = u = i.renderer.symbol(w, b.x, b.y, b.width, b.height, m ? x : o).add(l), e.enabledDataSorting && i.hasRendered && (u.attr({
             x: p.startXPos
-          }), g = "animate")), u && g === "animate" && u[k ? "show" : "hide"](k).animate(b), u) {
-            const w = e.pointAttribs(p, s || !p.selected ? void 0 : "select");
+          }), g = "animate")), u && g === "animate" && u[S ? "show" : "hide"](S).animate(b), u) {
+            const k = e.pointAttribs(p, s || !p.selected ? void 0 : "select");
             s ? r && u.css({
-              fill: w.fill
-            }) : u[g](w);
+              fill: k.fill
+            }) : u[g](k);
           }
           u && u.addClass(p.getClassName(), !0);
         } else u && (p.graphic = u.destroy());
@@ -15670,13 +15669,13 @@ class K {
    */
   markerAttribs(t, e) {
     const i = this.options, s = i.marker, r = t.marker || {}, n = r.symbol || s.symbol, o = {};
-    let a, l, h = X(r.radius, s?.radius);
-    e && (a = s.states[e], l = r.states && r.states[e], h = X(l?.radius, a?.radius, h && h + (a?.radiusPlus || 0))), t.hasImage = n && n.indexOf("url") === 0, t.hasImage && (h = 0);
-    const d = t.pos();
-    return q(h) && d && (i.crisp && (d[0] = aa(d[0], t.hasImage ? 0 : n === "rect" ? (
+    let a, l, c = j(r.radius, s?.radius);
+    e && (a = s.states[e], l = r.states && r.states[e], c = j(l?.radius, a?.radius, c && c + (a?.radiusPlus || 0))), t.hasImage = n && n.indexOf("url") === 0, t.hasImage && (c = 0);
+    const f = t.pos();
+    return K(c) && f && (i.crisp && (f[0] = Bo(f[0], t.hasImage ? 0 : n === "rect" ? (
       // Rectangle symbols need crisp edges, others don't
       s?.lineWidth || 0
-    ) : 1)), o.x = d[0] - h, o.y = d[1] - h), h && (o.width = o.height = 2 * h), o;
+    ) : 1)), o.x = f[0] - c, o.y = f[1] - c), c && (o.width = o.height = 2 * c), o;
   }
   /**
    * Internal function to get presentational attributes for each point.
@@ -15699,8 +15698,8 @@ class K {
    */
   pointAttribs(t, e) {
     const i = this.options, s = i.marker, r = t?.options, n = r?.marker || {}, o = r?.color, a = t?.color, l = t?.zone?.color;
-    let h, d, f = this.color, p, u, g = X(n.lineWidth, s.lineWidth), x = t?.isNull && i.nullInteraction ? 0 : 1;
-    return f = o || l || a || f, p = n.fillColor || s.fillColor || f, u = n.lineColor || s.lineColor || f, e = e || "normal", e && (h = s.states[e] || {}, d = n.states && n.states[e] || {}, g = X(d.lineWidth, h.lineWidth, g + X(d.lineWidthPlus, h.lineWidthPlus, 0)), p = d.fillColor || h.fillColor || p, u = d.lineColor || h.lineColor || u, x = X(d.opacity, h.opacity, x)), {
+    let c, f, d = this.color, p, u, g = j(n.lineWidth, s.lineWidth), x = t?.isNull && i.nullInteraction ? 0 : 1;
+    return d = o || l || a || d, p = n.fillColor || s.fillColor || d, u = n.lineColor || s.lineColor || d, e = e || "normal", e && (c = s.states[e] || {}, f = n.states && n.states[e] || {}, g = j(f.lineWidth, c.lineWidth, g + j(f.lineWidthPlus, c.lineWidthPlus, 0)), p = f.fillColor || c.fillColor || p, u = f.lineColor || c.lineColor || u, x = j(f.opacity, c.opacity, x)), {
       stroke: u,
       "stroke-width": g,
       fill: p,
@@ -15716,18 +15715,18 @@ class K {
    * @emits Highcharts.Series#event:destroy
    */
   destroy(t) {
-    const e = this, i = e.chart, s = /AppleWebKit\/533/.test(na.navigator.userAgent), r = e.data || [];
+    const e = this, i = e.chart, s = /AppleWebKit\/533/.test($o.navigator.userAgent), r = e.data || [];
     let n, o, a;
     for (F(e, "destroy", { keepEventsForUpdate: t }), this.removeEvents(t), (e.axisTypes || []).forEach(function(l) {
-      a = e[l], a?.series && (Ws(a.series, e), a.isDirty = a.forceRedraw = !0);
+      a = e[l], a?.series && (ws(a.series, e), a.isDirty = a.forceRedraw = !0);
     }), e.legendItem && e.chart.legend.destroyItem(e), o = r.length; o--; )
       r[o]?.destroy?.();
     for (const l of e.zones)
-      la(l, void 0, !0);
-    R.clearTimeout(e.animationTimeout), li(e, function(l, h) {
-      l instanceof j && !l.survive && (n = s && h === "group" ? "hide" : "destroy", l[n]());
-    }), i.hoverSeries === e && (i.hoverSeries = void 0), Ws(i.series, e), i.orderItems("series"), li(e, function(l, h) {
-      (!t || h !== "hcEvents") && delete e[h];
+      No(l, void 0, !0);
+    G.clearTimeout(e.animationTimeout), Qe(e, function(l, c) {
+      l instanceof H && !l.survive && (n = s && c === "group" ? "hide" : "destroy", l[n]());
+    }), i.hoverSeries === e && (i.hoverSeries = void 0), ws(i.series, e), i.orderItems("series"), Qe(e, function(l, c) {
+      (!t || c !== "hcEvents") && delete e[c];
     });
   }
   /**
@@ -15737,55 +15736,55 @@ class K {
    * @function Highcharts.Series#applyZones
    */
   applyZones() {
-    const t = this, { area: e, chart: i, graph: s, zones: r, points: n, xAxis: o, yAxis: a, zoneAxis: l } = t, { inverted: h, renderer: d } = i, f = this[`${l}Axis`], { isXAxis: p, len: u = 0, minPointOffset: g = 0 } = f || {}, x = (s?.strokeWidth() || 0) / 2 + 1, m = (b, y = 0, v = 0) => {
-      h && (v = u - v);
-      const { translated: S = 0, lineClip: k } = b, w = v - S;
-      k?.push([
+    const t = this, { area: e, chart: i, graph: s, zones: r, points: n, xAxis: o, yAxis: a, zoneAxis: l } = t, { inverted: c, renderer: f } = i, d = this[`${l}Axis`], { isXAxis: p, len: u = 0, minPointOffset: g = 0 } = d || {}, x = (s?.strokeWidth() || 0) / 2 + 1, m = (b, y = 0, v = 0) => {
+      c && (v = u - v);
+      const { translated: w = 0, lineClip: S } = b, k = v - w;
+      S?.push([
         "L",
         y,
-        Math.abs(w) < x ? v - x * (w <= 0 ? -1 : 1) : S
+        Math.abs(k) < x ? v - x * (k <= 0 ? -1 : 1) : w
       ]);
     };
-    if (r.length && (s || e) && f && q(f.min)) {
-      const b = f.getExtremes().max + g, y = (k) => {
-        k.forEach((w, M) => {
-          (w[0] === "M" || w[0] === "L") && (k[M] = [
-            w[0],
-            p ? u - w[1] : w[1],
-            p ? w[2] : u - w[2]
+    if (r.length && (s || e) && d && K(d.min)) {
+      const b = d.getExtremes().max + g, y = (S) => {
+        S.forEach((k, M) => {
+          (k[0] === "M" || k[0] === "L") && (S[M] = [
+            k[0],
+            p ? u - k[1] : k[1],
+            p ? k[2] : u - k[2]
           ]);
         });
       };
-      if (r.forEach((k) => {
-        k.lineClip = [], k.translated = zs(f.toPixels(X(k.value, b), !0) || 0, 0, u);
+      if (r.forEach((S) => {
+        S.lineClip = [], S.translated = vs(d.toPixels(j(S.value, b), !0) || 0, 0, u);
       }), s && !this.showLine && s.hide(), e && e.hide(), l === "y" && // Overheat protection
       n.length < o.len)
-        for (const k of n) {
-          const { plotX: w, plotY: M, zone: C } = k, A = C && r[r.indexOf(C) - 1];
-          C && m(C, w, M), A && m(A, w, M);
+        for (const S of n) {
+          const { plotX: k, plotY: M, zone: A } = S, T = A && r[r.indexOf(A) - 1];
+          A && m(A, k, M), T && m(T, k, M);
         }
-      let v = [], S = f.toPixels(f.getExtremes().min - g, !0);
-      r.forEach((k) => {
-        const w = k.lineClip || [], M = Math.round(k.translated || 0);
-        o.reversed && w.reverse();
-        let { clip: C, simpleClip: A } = k, O = 0, L = 0, E = o.len, D = a.len;
-        p ? (O = M, E = S) : (L = M, D = S);
-        const I = [
-          ["M", O, L],
-          ["L", E, L],
-          ["L", E, D],
-          ["L", O, D],
+      let v = [], w = d.toPixels(d.getExtremes().min - g, !0);
+      r.forEach((S) => {
+        const k = S.lineClip || [], M = Math.round(S.translated || 0);
+        o.reversed && k.reverse();
+        let { clip: A, simpleClip: T } = S, O = 0, B = 0, $ = o.len, N = a.len;
+        p ? (O = M, $ = w) : (B = M, N = w);
+        const P = [
+          ["M", O, B],
+          ["L", $, B],
+          ["L", $, N],
+          ["L", O, N],
           ["Z"]
-        ], B = [
-          I[0],
-          ...w,
-          I[1],
-          I[2],
+        ], D = [
+          P[0],
+          ...k,
+          P[1],
+          P[2],
           ...v,
-          I[3],
-          I[4]
+          P[3],
+          P[4]
         ];
-        v = w.reverse(), S = M, h && (y(B), e && y(I)), C ? (C.animate({ d: B }), A?.animate({ d: I })) : (C = k.clip = d.path(B), e && (A = k.simpleClip = d.path(I))), s && k.graph?.clip(C), e && k.area?.clip(A);
+        v = k.reverse(), w = M, c && (y(D), e && y(P)), A ? (A.animate({ d: D }), T?.animate({ d: P })) : (A = S.clip = f.path(D), e && (T = S.simpleClip = f.path(P))), s && S.graph?.clip(A), e && S.area?.clip(T);
       });
     } else t.visible && (s && s.show(), e && e.show());
   }
@@ -15804,7 +15803,7 @@ class K {
       zIndex: s || 0.1
       // Pointer logic uses this
     };
-    return U(this.opacity) && !this.chart.styledMode && this.state !== "inactive" && (a.opacity = this.opacity), n || (this[t] = n = this.chart.renderer.g().add(r)), n.addClass("highcharts-" + e + " highcharts-series-" + this.index + " highcharts-" + this.type + "-series " + (U(this.colorIndex) ? "highcharts-color-" + this.colorIndex + " " : "") + (this.options.className || "") + (n.hasClass("highcharts-tracker") ? " highcharts-tracker" : ""), !0), n.attr(a)[o ? "attr" : "animate"](this.getPlotBox(e)), n;
+    return V(this.opacity) && !this.chart.styledMode && this.state !== "inactive" && (a.opacity = this.opacity), n || (this[t] = n = this.chart.renderer.g().add(r)), n.addClass("highcharts-" + e + " highcharts-series-" + this.index + " highcharts-" + this.type + "-series " + (V(this.colorIndex) ? "highcharts-color-" + this.colorIndex + " " : "") + (this.options.className || "") + (n.hasClass("highcharts-tracker") ? " highcharts-tracker" : ""), !0), n.attr(a)[o ? "attr" : "animate"](this.getPlotBox(e)), n;
   }
   /**
    * Get the translation and scale for the plot area of this series.
@@ -15841,7 +15840,7 @@ class K {
    */
   removeEvents(t) {
     const { eventsToUnbind: e } = this;
-    t || pa(this), e.length && (e.forEach((i) => {
+    t || jo(this), e.length && (e.forEach((i) => {
       i();
     }), e.length = 0);
   }
@@ -15855,9 +15854,9 @@ class K {
    * @emits Highcharts.Series#event:afterRender
    */
   render() {
-    const t = this, { chart: e, options: i, hasRendered: s } = t, r = Bs(i.animation), n = t.visible ? "inherit" : "hidden", o = i.zIndex, a = e.seriesGroup;
+    const t = this, { chart: e, options: i, hasRendered: s } = t, r = ys(i.animation), n = t.visible ? "inherit" : "hidden", o = i.zIndex, a = e.seriesGroup;
     let l = t.finishedAnimating ? 0 : r.duration;
-    F(this, "render"), t.plotGroup("group", "series", n, o, a), t.markerGroup = t.plotGroup("markerGroup", "markers", n, o, a), i.clip !== !1 && t.setClip(), l && t.animate?.(!0), t.drawGraph && (t.drawGraph(), t.applyZones()), t.visible && t.drawPoints(), t.drawDataLabels?.(), t.redrawPoints?.(), i.enableMouseTracking && t.drawTracker?.(), l && t.animate?.(), s || (l && r.defer && (l += r.defer), t.animationTimeout = js(() => {
+    F(this, "render"), t.plotGroup("group", "series", n, o, a), t.markerGroup = t.plotGroup("markerGroup", "markers", n, o, a), i.clip !== !1 && t.setClip(), l && t.animate?.(!0), t.drawGraph && (t.drawGraph(), t.applyZones()), t.visible && t.drawPoints(), t.drawDataLabels?.(), t.redrawPoints?.(), i.enableMouseTracking && t.drawTracker?.(), l && t.animate?.(), s || (l && r.defer && (l += r.defer), t.animationTimeout = Cs(() => {
       t.afterAnimate();
     }, l || 0)), t.isDirty = !1, t.hasRendered = !0, F(t, "afterRender");
   }
@@ -15919,13 +15918,13 @@ class K {
     this.buildingKdTree = !0;
     const e = this, i = e.options, s = i.findNearestPointBy.indexOf("y") > -1 ? 2 : 1;
     function r(o, a, l) {
-      const h = o?.length;
-      let d, f;
-      if (h)
-        return d = e.kdAxisArray[a % l], o.sort((p, u) => (p[d] || 0) - (u[d] || 0)), f = Math.floor(h / 2), {
-          point: o[f],
-          left: r(o.slice(0, f), a + 1, l),
-          right: r(o.slice(f + 1), a + 1, l)
+      const c = o?.length;
+      let f, d;
+      if (c)
+        return f = e.kdAxisArray[a % l], o.sort((p, u) => (p[f] || 0) - (u[f] || 0)), d = Math.floor(c / 2), {
+          point: o[d],
+          left: r(o.slice(0, d), a + 1, l),
+          right: r(o.slice(d + 1), a + 1, l)
         };
     }
     function n() {
@@ -15937,14 +15936,14 @@ class K {
         i?.nullInteraction
       ), s, s), e.buildingKdTree = !1;
     }
-    delete e.kdTree, js(n, i.kdNow || t?.type === "touchstart" ? 0 : 1);
+    delete e.kdTree, Cs(n, i.kdNow || t?.type === "touchstart" ? 0 : 1);
   }
   /**
    * @private
    * @function Highcharts.Series#searchKDTree
    */
   searchKDTree(t, e, i, s, r) {
-    const n = this, [o, a] = this.kdAxisArray, l = e ? "distX" : "dist", h = (n.options.findNearestPointBy || "").indexOf("y") > -1 ? 2 : 1, d = !!n.isBubble, f = s || ((x, m, b) => {
+    const n = this, [o, a] = this.kdAxisArray, l = e ? "distX" : "dist", c = (n.options.findNearestPointBy || "").indexOf("y") > -1 ? 2 : 1, f = !!n.isBubble, d = s || ((x, m, b) => {
       const y = x[b] || 0, v = m[b] || 0;
       return [
         y === v && x.index > m.index || y < v ? x : m,
@@ -15952,22 +15951,22 @@ class K {
       ];
     }), p = r || ((x, m) => x < m);
     function u(x, m) {
-      const b = x[o], y = m[o], v = U(b) && U(y) ? b - y : null, S = x[a], k = m[a], w = U(S) && U(k) ? S - k : 0, M = d && m.marker?.radius || 0;
-      m.dist = Math.sqrt((v && v * v || 0) + w * w) - M, m.distX = U(v) ? Math.abs(v) - M : Number.MAX_VALUE;
+      const b = x[o], y = m[o], v = V(b) && V(y) ? b - y : null, w = x[a], S = m[a], k = V(w) && V(S) ? w - S : 0, M = f && m.marker?.radius || 0;
+      m.dist = Math.sqrt((v && v * v || 0) + k * k) - M, m.distX = V(v) ? Math.abs(v) - M : Number.MAX_VALUE;
     }
     function g(x, m, b, y) {
-      const v = m.point, S = n.kdAxisArray[b % y];
-      let k = v, w = !1;
+      const v = m.point, w = n.kdAxisArray[b % y];
+      let S = v, k = !1;
       u(x, v);
-      const M = (x[S] || 0) - (v[S] || 0) + (d && v.marker?.radius || 0), C = M < 0 ? "left" : "right", A = M < 0 ? "right" : "left";
-      if (m[C] && ([k, w] = f(v, g(x, m[C], b + 1, y), l)), m[A]) {
-        const O = Math.sqrt(M * M), L = k[l];
-        p(O, L, w) && (k = f(k, g(x, m[A], b + 1, y), l)[0]);
+      const M = (x[w] || 0) - (v[w] || 0) + (f && v.marker?.radius || 0), A = M < 0 ? "left" : "right", T = M < 0 ? "right" : "left";
+      if (m[A] && ([S, k] = d(v, g(x, m[A], b + 1, y), l)), m[T]) {
+        const O = Math.sqrt(M * M), B = S[l];
+        p(O, B, k) && (S = d(S, g(x, m[T], b + 1, y), l)[0]);
       }
-      return k;
+      return S;
     }
     if (!this.kdTree && !this.buildingKdTree && this.buildKDTree(i), this.kdTree)
-      return g(t, this.kdTree, h, h);
+      return g(t, this.kdTree, c, c);
   }
   /**
    * @private
@@ -15976,7 +15975,7 @@ class K {
   pointPlacementToXValue() {
     const { options: t, xAxis: e } = this;
     let i = t.pointPlacement;
-    return i === "between" && (i = e.reversed ? -0.5 : 0.5), q(i) ? i * (t.pointRange || e.pointRange) : 0;
+    return i === "between" && (i = e.reversed ? -0.5 : 0.5), K(i) ? i * (t.pointRange || e.pointRange) : 0;
   }
   /**
    * @private
@@ -15996,26 +15995,26 @@ class K {
   drawTracker() {
     const t = this, e = t.options, i = e.trackByArea, s = [].concat((i ? t.areaPath : t.graphPath) || []), r = t.chart, n = r.pointer, o = r.renderer, a = r.options.tooltip?.snap || 0, l = () => {
       e.enableMouseTracking && r.hoverSeries !== t && t.onMouseOver();
-    }, h = "rgba(192,192,192," + (ra ? 1e-4 : 2e-3) + ")";
-    let d = t.tracker;
-    d ? d.attr({ d: s }) : t.graph && (t.tracker = d = o.path(s).attr({
+    }, c = "rgba(192,192,192," + (Do ? 1e-4 : 2e-3) + ")";
+    let f = t.tracker;
+    f ? f.attr({ d: s }) : t.graph && (t.tracker = f = o.path(s).attr({
       visibility: t.visible ? "inherit" : "hidden",
       zIndex: 2
-    }).addClass(i ? "highcharts-tracker-area" : "highcharts-tracker-line").add(t.group), r.styledMode || d.attr({
+    }).addClass(i ? "highcharts-tracker-area" : "highcharts-tracker-line").add(t.group), r.styledMode || f.attr({
       "stroke-linecap": "round",
       "stroke-linejoin": "round",
       // #1225
-      stroke: h,
-      fill: i ? h : "none",
+      stroke: c,
+      fill: i ? c : "none",
       "stroke-width": t.graph.strokeWidth() + (i ? 0 : 2 * a)
     }), [
       t.tracker,
       t.markerGroup,
       t.dataLabelsGroup
-    ].forEach((f) => {
-      f && (f.addClass("highcharts-tracker").on("mouseover", l).on("mouseout", (p) => {
+    ].forEach((d) => {
+      d && (d.addClass("highcharts-tracker").on("mouseover", l).on("mouseout", (p) => {
         n?.onTrackerMouseOut(p);
-      }), e.cursor && !r.styledMode && f.css({ cursor: e.cursor }), f.on("touchstart", l));
+      }), e.cursor && !r.styledMode && d.css({ cursor: e.cursor }), d.on("touchstart", l));
     })), F(this, "afterDrawTracker");
   }
   /**
@@ -16068,23 +16067,23 @@ class K {
    * @emits Highcharts.Series#event:addPoint
    */
   addPoint(t, e, i, s, r) {
-    const n = this, o = n.options, { chart: a, data: l, dataTable: h, xAxis: d } = n, f = d?.hasNames && d.names, p = o.data, u = n.getColumn("x");
+    const n = this, o = n.options, { chart: a, data: l, dataTable: c, xAxis: f } = n, d = f?.hasNames && f.names, p = o.data, u = n.getColumn("x");
     let g, x;
-    e = X(e, !0);
+    e = j(e, !0);
     const m = { series: n };
     n.pointClass.prototype.applyOptions.apply(m, [t]);
     const b = m.x;
     if (x = u.length, n.requireSorting && b < u[x - 1])
       for (g = !0; x && u[x - 1] > b; )
         x--;
-    h.setRow(m, x, !0, { addColumns: !1 }), f && m.name && (f[b] = m.name), p?.splice(x, 0, t), (g || // When processedData is present we need to splice an empty slot
+    c.setRow(m, x, !0, { addColumns: !1 }), d && m.name && (d[b] = m.name), p?.splice(x, 0, t), (g || // When processedData is present we need to splice an empty slot
     // into series.data, otherwise generatePoints won't pick it up.
     n.processedData) && (n.data.splice(x, 0, null), n.processData()), o.legendType === "point" && n.generatePoints(), i && (l[0] && l[0].remove ? l[0].remove(!1) : ([
       l,
       p
-    ].filter(U).forEach((y) => {
+    ].filter(V).forEach((y) => {
       y.shift();
-    }), h.deleteRows(0))), r !== !1 && F(n, "addPoint", { point: m }), n.isDirty = !0, n.isDirtyData = !0, e && a.redraw(s);
+    }), c.deleteRows(0))), r !== !1 && F(n, "addPoint", { point: m }), n.isDirty = !0, n.isDirtyData = !0, e && a.redraw(s);
   }
   /**
    * Remove a point from the series. Unlike the
@@ -16114,17 +16113,17 @@ class K {
    * @emits Highcharts.Point#event:remove
    */
   removePoint(t, e, i) {
-    const s = this, { chart: r, data: n, points: o, dataTable: a } = s, l = n[t], h = function() {
+    const s = this, { chart: r, data: n, points: o, dataTable: a } = s, l = n[t], c = function() {
       [
         // #4935
         o?.length === n.length ? o : void 0,
         n,
         s.options.data
-      ].filter(U).forEach((d) => {
-        d.splice(t, 1);
+      ].filter(V).forEach((f) => {
+        f.splice(t, 1);
       }), a.deleteRows(t), l?.destroy(), s.isDirty = !0, s.isDirtyData = !0, e && r.redraw();
     };
-    ia(i, r), e = X(e, !0), l ? l.firePointEvent("remove", null, h) : h();
+    Eo(i, r), e = j(e, !0), l ? l.firePointEvent("remove", null, c) : c();
   }
   /**
    * Remove a series and optionally redraw the chart.
@@ -16150,7 +16149,7 @@ class K {
   remove(t, e, i, s) {
     const r = this, n = r.chart;
     function o() {
-      r.destroy(s), n.isDirtyLegend = n.isDirtyBox = !0, n.linkSeries(s), X(t, !0) && n.redraw(e);
+      r.destroy(s), n.isDirtyLegend = n.isDirtyBox = !0, n.linkSeries(s), j(t, !0) && n.redraw(e);
     }
     i !== !1 ? F(r, "remove", null, o) : o();
   }
@@ -16182,30 +16181,30 @@ class K {
    * @emits Highcharts.Series#event:afterUpdate
    */
   update(t, e) {
-    t = ha(t, this.userOptions), F(this, "update", { options: t });
-    const i = this, s = i.chart, r = i.userOptions, n = i.initialType || i.type, o = s.options.plotOptions, a = Pt[n].prototype, l = [
+    t = Ro(t, this.userOptions), F(this, "update", { options: t });
+    const i = this, s = i.chart, r = i.userOptions, n = i.initialType || i.type, o = s.options.plotOptions, a = At[n].prototype, l = [
       "group",
       "markerGroup",
       "dataLabelsGroup",
       "transformGroup"
-    ], h = [
+    ], c = [
       "dataGrouping",
       "pointStart",
       "pointInterval",
       "pointIntervalUnit",
       "keys"
-    ], d = i.finishedAnimating && { animation: !1 }, f = {};
-    let p, u, g = K.keepProps.slice(), x = t.type || r.type || s.options.chart.type;
+    ], f = i.finishedAnimating && { animation: !1 }, d = {};
+    let p, u, g = et.keepProps.slice(), x = t.type || r.type || s.options.chart.type;
     const m = !// Indicators etc recalculate the data. It should be
     // possible to omit this.
     (this.hasDerivedData || // New type requires new point classes
     x && x !== this.type || // New options affecting how the data points are built
     typeof t.keys < "u" || typeof t.pointStart < "u" || typeof t.pointInterval < "u" || typeof t.relativeXValue < "u" || t.joinBy || t.mapData || // #11636
     // Changes to data grouping requires new points in new group
-    h.some((y) => i.hasOptionChanged(y)));
-    x = x || n, m ? (g.push.apply(g, K.keepPropsForPoints), t.visible !== !1 && g.push("area", "graph"), i.parallelArrays.forEach(function(y) {
+    c.some((y) => i.hasOptionChanged(y)));
+    x = x || n, m ? (g.push.apply(g, et.keepPropsForPoints), t.visible !== !1 && g.push("area", "graph"), i.parallelArrays.forEach(function(y) {
       g.push(y + "Data");
-    }), t.data && (t.dataSorting && $t(i.options.dataSorting, t.dataSorting), this.setData(t.data, !1))) : this.dataTable.modified = this.dataTable, t = Gt(r, {
+    }), t.data && (t.dataSorting && Ot(i.options.dataSorting, t.dataSorting), this.setData(t.data, !1))) : this.dataTable.modified = this.dataTable, t = zt(r, {
       // When oldOptions.index is null it should't be cleared.
       // Otherwise navigator series will have wrong indexes (#10193).
       index: r.index === void 0 ? i.index : r.index,
@@ -16214,30 +16213,30 @@ class K {
         o?.series?.pointStart ?? r.pointStart ?? // When updating after addPoint
         i.getColumn("x")[0]
       )
-    }, !m && { data: i.options.data }, t, d), m && t.data && (t.data = i.options.data), g = l.concat(g), g.forEach(function(y) {
+    }, !m && { data: i.options.data }, t, f), m && t.data && (t.data = i.options.data), g = l.concat(g), g.forEach(function(y) {
       g[y] = i[y], delete i[y];
     });
     let b = !1;
-    if (Pt[x]) {
+    if (At[x]) {
       if (b = x !== i.type, i.remove(!1, !1, !1, !0), b)
         if (s.propFromSeries(), Object.setPrototypeOf)
-          Object.setPrototypeOf(i, Pt[x].prototype);
+          Object.setPrototypeOf(i, At[x].prototype);
         else {
           const y = Object.hasOwnProperty.call(i, "hcEvents") && i.hcEvents;
           for (u in a)
             i[u] = void 0;
-          $t(i, Pt[x].prototype), y ? i.hcEvents = y : delete i.hcEvents;
+          Ot(i, At[x].prototype), y ? i.hcEvents = y : delete i.hcEvents;
         }
     } else
-      xe(17, !0, s, { missingModuleFor: x });
+      fe(17, !0, s, { missingModuleFor: x });
     if (g.forEach(function(y) {
       i[y] = g[y];
     }), i.init(s, t), m && this.points) {
-      p = i.options, p.visible === !1 ? (f.graphic = 1, f.dataLabel = 1) : (this.hasMarkerChanged(p, r) && (f.graphic = 1), i.hasDataLabels?.() || (f.dataLabel = 1));
+      p = i.options, p.visible === !1 ? (d.graphic = 1, d.dataLabel = 1) : (this.hasMarkerChanged(p, r) && (d.graphic = 1), i.hasDataLabels?.() || (d.dataLabel = 1));
       for (const y of this.points)
-        y?.series && (y.resolveColor(), Object.keys(f).length && y.destroyElements(f), p.showInLegend === !1 && y.legendItem && s.legend.destroyItem(y));
+        y?.series && (y.resolveColor(), Object.keys(d).length && y.destroyElements(d), p.showInLegend === !1 && y.legendItem && s.legend.destroyItem(y));
     }
-    i.initialType = n, s.linkSeries(), s.setSortedData(), b && i.linkedSeries.length && (i.isDirtyData = !0), F(this, "afterUpdate"), X(e, !0) && s.redraw(m ? void 0 : !1);
+    i.initialType = n, s.linkSeries(), s.setSortedData(), b && i.linkedSeries.length && (i.isDirtyData = !0), F(this, "afterUpdate"), j(e, !0) && s.redraw(m ? void 0 : !1);
   }
   /**
    * Used from within series.update
@@ -16251,8 +16250,8 @@ class K {
    * @private
    */
   hasOptionChanged(t) {
-    const e = this.chart, i = this.options[t], s = e.options.plotOptions, r = this.userOptions[t], n = X(s?.[this.type]?.[t], s?.series?.[t]);
-    return r && !U(n) ? i !== r : i !== X(n, i);
+    const e = this.chart, i = this.options[t], s = e.options.plotOptions, r = this.userOptions[t], n = j(s?.[this.type]?.[t], s?.series?.[t]);
+    return r && !V(n) ? i !== r : i !== j(n, i);
   }
   /**
    * Runs on mouse over the series graphical items.
@@ -16292,23 +16291,23 @@ class K {
    *        Determines if state should be inherited by points too.
    */
   setState(t, e) {
-    const i = this, s = i.options, r = i.graph, n = s.inactiveOtherPoints, o = s.states, a = X(o[t || "normal"] && o[t || "normal"].animation, i.chart.options.chart.animation);
-    let l = s.lineWidth, h = s.opacity;
+    const i = this, s = i.options, r = i.graph, n = s.inactiveOtherPoints, o = s.states, a = j(o[t || "normal"] && o[t || "normal"].animation, i.chart.options.chart.animation);
+    let l = s.lineWidth, c = s.opacity;
     if (t = t || "", i.state !== t && ([
       i.group,
       i.markerGroup,
       i.dataLabelsGroup
-    ].forEach(function(d) {
-      d && (i.state && d.removeClass("highcharts-series-" + i.state), t && d.addClass("highcharts-series-" + t));
+    ].forEach(function(f) {
+      f && (i.state && f.removeClass("highcharts-series-" + i.state), t && f.addClass("highcharts-series-" + t));
     }), i.state = t, !i.chart.styledMode)) {
       if (o[t] && o[t].enabled === !1)
         return;
-      if (t && (l = o[t].lineWidth || l + (o[t].lineWidthPlus || 0), h = X(o[t].opacity, h)), r && !r.dashstyle && q(l))
-        for (const d of [
+      if (t && (l = o[t].lineWidth || l + (o[t].lineWidthPlus || 0), c = j(o[t].opacity, c)), r && !r.dashstyle && K(l))
+        for (const f of [
           r,
-          ...this.zones.map((f) => f.graph)
+          ...this.zones.map((d) => d.graph)
         ])
-          d?.animate({
+          f?.animate({
             "stroke-width": l
           }, a);
       n || [
@@ -16316,9 +16315,9 @@ class K {
         i.markerGroup,
         i.dataLabelsGroup,
         i.labelBySeries
-      ].forEach(function(d) {
-        d && d.animate({
-          opacity: h
+      ].forEach(function(f) {
+        f && f.animate({
+          opacity: c
         }, a);
       });
     }
@@ -16437,20 +16436,20 @@ class K {
    * @private
    */
   drawLegendSymbol(t, e) {
-    vo[this.options.legendSymbol || "rectangle"]?.call(this, t, e);
+    Un[this.options.legendSymbol || "rectangle"]?.call(this, t, e);
   }
 }
-K.defaultOptions = Wo;
-K.types = dt.seriesTypes;
-K.registerType = dt.registerSeriesType;
-K.keepProps = [
+et.defaultOptions = po;
+et.types = Zt.seriesTypes;
+et.registerType = Zt.registerSeriesType;
+et.keepProps = [
   "colorIndex",
   "eventOptions",
   "navigatorSeries",
   "symbolIndex",
   "baseSeries"
 ];
-K.keepPropsForPoints = [
+et.keepPropsForPoints = [
   "data",
   "isDirtyData",
   // GeoHeatMap interpolation
@@ -16479,7 +16478,7 @@ K.keepPropsForPoints = [
   "transformGroups"
   // #18857
 ];
-$t(K.prototype, {
+Ot(et.prototype, {
   axisTypes: ["xAxis", "yAxis"],
   coll: "series",
   colorCounter: 0,
@@ -16489,23 +16488,23 @@ $t(K.prototype, {
   kdAxisArray: ["clientX", "plotY"],
   // Each point's x and y values are stored in this.xData and this.yData:
   parallelArrays: ["x", "y"],
-  pointClass: lt,
+  pointClass: ft,
   requireSorting: !0,
   // Requires the data to be sorted:
   sorted: !0
 });
-dt.series = K;
-const { defined: Gs, extend: ua, getAlignFactor: Ys, isNumber: Yt, merge: ga, pick: ye, removeEvent: Vs } = R;
-class St extends j {
+Zt.series = et;
+const { defined: Ts, extend: Ho, getAlignFactor: Os, isNumber: Wt, merge: Xo, pick: pe, removeEvent: Ls } = G;
+class yt extends H {
   /* *
    *
    *  Constructor
    *
    * */
-  constructor(t, e, i, s, r, n, o, a, l, h) {
-    super(t, "g"), this.paddingLeftSetter = this.paddingSetter, this.paddingRightSetter = this.paddingSetter, this.doUpdate = !1, this.textStr = e, this.x = i, this.y = s, this.anchorX = n, this.anchorY = o, this.baseline = l, this.className = h, this.addClass(h === "button" ? "highcharts-no-tooltip" : "highcharts-label"), h && this.addClass("highcharts-" + h), this.text = t.text(void 0, 0, 0, a).attr({ zIndex: 1 });
-    let d;
-    typeof r == "string" && (d = /^url\((.*?)\)$/.test(r), (d || this.renderer.symbols[r]) && (this.symbolKey = r)), this.bBox = St.emptyBBox, this.padding = 3, this.baselineOffset = 0, this.needsBox = t.styledMode || d, this.deferredAttr = {}, this.alignFactor = 0;
+  constructor(t, e, i, s, r, n, o, a, l, c) {
+    super(t, "g"), this.paddingLeftSetter = this.paddingSetter, this.paddingRightSetter = this.paddingSetter, this.doUpdate = !1, this.textStr = e, this.x = i, this.y = s, this.anchorX = n, this.anchorY = o, this.baseline = l, this.className = c, this.addClass(c === "button" ? "highcharts-no-tooltip" : "highcharts-label"), c && this.addClass("highcharts-" + c), this.text = t.text(void 0, 0, 0, a).attr({ zIndex: 1 });
+    let f;
+    typeof r == "string" && (f = /^url\((.*?)\)$/.test(r), (f || this.renderer.symbols[r]) && (this.symbolKey = r)), this.bBox = yt.emptyBBox, this.padding = 3, this.baselineOffset = 0, this.needsBox = t.styledMode || f, this.deferredAttr = {}, this.alignFactor = 0;
   }
   /* *
    *
@@ -16513,8 +16512,8 @@ class St extends j {
    *
    * */
   alignSetter(t) {
-    const e = Ys(t);
-    this.textAlign = t, e !== this.alignFactor && (this.alignFactor = e, this.bBox && Yt(this.xSetting) && this.attr({ x: this.xSetting }));
+    const e = Os(t);
+    this.textAlign = t, e !== this.alignFactor && (this.alignFactor = e, this.bBox && Wt(this.xSetting) && this.attr({ x: this.xSetting }));
   }
   anchorXSetter(t, e) {
     this.anchorX = t, this.boxAttr(e, Math.round(t) - this.getCrispAdjust() - this.xSetting);
@@ -16535,17 +16534,17 @@ class St extends j {
   css(t) {
     if (t) {
       const e = {};
-      t = ga(t), St.textProps.forEach((i) => {
+      t = Xo(t), yt.textProps.forEach((i) => {
         typeof t[i] < "u" && (e[i] = t[i], delete t[i]);
       }), this.text.css(e), "fontSize" in e || "fontWeight" in e ? this.updateTextPadding() : ("width" in e || "textOverflow" in e) && this.updateBoxSize();
     }
-    return j.prototype.css.call(this, t);
+    return H.prototype.css.call(this, t);
   }
   /*
    * Destroy and release memory.
    */
   destroy() {
-    Vs(this.element, "mouseenter"), Vs(this.element, "mouseleave"), this.text && this.text.destroy(), this.box && (this.box = this.box.destroy()), j.prototype.destroy.call(this);
+    Ls(this.element, "mouseenter"), Ls(this.element, "mouseleave"), this.text && this.text.destroy(), this.box && (this.box = this.box.destroy()), H.prototype.destroy.call(this);
   }
   fillSetter(t, e) {
     t && (this.needsBox = !0), this.fill = t, this.boxAttr(e, t);
@@ -16555,14 +16554,14 @@ class St extends j {
    */
   getBBox(t, e) {
     this.textStr && this.bBox.width === 0 && this.bBox.height === 0 && this.updateBoxSize();
-    const { padding: i, height: s = 0, translateX: r = 0, translateY: n = 0, width: o = 0 } = this, a = ye(this.paddingLeft, i), l = e ?? (this.rotation || 0);
-    let h = {
+    const { padding: i, height: s = 0, translateX: r = 0, translateY: n = 0, width: o = 0 } = this, a = pe(this.paddingLeft, i), l = e ?? (this.rotation || 0);
+    let c = {
       width: o,
       height: s,
       x: r + this.bBox.x - a,
       y: n + this.bBox.y - i + this.baselineOffset
     };
-    return l && (h = this.getRotatedBox(h, l)), h;
+    return l && (c = this.getRotatedBox(c, l)), c;
   }
   getCrispAdjust() {
     return (this.renderer.styledMode && this.box ? this.box.strokeWidth() : this["stroke-width"] ? parseInt(this["stroke-width"], 10) : 0) % 2 / 2;
@@ -16591,16 +16590,16 @@ class St extends j {
     this.text.add(this), this.attr({
       // Alignment is available now  (#3295, 0 not rendered if given
       // as a value)
-      text: ye(this.textStr, ""),
+      text: pe(this.textStr, ""),
       x: this.x || 0,
       y: this.y || 0
-    }), this.box && Gs(this.anchorX) && this.attr({
+    }), this.box && Ts(this.anchorX) && this.attr({
       anchorX: this.anchorX,
       anchorY: this.anchorY
     });
   }
   paddingSetter(t, e) {
-    Yt(t) ? t !== this[e] && (this[e] = t, this.updateTextPadding()) : this[e] = void 0;
+    Wt(t) ? t !== this[e] && (this[e] = t, this.updateTextPadding()) : this[e] = void 0;
   }
   rSetter(t, e) {
     this.boxAttr(e, t);
@@ -16623,7 +16622,7 @@ class St extends j {
    * the new bounding box and reflect it in the border box.
    */
   updateBoxSize() {
-    const t = this.text, e = {}, i = this.padding, s = this.bBox = (!Yt(this.widthSetting) || !Yt(this.heightSetting) || this.textAlign) && Gs(t.textStr) ? t.getBBox(void 0, 0) : St.emptyBBox;
+    const t = this.text, e = {}, i = this.padding, s = this.bBox = (!Wt(this.widthSetting) || !Wt(this.heightSetting) || this.textAlign) && Ts(t.textStr) ? t.getBBox(void 0, 0) : yt.emptyBBox;
     let r;
     this.width = this.getPaddedWidth(), this.height = (this.heightSetting || s.height || 0) + 2 * i;
     const n = this.renderer.fontMetrics(t);
@@ -16641,7 +16640,7 @@ class St extends j {
           (this.className === "button" ? "" : "highcharts-label-box") + (this.className ? " highcharts-" + this.className + "-box" : "")
         ), o.add(this);
       }
-      r = this.getCrispAdjust(), e.x = r, e.y = (this.baseline ? -this.baselineOffset : 0) + r, e.width = Math.round(this.width), e.height = Math.round(this.height), this.box.attr(ua(e, this.deferredAttr)), this.deferredAttr = {};
+      r = this.getCrispAdjust(), e.x = r, e.y = (this.baseline ? -this.baselineOffset : 0) + r, e.width = Math.round(this.width), e.height = Math.round(this.height), this.box.attr(Ho(e, this.deferredAttr)), this.deferredAttr = {};
     }
   }
   /*
@@ -16653,7 +16652,7 @@ class St extends j {
     if (!t.textPath) {
       this.updateBoxSize();
       const i = this.baseline ? 0 : this.baselineOffset, s = (this.paddingLeft ?? this.padding) + // Compensate for alignment
-      Ys(e) * (this.widthSetting ?? this.bBox.width);
+      Os(e) * (this.widthSetting ?? this.bBox.width);
       (s !== t.x || i !== t.y) && (t.attr({
         align: e,
         x: s
@@ -16661,10 +16660,10 @@ class St extends j {
     }
   }
   widthSetter(t) {
-    this.widthSetting = Yt(t) ? t : void 0, this.doUpdate = !0;
+    this.widthSetting = Wt(t) ? t : void 0, this.doUpdate = !0;
   }
   getPaddedWidth() {
-    const t = this.padding, e = ye(this.paddingLeft, t), i = ye(this.paddingRight, t);
+    const t = this.padding, e = pe(this.paddingLeft, t), i = pe(this.paddingRight, t);
     return (this.widthSetting || this.bBox.width || 0) + e + i;
   }
   xSetter(t) {
@@ -16674,13 +16673,13 @@ class St extends j {
     this.anchorY && (this["forceAnimate:anchorY"] = !0), this.ySetting = this.y = Math.round(t), this.attr("translateY", this.ySetting);
   }
 }
-St.emptyBBox = {
+yt.emptyBBox = {
   width: 0,
   height: 0,
   x: 0,
   y: 0
 };
-St.textProps = [
+yt.textProps = [
   "color",
   "direction",
   "fontFamily",
@@ -16696,14 +16695,14 @@ St.textProps = [
   "whiteSpace",
   "width"
 ];
-const { defined: Us, isNumber: ma, pick: Vt } = R;
-function Lr(c, t, e, i, s) {
+const { defined: Es, isNumber: Go, pick: Ft } = G;
+function or(h, t, e, i, s) {
   const r = [];
   if (s) {
     let n = s.start || 0, o = s.end || 0;
-    const a = Vt(s.r, e), l = Vt(s.r, i || e), h = 2e-4 / (s.borderRadius ? 1 : Math.max(a, 1)), d = Math.abs(o - n - 2 * Math.PI) < h;
-    d && (n = Math.PI / 2, o = Math.PI * 2.5 - h);
-    const f = s.innerR, p = Vt(s.open, d), u = Math.cos(n), g = Math.sin(n), x = Math.cos(o), m = Math.sin(o), b = Vt(s.longArc, o - n - Math.PI < h ? 0 : 1);
+    const a = Ft(s.r, e), l = Ft(s.r, i || e), c = 2e-4 / (s.borderRadius ? 1 : Math.max(a, 1)), f = Math.abs(o - n - 2 * Math.PI) < c;
+    f && (n = Math.PI / 2, o = Math.PI * 2.5 - c);
+    const d = s.innerR, p = Ft(s.open, f), u = Math.cos(n), g = Math.sin(n), x = Math.cos(o), m = Math.sin(o), b = Ft(s.longArc, o - n - Math.PI < c ? 0 : 1);
     let y = [
       "A",
       // ArcTo
@@ -16715,150 +16714,150 @@ function Lr(c, t, e, i, s) {
       // Slanting
       b,
       // Long or short arc
-      Vt(s.clockwise, 1),
+      Ft(s.clockwise, 1),
       // Clockwise
-      c + a * x,
+      h + a * x,
       t + l * m
     ];
-    y.params = { start: n, end: o, cx: c, cy: t }, r.push([
+    y.params = { start: n, end: o, cx: h, cy: t }, r.push([
       "M",
-      c + a * u,
+      h + a * u,
       t + l * g
-    ], y), Us(f) && (y = [
+    ], y), Es(d) && (y = [
       "A",
       // ArcTo
-      f,
+      d,
       // X radius
-      f,
+      d,
       // Y radius
       0,
       // Slanting
       b,
       // Long or short arc
       // Clockwise - opposite to the outer arc clockwise
-      Us(s.clockwise) ? 1 - s.clockwise : 0,
-      c + f * u,
-      t + f * g
+      Es(s.clockwise) ? 1 - s.clockwise : 0,
+      h + d * u,
+      t + d * g
     ], y.params = {
       start: o,
       end: n,
-      cx: c,
+      cx: h,
       cy: t
     }, r.push(p ? [
       "M",
-      c + f * x,
-      t + f * m
+      h + d * x,
+      t + d * m
     ] : [
       "L",
-      c + f * x,
-      t + f * m
+      h + d * x,
+      t + d * m
     ], y)), p || r.push(["Z"]);
   }
   return r;
 }
-function xa(c, t, e, i, s) {
-  const o = Math.min(s?.r || 0, e, i), a = o + 6, l = s?.anchorX, h = s?.anchorY || 0, d = Vi(c, t, e, i, { r: o });
-  if (!ma(l) || l < e && l > 0 && h < i && h > 0)
-    return d;
-  if (c + l > e - a)
-    if (h > t + a && h < t + i - a)
-      d.splice(3, 1, ["L", c + e, h - 6], ["L", c + e + 6, h], ["L", c + e, h + 6], ["L", c + e, t + i - o]);
+function Yo(h, t, e, i, s) {
+  const o = Math.min(s?.r || 0, e, i), a = o + 6, l = s?.anchorX, c = s?.anchorY || 0, f = Pi(h, t, e, i, { r: o });
+  if (!Go(l) || l < e && l > 0 && c < i && c > 0)
+    return f;
+  if (h + l > e - a)
+    if (c > t + a && c < t + i - a)
+      f.splice(3, 1, ["L", h + e, c - 6], ["L", h + e + 6, c], ["L", h + e, c + 6], ["L", h + e, t + i - o]);
     else if (l < e) {
-      const f = h < t + a, p = f ? t : t + i, u = f ? 2 : 5;
-      d.splice(u, 0, ["L", l, h], ["L", c + e - o, p]);
+      const d = c < t + a, p = d ? t : t + i, u = d ? 2 : 5;
+      f.splice(u, 0, ["L", l, c], ["L", h + e - o, p]);
     } else
-      d.splice(3, 1, ["L", c + e, i / 2], ["L", l, h], ["L", c + e, i / 2], ["L", c + e, t + i - o]);
-  else if (c + l < a)
-    if (h > t + a && h < t + i - a)
-      d.splice(7, 1, ["L", c, h + 6], ["L", c - 6, h], ["L", c, h - 6], ["L", c, t + o]);
+      f.splice(3, 1, ["L", h + e, i / 2], ["L", l, c], ["L", h + e, i / 2], ["L", h + e, t + i - o]);
+  else if (h + l < a)
+    if (c > t + a && c < t + i - a)
+      f.splice(7, 1, ["L", h, c + 6], ["L", h - 6, c], ["L", h, c - 6], ["L", h, t + o]);
     else if (l > 0) {
-      const f = h < t + a, p = f ? t : t + i, u = f ? 1 : 6;
-      d.splice(u, 0, ["L", l, h], ["L", c + o, p]);
+      const d = c < t + a, p = d ? t : t + i, u = d ? 1 : 6;
+      f.splice(u, 0, ["L", l, c], ["L", h + o, p]);
     } else
-      d.splice(7, 1, ["L", c, i / 2], ["L", l, h], ["L", c, i / 2], ["L", c, t + o]);
+      f.splice(7, 1, ["L", h, i / 2], ["L", l, c], ["L", h, i / 2], ["L", h, t + o]);
   else // Replace bottom
-  h > i && l < e - a ? d.splice(5, 1, ["L", l + 6, t + i], ["L", l, t + i + 6], ["L", l - 6, t + i], ["L", c + o, t + i]) : (
+  c > i && l < e - a ? f.splice(5, 1, ["L", l + 6, t + i], ["L", l, t + i + 6], ["L", l - 6, t + i], ["L", h + o, t + i]) : (
     // Replace top
-    h < 0 && l > a && d.splice(1, 1, ["L", l - 6, t], ["L", l, t - 6], ["L", l + 6, t], ["L", e - o, t])
+    c < 0 && l > a && f.splice(1, 1, ["L", l - 6, t], ["L", l, t - 6], ["L", l + 6, t], ["L", e - o, t])
   );
-  return d;
+  return f;
 }
-function ya(c, t, e, i) {
-  return Lr(c + e / 2, t + i / 2, e / 2, i / 2, {
+function Vo(h, t, e, i) {
+  return or(h + e / 2, t + i / 2, e / 2, i / 2, {
     start: Math.PI * 0.5,
     end: Math.PI * 2.5,
     open: !1
   });
 }
-function ba(c, t, e, i) {
+function Uo(h, t, e, i) {
   return [
-    ["M", c + e / 2, t],
-    ["L", c + e, t + i / 2],
-    ["L", c + e / 2, t + i],
-    ["L", c, t + i / 2],
+    ["M", h + e / 2, t],
+    ["L", h + e, t + i / 2],
+    ["L", h + e / 2, t + i],
+    ["L", h, t + i / 2],
     ["Z"]
   ];
 }
-function Ks(c, t, e, i, s) {
-  return s?.r ? Vi(c, t, e, i, s) : [
-    ["M", c, t],
-    ["L", c + e, t],
-    ["L", c + e, t + i],
-    ["L", c, t + i],
+function Ps(h, t, e, i, s) {
+  return s?.r ? Pi(h, t, e, i, s) : [
+    ["M", h, t],
+    ["L", h + e, t],
+    ["L", h + e, t + i],
+    ["L", h, t + i],
     ["Z"]
   ];
 }
-function Vi(c, t, e, i, s) {
+function Pi(h, t, e, i, s) {
   const r = s?.r || 0;
   return [
-    ["M", c + r, t],
-    ["L", c + e - r, t],
+    ["M", h + r, t],
+    ["L", h + e - r, t],
     // Top side
-    ["A", r, r, 0, 0, 1, c + e, t + r],
+    ["A", r, r, 0, 0, 1, h + e, t + r],
     // Top-right corner
-    ["L", c + e, t + i - r],
+    ["L", h + e, t + i - r],
     // Right side
-    ["A", r, r, 0, 0, 1, c + e - r, t + i],
+    ["A", r, r, 0, 0, 1, h + e - r, t + i],
     // Bottom-right corner
-    ["L", c + r, t + i],
+    ["L", h + r, t + i],
     // Bottom side
-    ["A", r, r, 0, 0, 1, c, t + i - r],
+    ["A", r, r, 0, 0, 1, h, t + i - r],
     // Bottom-left corner
-    ["L", c, t + r],
+    ["L", h, t + r],
     // Left side
-    ["A", r, r, 0, 0, 1, c + r, t],
+    ["A", r, r, 0, 0, 1, h + r, t],
     ["Z"]
     // Top-left corner
   ];
 }
-function va(c, t, e, i) {
+function Ko(h, t, e, i) {
   return [
-    ["M", c + e / 2, t],
-    ["L", c + e, t + i],
-    ["L", c, t + i],
+    ["M", h + e / 2, t],
+    ["L", h + e, t + i],
+    ["L", h, t + i],
     ["Z"]
   ];
 }
-function ka(c, t, e, i) {
+function qo(h, t, e, i) {
   return [
-    ["M", c, t],
-    ["L", c + e, t],
-    ["L", c + e / 2, t + i],
+    ["M", h, t],
+    ["L", h + e, t],
+    ["L", h + e / 2, t + i],
     ["Z"]
   ];
 }
-const Sa = {
-  arc: Lr,
-  callout: xa,
-  circle: ya,
-  diamond: ba,
-  rect: Ks,
-  roundedRect: Vi,
-  square: Ks,
-  triangle: va,
-  "triangle-down": ka
-}, { doc: hi, SVG_NS: Ma, win: qs } = N, { attr: ci, extend: wa, fireEvent: Ca, isString: Aa, objectEach: Ta, pick: Oa } = R, di = (c, t) => c.substring(0, t) + "…";
-class La {
+const Zo = {
+  arc: or,
+  callout: Yo,
+  circle: Vo,
+  diamond: Uo,
+  rect: Ps,
+  roundedRect: Pi,
+  square: Ps,
+  triangle: Ko,
+  "triangle-down": qo
+}, { doc: Je, SVG_NS: _o, win: Ds } = I, { attr: ti, extend: Qo, fireEvent: Jo, isString: ta, objectEach: ea, pick: ia } = G, ei = (h, t) => h.substring(0, t) + "…";
+class sa {
   constructor(t) {
     const e = t.styles;
     this.renderer = t.renderer, this.svgElement = t, this.width = t.textWidth, this.textLineHeight = e?.lineHeight, this.textOutline = e?.textOutline, this.ellipsis = e?.textOverflow === "ellipsis", this.lineClamp = e?.lineClamp, this.noWrap = e?.whiteSpace === "nowrap";
@@ -16872,7 +16871,7 @@ class La {
    * @return {void}.
    */
   buildSVG() {
-    const t = this.svgElement, e = t.element, i = t.renderer, s = Oa(t.textStr, "").toString(), r = s.indexOf("<") !== -1, n = e.childNodes, o = !t.added && i.box, a = /<br.*?>/g, l = [
+    const t = this.svgElement, e = t.element, i = t.renderer, s = ia(t.textStr, "").toString(), r = s.indexOf("<") !== -1, n = e.childNodes, o = !t.added && i.box, a = /<br.*?>/g, l = [
       s,
       this.ellipsis,
       this.noWrap,
@@ -16884,20 +16883,20 @@ class La {
     ].join(",");
     if (l !== t.textCache) {
       t.textCache = l, delete t.actualWidth;
-      for (let h = n.length; h--; )
-        e.removeChild(n[h]);
+      for (let c = n.length; c--; )
+        e.removeChild(n[c]);
       if (!r && !this.ellipsis && !this.width && !t.textPath && (s.indexOf(" ") === -1 || this.noWrap && !a.test(s)))
-        e.appendChild(hi.createTextNode(this.unescapeEntities(s)));
+        e.appendChild(Je.createTextNode(this.unescapeEntities(s)));
       else if (s !== "") {
         o && o.appendChild(e);
-        const h = new G(s);
-        this.modifyTree(h.nodes), h.addToDOM(e), this.modifyDOM(), this.ellipsis && (e.textContent || "").indexOf("…") !== -1 && t.attr(
+        const c = new X(s);
+        this.modifyTree(c.nodes), c.addToDOM(e), this.modifyDOM(), this.ellipsis && (e.textContent || "").indexOf("…") !== -1 && t.attr(
           "title",
           this.unescapeEntities(t.textStr || "", ["&lt;", "&gt;"])
           // #7179
         ), o && o.removeChild(e);
       }
-      Aa(this.textOutline) && t.applyTextOutline && t.applyTextOutline(this.textOutline);
+      ta(this.textOutline) && t.applyTextOutline && t.applyTextOutline(this.textOutline);
     }
   }
   /**
@@ -16909,13 +16908,13 @@ class La {
    *
    */
   modifyDOM() {
-    const t = this.svgElement, e = ci(t.element, "x");
+    const t = this.svgElement, e = ti(t.element, "x");
     t.firstLineMetrics = void 0;
     let i;
     for (; (i = t.element.firstChild) && /^[\s\u200B]*$/.test(i.textContent || " "); )
       t.element.removeChild(i);
     [].forEach.call(t.element.querySelectorAll("tspan.highcharts-br"), (o, a) => {
-      o.nextSibling && o.previousSibling && (a === 0 && o.previousSibling.nodeType === 1 && (t.firstLineMetrics = t.renderer.fontMetrics(o.previousSibling)), ci(o, {
+      o.nextSibling && o.previousSibling && (a === 0 && o.previousSibling.nodeType === 1 && (t.firstLineMetrics = t.renderer.fontMetrics(o.previousSibling)), ti(o, {
         // Since the break is inserted in front of the next
         // line, we need to use the next sibling for the line
         // height
@@ -16927,29 +16926,29 @@ class La {
     if (!s)
       return;
     const r = (o, a) => {
-      const l = o.textContent || "", h = l.replace(/([^\^])-/g, "$1- ").split(" "), d = !this.noWrap && (h.length > 1 || t.element.childNodes.length > 1), f = this.getLineHeight(a), p = Math.max(
+      const l = o.textContent || "", c = l.replace(/([^\^])-/g, "$1- ").split(" "), f = !this.noWrap && (c.length > 1 || t.element.childNodes.length > 1), d = this.getLineHeight(a), p = Math.max(
         0,
         // Subtract the font face to make room for
         // the ellipsis itself
-        s - 0.8 * f
+        s - 0.8 * d
       );
       let u = 0, g = t.actualWidth;
-      if (d) {
+      if (f) {
         const x = [], m = [];
         for (; a.firstChild && a.firstChild !== o; )
           m.push(a.firstChild), a.removeChild(a.firstChild);
-        for (; h.length; )
-          if (h.length && !this.noWrap && u > 0 && (x.push(o.textContent || ""), o.textContent = h.join(" ").replace(/- /g, "-")), this.truncate(
+        for (; c.length; )
+          if (c.length && !this.noWrap && u > 0 && (x.push(o.textContent || ""), o.textContent = c.join(" ").replace(/- /g, "-")), this.truncate(
             o,
             void 0,
-            h,
+            c,
             u === 0 && g || 0,
             s,
             p,
             // Build the text to test for
-            (b, y) => h.slice(0, y).join(" ").replace(/- /g, "-")
+            (b, y) => c.slice(0, y).join(" ").replace(/- /g, "-")
           ), g = t.actualWidth, u++, this.lineClamp && u >= this.lineClamp) {
-            h.length && (this.truncate(
+            c.length && (this.truncate(
               o,
               o.textContent || "",
               void 0,
@@ -16957,16 +16956,16 @@ class La {
               // Target width
               s,
               p,
-              di
+              ei
             ), o.textContent = o.textContent?.replace("…", "") + "…");
             break;
           }
         m.forEach((b) => {
           a.insertBefore(b, o);
         }), x.forEach((b) => {
-          a.insertBefore(hi.createTextNode(b), o);
-          const y = hi.createElementNS(Ma, "tspan");
-          y.textContent = "​", ci(y, { dy: f, x: e }), a.insertBefore(y, o);
+          a.insertBefore(Je.createTextNode(b), o);
+          const y = Je.createElementNS(_o, "tspan");
+          y.textContent = "​", ti(y, { dy: d, x: e }), a.insertBefore(y, o);
         });
       } else this.ellipsis && l && this.truncate(
         o,
@@ -16976,11 +16975,11 @@ class La {
         // Target width
         s,
         p,
-        di
+        ei
       );
     }, n = ((o) => {
       [].slice.call(o.childNodes).forEach((l) => {
-        l.nodeType === qs.Node.TEXT_NODE ? r(l, o) : (l.className.baseVal.indexOf("highcharts-br") !== -1 && (t.actualWidth = 0), n(l));
+        l.nodeType === Ds.Node.TEXT_NODE ? r(l, o) : (l.className.baseVal.indexOf("highcharts-br") !== -1 && (t.actualWidth = 0), n(l));
       });
     });
     n(t.element);
@@ -16992,7 +16991,7 @@ class La {
    * @return {number} The rendered line height
    */
   getLineHeight(t) {
-    const e = t.nodeType === qs.Node.TEXT_NODE ? t.parentElement : t;
+    const e = t.nodeType === Ds.Node.TEXT_NODE ? t.parentElement : t;
     return this.textLineHeight ? parseInt(this.textLineHeight.toString(), 10) : this.renderer.fontMetrics(e || this.svgElement.element).h;
   }
   /**
@@ -17010,12 +17009,12 @@ class La {
       const { attributes: r = {}, children: n, style: o = {}, tagName: a } = i, l = this.renderer.styledMode;
       if (a === "b" || a === "strong" ? l ? r.class = "highcharts-strong" : o.fontWeight = "bold" : (a === "i" || a === "em") && (l ? r.class = "highcharts-emphasized" : o.fontStyle = "italic"), o?.color && (o.fill = o.color), a === "br") {
         r.class = "highcharts-br", i.textContent = "​";
-        const h = t[s + 1];
-        h?.textContent && (h.textContent = h.textContent.replace(/^ +/gm, ""));
-      } else a === "a" && n && n.some((h) => h.tagName === "#text") && (i.children = [{ children: n, tagName: "tspan" }]);
-      a !== "#text" && a !== "a" && (i.tagName = "tspan"), wa(i, { attributes: r, style: o }), n && n.filter((h) => h.tagName !== "#text").forEach(e);
+        const c = t[s + 1];
+        c?.textContent && (c.textContent = c.textContent.replace(/^ +/gm, ""));
+      } else a === "a" && n && n.some((c) => c.tagName === "#text") && (i.children = [{ children: n, tagName: "tspan" }]);
+      a !== "#text" && a !== "a" && (i.tagName = "tspan"), Qo(i, { attributes: r, style: o }), n && n.filter((c) => c.tagName !== "#text").forEach(e);
     };
-    t.forEach(e), Ca(this.svgElement, "afterModifyTree", { nodes: t });
+    t.forEach(e), Jo(this.svgElement, "afterModifyTree", { nodes: t });
   }
   /*
    * Truncate the text node contents to a given length. Used when the css
@@ -17024,22 +17023,22 @@ class La {
    * word-wrapped line by line.
    */
   truncate(t, e, i, s, r, n, o) {
-    const a = this.svgElement, { rotation: l } = a, h = [];
-    let d = i && !s ? 1 : 0, f = (e || i || "").length, p = f, u, g;
+    const a = this.svgElement, { rotation: l } = a, c = [];
+    let f = i && !s ? 1 : 0, d = (e || i || "").length, p = d, u, g;
     i || (r = n);
     const x = function(m, b) {
       const y = b || m, v = t.parentNode;
-      if (v && typeof h[y] > "u" && v.getSubStringLength)
+      if (v && typeof c[y] > "u" && v.getSubStringLength)
         try {
-          h[y] = s + v.getSubStringLength(0, i ? y + 1 : y);
+          c[y] = s + v.getSubStringLength(0, i ? y + 1 : y);
         } catch {
         }
-      return h[y];
+      return c[y];
     };
     if (a.rotation = 0, g = x(t.textContent.length), s + g > r) {
-      for (; d <= f; )
-        p = Math.ceil((d + f) / 2), i && (u = o(i, p)), g = x(p, u && u.length - 1), d === f ? d = f + 1 : g > r ? f = p - 1 : d = p;
-      f === 0 ? t.textContent = "" : e && f === e.length - 1 || (t.textContent = u || o(e || i, p)), this.ellipsis && g > r && this.truncate(t, t.textContent || "", void 0, 0, r, n, di);
+      for (; f <= d; )
+        p = Math.ceil((f + d) / 2), i && (u = o(i, p)), g = x(p, u && u.length - 1), f === d ? f = d + 1 : g > r ? d = p - 1 : f = p;
+      d === 0 ? t.textContent = "" : e && d === e.length - 1 || (t.textContent = u || o(e || i, p)), this.ellipsis && g > r && this.truncate(t, t.textContent || "", void 0, 0, r, n, ei);
     }
     i && i.splice(0, p), a.actualWidth = g, a.rotation = l;
   }
@@ -17054,14 +17053,14 @@ class La {
    * @return {string} The processed string
    */
   unescapeEntities(t, e) {
-    return Ta(this.renderer.escapes, function(i, s) {
+    return ea(this.renderer.escapes, function(i, s) {
       (!e || e.indexOf(i) === -1) && (t = t.toString().replace(new RegExp(i, "g"), s));
     }), t;
   }
 }
-const { defaultOptions: Pa } = Ct, { charts: Ea, deg2rad: Zs, doc: Et, isFirefox: _s, isMS: Js, isWebKit: Ia, noop: $a, SVG_NS: Da, symbolSizes: fi, win: pi } = N, { addEvent: be, attr: ve, createElement: Ba, crisp: Qs, css: ke, defined: xt, destroyObjectProperties: Na, extend: kt, isArray: za, isNumber: yt, isObject: Ut, isString: Ra, merge: ui, pick: gi, pInt: Wa, replaceNested: Ha, uniqueKey: Fa } = R;
-let mi;
-class Ui {
+const { defaultOptions: ra } = St, { charts: na, deg2rad: $s, doc: Ct, isFirefox: Is, isMS: Bs, isWebKit: oa, noop: aa, SVG_NS: la, symbolSizes: ii, win: si } = I, { addEvent: ue, attr: ge, createElement: ha, crisp: Ns, css: me, defined: pt, destroyObjectProperties: ca, extend: mt, isArray: da, isNumber: ut, isObject: jt, isString: fa, merge: ri, pick: ni, pInt: pa, replaceNested: ua, uniqueKey: ga } = G;
+let oi;
+class Di {
   /**
    * The root `svg` node of the renderer.
    *
@@ -17128,15 +17127,15 @@ class Ui {
     const a = this, l = a.createElement("svg").attr({
       version: "1.1",
       class: "highcharts-root"
-    }), h = l.element;
-    o || l.css(this.getStyle(s || {})), t.appendChild(h), ve(t, "dir", "ltr"), t.innerHTML.indexOf("xmlns") === -1 && ve(h, "xmlns", this.SVG_NS), this.box = h, this.boxWrapper = l, this.alignedObjects = [], this.url = this.getReferenceURL(), this.createElement("desc").add().element.appendChild(Et.createTextNode("Created with Highcharts 12.4.0")), this.defs = this.createElement("defs").add(), this.allowHTML = n, this.forExport = r, this.styledMode = o, this.gradients = {}, this.cache = {}, this.cacheKeys = [], this.imgCount = 0, this.rootFontSize = l.getStyle("font-size"), a.setSize(e, i, !1);
-    let f, p;
-    _s && t.getBoundingClientRect && (f = function() {
-      ke(t, { left: 0, top: 0 }), p = t.getBoundingClientRect(), ke(t, {
+    }), c = l.element;
+    o || l.css(this.getStyle(s || {})), t.appendChild(c), ge(t, "dir", "ltr"), t.innerHTML.indexOf("xmlns") === -1 && ge(c, "xmlns", this.SVG_NS), this.box = c, this.boxWrapper = l, this.alignedObjects = [], this.url = this.getReferenceURL(), this.createElement("desc").add().element.appendChild(Ct.createTextNode("Created with Highcharts 12.4.0")), this.defs = this.createElement("defs").add(), this.allowHTML = n, this.forExport = r, this.styledMode = o, this.gradients = {}, this.cache = {}, this.cacheKeys = [], this.imgCount = 0, this.rootFontSize = l.getStyle("font-size"), a.setSize(e, i, !1);
+    let d, p;
+    Is && t.getBoundingClientRect && (d = function() {
+      me(t, { left: 0, top: 0 }), p = t.getBoundingClientRect(), me(t, {
         left: Math.ceil(p.left) - p.left + "px",
         top: Math.ceil(p.top) - p.top + "px"
       });
-    }, f(), a.unSubPixelFix = be(pi, "resize", f));
+    }, d(), a.unSubPixelFix = ue(si, "resize", d));
   }
   /* *
    *
@@ -17160,7 +17159,7 @@ class Ui {
    * The inserted node.
    */
   definition(t) {
-    return new G([t]).addToDOM(this.defs.element);
+    return new X([t]).addToDOM(this.defs.element);
   }
   /**
    * Get the prefix needed for internal URL references to work in certain
@@ -17185,9 +17184,9 @@ class Ui {
    * The prefix to use. An empty string for modern browsers.
    */
   getReferenceURL() {
-    if ((_s || Ia) && Et.getElementsByTagName("base").length) {
-      if (!xt(mi)) {
-        const t = Fa(), i = new G([{
+    if ((Is || oa) && Ct.getElementsByTagName("base").length) {
+      if (!pt(oi)) {
+        const t = ga(), i = new X([{
           tagName: "svg",
           attributes: {
             width: 8,
@@ -17218,17 +17217,17 @@ class Ui {
               fill: "rgba(0,0,0,0.001)"
             }
           }]
-        }]).addToDOM(Et.body);
-        ke(i, {
+        }]).addToDOM(Ct.body);
+        me(i, {
           position: "fixed",
           top: 0,
           left: 0,
           zIndex: 9e5
-        }), mi = Et.elementFromPoint(6, 6)?.id === "hitme", Et.body.removeChild(i);
+        }), oi = Ct.elementFromPoint(6, 6)?.id === "hitme", Ct.body.removeChild(i);
       }
-      if (mi)
-        return Ha(
-          pi.location.href.split("#")[0],
+      if (oi)
+        return ua(
+          si.location.href.split("#")[0],
           // Remove hash
           [/<[^>]*>/g, ""],
           // Wing cut HTML
@@ -17253,7 +17252,7 @@ class Ui {
    * The style settings mixed with defaults.
    */
   getStyle(t) {
-    return this.style = kt({
+    return this.style = mt({
       fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif',
       fontSize: "1rem"
     }, t), this.style;
@@ -17293,7 +17292,7 @@ class Ui {
    */
   destroy() {
     const t = this, e = t.defs;
-    return t.box = null, t.boxWrapper = t.boxWrapper.destroy(), Na(t.gradients || {}), t.gradients = null, t.defs = e.destroy(), t.unSubPixelFix && t.unSubPixelFix(), t.alignedObjects = null, null;
+    return t.box = null, t.boxWrapper = t.boxWrapper.destroy(), ca(t.gradients || {}), t.gradients = null, t.defs = e.destroy(), t.unSubPixelFix && t.unSubPixelFix(), t.alignedObjects = null, null;
   }
   /**
    * Create a wrapper for an SVG element. Serves as a factory for
@@ -17340,7 +17339,7 @@ class Ui {
     const e = [
       `highcharts-drop-shadow-${this.chartIndex}`,
       ...Object.keys(t).map((s) => `${s}-${t[s]}`)
-    ].join("-").toLowerCase().replace(/[^a-z\d\-]/g, ""), i = ui({
+    ].join("-").toLowerCase().replace(/[^a-z\d\-]/g, ""), i = ri({
       color: "#000000",
       offsetX: 1,
       offsetY: 1,
@@ -17395,7 +17394,7 @@ class Ui {
    * The parent SVGElement.
    */
   buildText(t) {
-    new La(t).buildSVG();
+    new sa(t).buildSVG();
   }
   /**
    * Returns white for dark colors and black for bright colors, based on W3C's
@@ -17413,8 +17412,8 @@ class Ui {
   getContrast(t) {
     if (t === "transparent")
       return "#000000";
-    const e = V.parse(t).rgba, i = " clamp(0,calc(9e9*(0.5 - (0.2126*r + 0.7152*g + 0.0722*b))),1)";
-    if (yt(e[0]) || !V.useColorMix) {
+    const e = U.parse(t).rgba, i = " clamp(0,calc(9e9*(0.5 - (0.2126*r + 0.7152*g + 0.0722*b))),1)";
+    if (ut(e[0]) || !U.useColorMix) {
       const s = e.map((n) => {
         const o = n / 255;
         return o <= 0.04 ? o / 12.92 : Math.pow((o + 0.055) / 1.055, 2.4);
@@ -17463,29 +17462,29 @@ class Ui {
    * @return {Highcharts.SVGElement}
    * The button element.
    */
-  button(t, e, i, s, r = {}, n, o, a, l, h) {
-    const d = this.label(t, e, i, l, void 0, void 0, h, void 0, "button"), f = this.styledMode, p = arguments;
+  button(t, e, i, s, r = {}, n, o, a, l, c) {
+    const f = this.label(t, e, i, l, void 0, void 0, c, void 0, "button"), d = this.styledMode, p = arguments;
     let u = 0;
-    r = ui(Pa.global.buttonTheme, r), f && (delete r.fill, delete r.stroke, delete r["stroke-width"]);
+    r = ri(ra.global.buttonTheme, r), d && (delete r.fill, delete r.stroke, delete r["stroke-width"]);
     const g = r.states || {}, x = r.style || {};
     delete r.states, delete r.style;
     const m = [
-      G.filterUserAttributes(r)
+      X.filterUserAttributes(r)
     ], b = [x];
-    return f || ["hover", "select", "disabled"].forEach((y, v) => {
-      m.push(ui(m[0], G.filterUserAttributes(p[v + 5] || g[y] || {}))), b.push(m[v + 1].style), delete m[v + 1].style;
-    }), be(d.element, Js ? "mouseover" : "mouseenter", function() {
-      u !== 3 && d.setState(1);
-    }), be(d.element, Js ? "mouseout" : "mouseleave", function() {
-      u !== 3 && d.setState(u);
-    }), d.setState = (y = 0) => {
-      if (y !== 1 && (d.state = u = y), d.removeClass(/highcharts-button-(normal|hover|pressed|disabled)/).addClass("highcharts-button-" + ["normal", "hover", "pressed", "disabled"][y]), !f) {
-        d.attr(m[y]);
+    return d || ["hover", "select", "disabled"].forEach((y, v) => {
+      m.push(ri(m[0], X.filterUserAttributes(p[v + 5] || g[y] || {}))), b.push(m[v + 1].style), delete m[v + 1].style;
+    }), ue(f.element, Bs ? "mouseover" : "mouseenter", function() {
+      u !== 3 && f.setState(1);
+    }), ue(f.element, Bs ? "mouseout" : "mouseleave", function() {
+      u !== 3 && f.setState(u);
+    }), f.setState = (y = 0) => {
+      if (y !== 1 && (f.state = u = y), f.removeClass(/highcharts-button-(normal|hover|pressed|disabled)/).addClass("highcharts-button-" + ["normal", "hover", "pressed", "disabled"][y]), !d) {
+        f.attr(m[y]);
         const v = b[y];
-        Ut(v) && d.css(v);
+        jt(v) && f.css(v);
       }
-    }, d.attr(m[0]), f || (d.css(kt({ cursor: "default" }, x)), h && d.text.css({ pointerEvents: "none" })), d.on("touchstart", (y) => y.stopPropagation()).on("click", function(y) {
-      u !== 3 && s?.call(d, y);
+    }, f.attr(m[0]), d || (f.css(mt({ cursor: "default" }, x)), c && f.text.css({ pointerEvents: "none" })), f.on("touchstart", (y) => y.stopPropagation()).on("click", function(y) {
+      u !== 3 && s?.call(f, y);
     });
   }
   /**
@@ -17504,7 +17503,7 @@ class Ui {
    */
   crispLine(t, e) {
     const [i, s] = t;
-    return xt(i[1]) && i[1] === s[1] && (i[1] = s[1] = Qs(i[1], e)), xt(i[2]) && i[2] === s[2] && (i[2] = s[2] = Qs(i[2], e)), t;
+    return pt(i[1]) && i[1] === s[1] && (i[1] = s[1] = Ns(i[1], e)), pt(i[2]) && i[2] === s[2] && (i[2] = s[2] = Ns(i[2], e)), t;
   }
   /**
    * Draw a path, wraps the SVG `path` element.
@@ -17543,7 +17542,7 @@ class Ui {
     const e = this.styledMode ? {} : {
       fill: "none"
     };
-    return za(t) ? e.d = t : Ut(t) && kt(e, t), this.createElement("path").attr(e);
+    return da(t) ? e.d = t : jt(t) && mt(e, t), this.createElement("path").attr(e);
   }
   /**
    * Draw a circle, wraps the SVG `circle` element.
@@ -17577,7 +17576,7 @@ class Ui {
   * The generated wrapper element.
   */
   circle(t, e, i) {
-    const s = Ut(t) ? t : typeof t > "u" ? {} : { x: t, y: e, r: i }, r = this.createElement("circle");
+    const s = jt(t) ? t : typeof t > "u" ? {} : { x: t, y: e, r: i }, r = this.createElement("circle");
     return r.xSetter = r.ySetter = function(n, o, a) {
       a.setAttribute("c" + o, n);
     }, r.attr(s);
@@ -17626,7 +17625,7 @@ class Ui {
   */
   arc(t, e, i, s, r, n) {
     let o;
-    Ut(t) ? (o = t, e = o.y, i = o.r, s = o.innerR, r = o.start, n = o.end, t = o.x) : o = { innerR: s, start: r, end: n };
+    jt(t) ? (o = t, e = o.y, i = o.r, s = o.innerR, r = o.start, n = o.end, t = o.x) : o = { innerR: s, start: r, end: n };
     const a = this.symbol("arc", t, e, i, i, o);
     return a.r = i, a;
   }
@@ -17673,15 +17672,15 @@ class Ui {
   * The generated wrapper element.
   */
   rect(t, e, i, s, r, n) {
-    const o = Ut(t) ? t : typeof t > "u" ? {} : {
+    const o = jt(t) ? t : typeof t > "u" ? {} : {
       x: t,
       y: e,
       r,
       width: Math.max(i || 0, 0),
       height: Math.max(s || 0, 0)
     }, a = this.createElement("rect");
-    return this.styledMode || (typeof n < "u" && (o["stroke-width"] = n, kt(o, a.crisp(o))), o.fill = "none"), a.rSetter = function(l, h, d) {
-      a.r = l, ve(d, {
+    return this.styledMode || (typeof n < "u" && (o["stroke-width"] = n, mt(o, a.crisp(o))), o.fill = "none"), a.rSetter = function(l, c, f) {
+      a.r = l, ge(f, {
         rx: l,
         ry: l
       });
@@ -17731,7 +17730,7 @@ class Ui {
           viewBox: "0 0 " + this.attr("width") + " " + this.attr("height")
         });
       },
-      duration: gi(i, !0) ? void 0 : 0
+      duration: ni(i, !0) ? void 0 : 0
     }), s.alignElements();
   }
   /**
@@ -17786,17 +17785,17 @@ class Ui {
    */
   image(t, e, i, s, r, n) {
     const o = { preserveAspectRatio: "none" };
-    yt(e) && (o.x = e), yt(i) && (o.y = i), yt(s) && (o.width = s), yt(r) && (o.height = r);
-    const a = this.createElement("image").attr(o), l = function(h) {
-      a.attr({ href: t }), n.call(a, h);
+    ut(e) && (o.x = e), ut(i) && (o.y = i), ut(s) && (o.width = s), ut(r) && (o.height = r);
+    const a = this.createElement("image").attr(o), l = function(c) {
+      a.attr({ href: t }), n.call(a, c);
     };
     if (n) {
       a.attr({
         /* eslint-disable-next-line max-len */
         href: "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
       });
-      const h = new pi.Image();
-      be(h, "load", l), h.src = t, h.complete && l({});
+      const c = new si.Image();
+      ue(c, "load", l), c.src = t, c.complete && l({});
     } else
       a.attr({ href: t });
     return a;
@@ -17831,42 +17830,42 @@ class Ui {
    * SVG symbol.
    */
   symbol(t, e, i, s, r, n) {
-    const o = this, a = /^url\((.*?)\)$/, l = a.test(t), h = !l && (this.symbols[t] ? t : "circle"), d = h && this.symbols[h];
-    let f, p, u, g;
-    if (d)
-      typeof e == "number" && (p = d.call(this.symbols, e || 0, i || 0, s || 0, r || 0, n)), f = this.path(p), o.styledMode || f.attr("fill", "none"), kt(f, {
-        symbolName: h || void 0,
+    const o = this, a = /^url\((.*?)\)$/, l = a.test(t), c = !l && (this.symbols[t] ? t : "circle"), f = c && this.symbols[c];
+    let d, p, u, g;
+    if (f)
+      typeof e == "number" && (p = f.call(this.symbols, e || 0, i || 0, s || 0, r || 0, n)), d = this.path(p), o.styledMode || d.attr("fill", "none"), mt(d, {
+        symbolName: c || void 0,
         x: e,
         y: i,
         width: s,
         height: r
-      }), n && kt(f, n);
+      }), n && mt(d, n);
     else if (l) {
       u = t.match(a)[1];
-      const x = f = this.image(u);
-      x.imgwidth = gi(n?.width, fi[u]?.width), x.imgheight = gi(n?.height, fi[u]?.height), g = (m) => m.attr({
+      const x = d = this.image(u);
+      x.imgwidth = ni(n?.width, ii[u]?.width), x.imgheight = ni(n?.height, ii[u]?.height), g = (m) => m.attr({
         width: m.width,
         height: m.height
       }), ["width", "height"].forEach((m) => {
         x[`${m}Setter`] = function(b, y) {
           this[y] = b;
-          const { alignByTranslate: v, element: S, width: k, height: w, imgwidth: M, imgheight: C } = this, A = y === "width" ? M : C;
+          const { alignByTranslate: v, element: w, width: S, height: k, imgwidth: M, imgheight: A } = this, T = y === "width" ? M : A;
           let O = 1;
-          n && n.backgroundSize === "within" && k && w && M && C ? (O = Math.min(k / M, w / C), ve(S, {
+          n && n.backgroundSize === "within" && S && k && M && A ? (O = Math.min(S / M, k / A), ge(w, {
             width: Math.round(M * O),
-            height: Math.round(C * O)
-          })) : S && A && S.setAttribute(y, A), !v && M && C && this.translate(((k || 0) - M * O) / 2, ((w || 0) - C * O) / 2);
+            height: Math.round(A * O)
+          })) : w && T && w.setAttribute(y, T), !v && M && A && this.translate(((S || 0) - M * O) / 2, ((k || 0) - A * O) / 2);
         };
-      }), xt(e) && x.attr({
+      }), pt(e) && x.attr({
         x: e,
         y: i
-      }), x.isImg = !0, x.symbolUrl = t, xt(x.imgwidth) && xt(x.imgheight) ? g(x) : (x.attr({ width: 0, height: 0 }), Ba("img", {
+      }), x.isImg = !0, x.symbolUrl = t, pt(x.imgwidth) && pt(x.imgheight) ? g(x) : (x.attr({ width: 0, height: 0 }), ha("img", {
         onload: function() {
-          const m = Ea[o.chartIndex];
-          this.width === 0 && (ke(this, {
+          const m = na[o.chartIndex];
+          this.width === 0 && (me(this, {
             position: "absolute",
             top: "-999em"
-          }), Et.body.appendChild(this)), fi[u] = {
+          }), Ct.body.appendChild(this)), ii[u] = {
             width: this.width,
             height: this.height
           }, x.imgwidth = this.width, x.imgheight = this.height, x.element && g(x), this.parentNode && this.parentNode.removeChild(this), o.imgCount--, !o.imgCount && m && !m.hasLoaded && m.onload();
@@ -17874,7 +17873,7 @@ class Ui {
         src: u
       }), this.imgCount++);
     }
-    return f;
+    return d;
   }
   /**
    * Define a clipping rectangle. The clipping rectangle is later applied
@@ -17945,13 +17944,13 @@ class Ui {
     const r = this, n = {};
     if (s && (r.allowHTML || !r.forExport))
       return r.html(t, e, i);
-    n.x = Math.round(e || 0), i && (n.y = Math.round(i)), xt(t) && (n.text = t);
+    n.x = Math.round(e || 0), i && (n.y = Math.round(i)), pt(t) && (n.text = t);
     const o = r.createElement("text").attr(n);
-    return (!s || r.forExport && !r.allowHTML) && (o.xSetter = function(a, l, h) {
-      const d = h.getElementsByTagName("tspan"), f = h.getAttribute(l);
-      for (let p = 0, u; p < d.length; p++)
-        u = d[p], u.getAttribute(l) === f && u.setAttribute(l, a);
-      h.setAttribute(l, a);
+    return (!s || r.forExport && !r.allowHTML) && (o.xSetter = function(a, l, c) {
+      const f = c.getElementsByTagName("tspan"), d = c.getAttribute(l);
+      for (let p = 0, u; p < f.length; p++)
+        u = f[p], u.getAttribute(l) === d && u.setAttribute(l, a);
+      c.setAttribute(l, a);
     }), o;
   }
   /**
@@ -17968,7 +17967,7 @@ class Ui {
    * The font metrics.
    */
   fontMetrics(t) {
-    const e = yt(t) ? t : Wa(j.prototype.getStyle.call(t, "font-size") || 0), i = e < 24 ? e + 3 : Math.round(e * 1.2), s = Math.round(i * 0.8);
+    const e = ut(t) ? t : pa(H.prototype.getStyle.call(t, "font-size") || 0), i = e < 24 ? e + 3 : Math.round(e * 1.2), s = Math.round(i * 0.8);
     return {
       // Line height
       h: i,
@@ -17986,8 +17985,8 @@ class Ui {
    */
   rotCorr(t, e, i) {
     let s = t;
-    return e && i && (s = Math.max(s * Math.cos(e * Zs), 4)), {
-      x: -t / 3 * Math.sin(e * Zs),
+    return e && i && (s = Math.max(s * Math.cos(e * $s), 4)), {
+      x: -t / 3 * Math.sin(e * $s),
       y: s
     };
   }
@@ -18014,7 +18013,7 @@ class Ui {
       V: 2
     };
     for (let r = 0; r < t.length; r++)
-      Ra(i[0]) && yt(t[r]) && i.length === s[i[0].toUpperCase()] && t.splice(r, 0, i[0].replace("M", "L").replace("m", "l")), typeof t[r] == "string" && (i.length && e.push(i.slice(0)), i.length = 0), i.push(t[r]);
+      fa(i[0]) && ut(t[r]) && i.length === s[i[0].toUpperCase()] && t.splice(r, 0, i[0].replace("M", "L").replace("m", "l")), typeof t[r] == "string" && (i.length && e.push(i.slice(0)), i.length = 0), i.push(t[r]);
     return e.push(i.slice(0)), e;
   }
   /**
@@ -18068,7 +18067,7 @@ class Ui {
    *         The generated label.
    */
   label(t, e, i, s, r, n, o, a, l) {
-    return new St(this, t, e, i, s, r, n, o, a, l);
+    return new yt(this, t, e, i, s, r, n, o, a, l);
   }
   /**
    * Re-align all aligned elements.
@@ -18080,15 +18079,15 @@ class Ui {
     this.alignedObjects.forEach((t) => t.align());
   }
 }
-kt(Ui.prototype, {
+mt(Di.prototype, {
   /**
    * A pointer to the renderer's associated Element class.
    *
    * @name Highcharts.SVGRenderer#Element
    * @type {Highcharts.SVGElement}
    */
-  Element: j,
-  SVG_NS: Da,
+  Element: H,
+  SVG_NS: la,
   /**
    * A collection of characters mapped to HTML entities. When `useHTML` on an
    * element is true, these entities will be rendered correctly by HTML. In
@@ -18116,7 +18115,7 @@ kt(Ui.prototype, {
    * @name Highcharts.SVGRenderer#symbols
    * @type {Highcharts.SymbolDictionary}
    */
-  symbols: Sa,
+  symbols: Zo,
   /**
    * Dummy function for plugins, called every time the renderer is updated.
    * Prior to Highcharts 5, this was used for the canvg renderer.
@@ -18124,11 +18123,11 @@ kt(Ui.prototype, {
    * @deprecated
    * @function Highcharts.SVGRenderer#draw
    */
-  draw: $a
+  draw: aa
 });
-Or.registerRendererType("svg", Ui, !0);
-const { animate: xi, animObject: Xa, setAnimation: yi } = At, { defaultOptions: bi } = Ct, { numberFormat: ja } = ee, { registerEventOptions: tr } = ze, { charts: bt, doc: Kt, marginNames: er, svg: Ga, win: ir } = N, { seriesTypes: vi } = dt, { addEvent: ki, attr: sr, createElement: Si, css: it, defined: gt, diffObjects: rr, discardElement: Ya, erase: Va, error: Mi, extend: mt, find: wi, fireEvent: $, getAlignFactor: Ua, getStyle: Ci, isArray: Ka, isNumber: It, isObject: qa, isString: Se, merge: at, objectEach: Ai, pick: _, pInt: Za, relativeLength: nr, removeEvent: or, splat: Me, syncTimeout: _a, uniqueKey: Ja } = R;
-class rt {
+nr.registerRendererType("svg", Di, !0);
+const { animate: ai, animObject: ma, setAnimation: li } = qt, { defaultOptions: hi } = St, { numberFormat: xa } = Te, { registerEventOptions: Rs } = Ei, { charts: gt, doc: Ht, marginNames: zs, svg: ya, win: Ws } = I, { seriesTypes: ci } = Zt, { addEvent: di, attr: Fs, createElement: fi, css: it, defined: ct, diffObjects: js, discardElement: ba, erase: va, error: pi, extend: dt, find: ui, fireEvent: E, getAlignFactor: Sa, getStyle: gi, isArray: wa, isNumber: Tt, isObject: Ma, isString: xe, merge: nt, objectEach: mi, pick: Z, pInt: ka, relativeLength: Hs, removeEvent: Xs, splat: ye, syncTimeout: Aa, uniqueKey: Ca } = G;
+class xt {
   /**
    * Factory function for basic charts.
    *
@@ -18161,7 +18160,7 @@ class rt {
    * Returns the Chart object.
    */
   static chart(t, e, i) {
-    return new rt(t, e, i);
+    return new xt(t, e, i);
   }
   // Implementation
   constructor(t, e, i) {
@@ -18170,7 +18169,7 @@ class rt {
       // ES5 builds fail unless we cast it to an Array
       ...arguments
     ];
-    (Se(t) || t.nodeName) && (this.renderTo = s.shift()), this.init(s[0], s[1]);
+    (xe(t) || t.nodeName) && (this.renderTo = s.shift()), this.init(s[0], s[1]);
   }
   /* *
    *
@@ -18188,11 +18187,11 @@ class rt {
     const t = this, e = t.options.chart, i = e.zooming;
     t.zooming = {
       ...i,
-      type: _(e.zoomType, i.type),
-      key: _(e.zoomKey, i.key),
-      pinchType: _(e.pinchType, i.pinchType),
-      singleTouch: _(e.zoomBySingleTouch, i.singleTouch, !1),
-      resetButton: at(i.resetButton, e.resetZoomButton)
+      type: Z(e.zoomType, i.type),
+      key: Z(e.zoomKey, i.key),
+      pinchType: Z(e.pinchType, i.pinchType),
+      singleTouch: Z(e.zoomBySingleTouch, i.singleTouch, !1),
+      resetButton: nt(i.resetButton, e.resetZoomButton)
     };
   }
   /**
@@ -18213,13 +18212,13 @@ class rt {
    * @emits Highcharts.Chart#event:afterInit
    */
   init(t, e) {
-    $(this, "init", { args: arguments }, function() {
-      const i = at(bi, t), s = i.chart, r = this.renderTo || s.renderTo;
-      this.userOptions = mt({}, t), (this.renderTo = Se(r) ? Kt.getElementById(r) : r) || Mi(13, !0, this), this.margin = [], this.spacing = [], this.labelCollectors = [], this.callback = e, this.isResizing = 0, this.options = i, this.axes = [], this.series = [], this.locale = i.lang.locale ?? this.renderTo.closest("[lang]")?.lang, this.time = new kr(mt(i.time || {}, {
+    E(this, "init", { args: arguments }, function() {
+      const i = nt(hi, t), s = i.chart, r = this.renderTo || s.renderTo;
+      this.userOptions = dt({}, t), (this.renderTo = xe(r) ? Ht.getElementById(r) : r) || pi(13, !0, this), this.margin = [], this.spacing = [], this.labelCollectors = [], this.callback = e, this.isResizing = 0, this.options = i, this.axes = [], this.series = [], this.locale = i.lang.locale ?? this.renderTo.closest("[lang]")?.lang, this.time = new er(dt(i.time || {}, {
         locale: this.locale
-      }), i.lang), i.time = this.time.options, this.numberFormatter = (s.numberFormatter || ja).bind(this), this.styledMode = s.styledMode, this.hasCartesianSeries = s.showAxes;
+      }), i.lang), i.time = this.time.options, this.numberFormatter = (s.numberFormatter || xa).bind(this), this.styledMode = s.styledMode, this.hasCartesianSeries = s.showAxes;
       const n = this;
-      n.index = bt.length, bt.push(n), N.chartCount++, tr(this, s), n.xAxis = [], n.yAxis = [], n.pointCount = n.colorCounter = n.symbolCounter = 0, this.setZoomOptions(), $(n, "afterInit"), n.firstRender();
+      n.index = gt.length, gt.push(n), I.chartCount++, Rs(this, s), n.xAxis = [], n.yAxis = [], n.pointCount = n.colorCounter = n.symbolCounter = 0, this.setZoomOptions(), E(n, "afterInit"), n.firstRender();
     });
   }
   /**
@@ -18229,8 +18228,8 @@ class rt {
    * @function Highcharts.Chart#initSeries
    */
   initSeries(t) {
-    const e = this, i = e.options.chart, s = t.type || i.type, r = vi[s];
-    r || Mi(17, !0, e, { missingModuleFor: s });
+    const e = this, i = e.options.chart, s = t.type || i.type, r = ci[s];
+    r || pi(17, !0, e, { missingModuleFor: s });
     const n = new r();
     return typeof n.init == "function" && n.init(e, t), n;
   }
@@ -18270,11 +18269,11 @@ class rt {
    * If this is given, only the series above this index are handled.
    */
   orderItems(t, e = 0) {
-    const i = this[t], s = this.options[t] = Me(this.options[t]).slice(), r = this.userOptions[t] = this.userOptions[t] ? Me(this.userOptions[t]).slice() : [];
+    const i = this[t], s = this.options[t] = ye(this.options[t]).slice(), r = this.userOptions[t] = this.userOptions[t] ? ye(this.userOptions[t]).slice() : [];
     if (this.hasRendered && (s.splice(e), r.splice(e)), i)
       for (let n = e, o = i.length; n < o; ++n) {
         const a = i[n];
-        a && (a.index = n, a instanceof K && (a.name = a.getName()), a.options.isInternal || (s[n] = a.options, r[n] = a.userOptions));
+        a && (a.index = n, a instanceof et && (a.name = a.getName()), a.options.isInternal || (s[n] = a.options, r[n] = a.userOptions));
       }
   }
   /**
@@ -18286,7 +18285,7 @@ class rt {
    */
   getClipBox(t, e) {
     const i = this.inverted, { xAxis: s, yAxis: r } = t || {};
-    let { x: n, y: o, width: a, height: l } = at(this.clipBox);
+    let { x: n, y: o, width: a, height: l } = nt(this.clipBox);
     return t && (s && s.len !== this.plotSizeX && (a = s.len), r && r.len !== this.plotSizeY && (l = r.len), i && !t.invertible && ([a, l] = [l, a])), e && (n += (i ? r : s)?.pos ?? this.plotLeft, o += (i ? s : r)?.pos ?? this.plotTop), { x: n, y: o, width: a, height: l };
   }
   /**
@@ -18307,27 +18306,27 @@ class rt {
    * Returns true if the given point is inside the plot area.
    */
   isInsidePlot(t, e, i = {}) {
-    const { inverted: s, plotBox: r, plotLeft: n, plotTop: o, scrollablePlotBox: a } = this, { scrollLeft: l = 0, scrollTop: h = 0 } = i.visiblePlotOnly && this.scrollablePlotArea?.scrollingContainer || {}, d = i.series, f = i.visiblePlotOnly && a || r, p = i.inverted ? e : t, u = i.inverted ? t : e, g = {
+    const { inverted: s, plotBox: r, plotLeft: n, plotTop: o, scrollablePlotBox: a } = this, { scrollLeft: l = 0, scrollTop: c = 0 } = i.visiblePlotOnly && this.scrollablePlotArea?.scrollingContainer || {}, f = i.series, d = i.visiblePlotOnly && a || r, p = i.inverted ? e : t, u = i.inverted ? t : e, g = {
       x: p,
       y: u,
       isInsidePlot: !0,
       options: i
     };
     if (!i.ignoreX) {
-      const x = d && (s && !this.polar ? d.yAxis : d.xAxis) || {
+      const x = f && (s && !this.polar ? f.yAxis : f.xAxis) || {
         pos: n,
         len: 1 / 0
       }, m = i.paneCoordinates ? x.pos + p : n + p;
-      m >= Math.max(l + n, x.pos) && m <= Math.min(l + n + f.width, x.pos + x.len) || (g.isInsidePlot = !1);
+      m >= Math.max(l + n, x.pos) && m <= Math.min(l + n + d.width, x.pos + x.len) || (g.isInsidePlot = !1);
     }
     if (!i.ignoreY && g.isInsidePlot) {
-      const x = !s && i.axis && !i.axis.isXAxis && i.axis || d && (s ? d.xAxis : d.yAxis) || {
+      const x = !s && i.axis && !i.axis.isXAxis && i.axis || f && (s ? f.xAxis : f.yAxis) || {
         pos: o,
         len: 1 / 0
       }, m = i.paneCoordinates ? x.pos + u : o + u;
-      m >= Math.max(h + o, x.pos) && m <= Math.min(h + o + f.height, x.pos + x.len) || (g.isInsidePlot = !1);
+      m >= Math.max(c + o, x.pos) && m <= Math.min(c + o + d.height, x.pos + x.len) || (g.isInsidePlot = !1);
     }
-    return $(this, "afterIsInsidePlot", g), g.isInsidePlot;
+    return E(this, "afterIsInsidePlot", g), g.isInsidePlot;
   }
   /**
    * Redraw the chart after changes have been done to the data, axis extremes
@@ -18352,31 +18351,31 @@ class rt {
    * @emits Highcharts.Chart#event:updatedData
    */
   redraw(t) {
-    $(this, "beforeRedraw");
-    const e = this, i = e.hasCartesianSeries ? e.axes : e.colorAxis || [], s = e.series, r = e.pointer, n = e.legend, o = e.userOptions.legend, a = e.renderer, l = a.isHidden(), h = [];
-    let d, f, p, u = e.isDirtyBox, g = e.isDirtyLegend, x;
-    for (a.rootFontSize = a.boxWrapper.getStyle("font-size"), e.setResponsive && e.setResponsive(!1), yi(e.hasRendered ? t : !1, e), l && e.temporaryDisplay(), e.layOutTitles(!1), p = s.length; p--; )
-      if (x = s[p], (x.options.stacking || x.options.centerInCategory) && (f = !0, x.isDirty)) {
-        d = !0;
+    E(this, "beforeRedraw");
+    const e = this, i = e.hasCartesianSeries ? e.axes : e.colorAxis || [], s = e.series, r = e.pointer, n = e.legend, o = e.userOptions.legend, a = e.renderer, l = a.isHidden(), c = [];
+    let f, d, p, u = e.isDirtyBox, g = e.isDirtyLegend, x;
+    for (a.rootFontSize = a.boxWrapper.getStyle("font-size"), e.setResponsive && e.setResponsive(!1), li(e.hasRendered ? t : !1, e), l && e.temporaryDisplay(), e.layOutTitles(!1), p = s.length; p--; )
+      if (x = s[p], (x.options.stacking || x.options.centerInCategory) && (d = !0, x.isDirty)) {
+        f = !0;
         break;
       }
-    if (d)
+    if (f)
       for (p = s.length; p--; )
         x = s[p], x.options.stacking && (x.isDirty = !0);
     s.forEach(function(m) {
-      m.isDirty && (m.options.legendType === "point" ? (typeof m.updateTotals == "function" && m.updateTotals(), g = !0) : o && (o.labelFormatter || o.labelFormat) && (g = !0)), m.isDirtyData && $(m, "updatedData");
-    }), g && n && n.options.enabled && (n.render(), e.isDirtyLegend = !1), f && e.getStacks(), i.forEach(function(m) {
+      m.isDirty && (m.options.legendType === "point" ? (typeof m.updateTotals == "function" && m.updateTotals(), g = !0) : o && (o.labelFormatter || o.labelFormat) && (g = !0)), m.isDirtyData && E(m, "updatedData");
+    }), g && n && n.options.enabled && (n.render(), e.isDirtyLegend = !1), d && e.getStacks(), i.forEach(function(m) {
       m.updateNames(), m.setScale();
     }), e.getMargins(), i.forEach(function(m) {
       m.isDirty && (u = !0);
     }), i.forEach(function(m) {
       const b = m.min + "," + m.max;
-      m.extKey !== b && (m.extKey = b, h.push(function() {
-        $(m, "afterSetExtremes", mt(m.eventArgs, m.getExtremes())), delete m.eventArgs;
-      })), (u || f) && m.redraw();
-    }), u && e.drawChartBox(), $(e, "predraw"), s.forEach(function(m) {
+      m.extKey !== b && (m.extKey = b, c.push(function() {
+        E(m, "afterSetExtremes", dt(m.eventArgs, m.getExtremes())), delete m.eventArgs;
+      })), (u || d) && m.redraw();
+    }), u && e.drawChartBox(), E(e, "predraw"), s.forEach(function(m) {
       (u || m.isDirty) && m.visible && m.redraw(), m.isDirtyData = !1;
-    }), r && r.reset(!0), a.draw(), $(e, "redraw"), $(e, "render"), l && e.temporaryDisplay(!0), h.forEach(function(m) {
+    }), r && r.reset(!0), a.draw(), E(e, "redraw"), E(e, "render"), l && e.temporaryDisplay(!0), c.forEach(function(m) {
       m.call();
     });
   }
@@ -18402,11 +18401,11 @@ class rt {
     }
     let s = (
       // Search axes
-      wi(this.axes, i) || // Search series
-      wi(this.series, i)
+      ui(this.axes, i) || // Search series
+      ui(this.series, i)
     );
     for (let r = 0; !s && r < e.length; r++)
-      s = wi(e[r].points || [], i);
+      s = ui(e[r].points || [], i);
     return s;
   }
   /**
@@ -18419,13 +18418,13 @@ class rt {
    */
   createAxes() {
     const t = this.userOptions;
-    $(this, "createAxes");
+    E(this, "createAxes");
     for (const e of ["xAxis", "yAxis"]) {
-      const i = t[e] = Me(t[e] || {});
+      const i = t[e] = ye(t[e] || {});
       for (const s of i)
-        new Nt(this, s, e);
+        new Ut(this, s, e);
     }
-    $(this, "afterCreateAxes");
+    E(this, "afterCreateAxes");
   }
   /**
    * Returns an array of all currently selected points in the chart. Points
@@ -18447,7 +18446,7 @@ class rt {
    */
   getSelectedPoints() {
     return this.series.reduce((t, e) => (e.getPointsCollection().forEach((i) => {
-      _(i.selectedStaging, i.selected) && t.push(i);
+      Z(i.selectedStaging, i.selected) && t.push(i);
     }), t), []);
   }
   /**
@@ -18503,7 +18502,7 @@ class rt {
    * The options to set, will be merged with default options.
    */
   applyDescription(t, e) {
-    const i = this, s = this.options[t] = at(this.options[t], e);
+    const i = this, s = this.options[t] = nt(this.options[t], e);
     let r = this[t];
     r && e && (this[t] = r = r.destroy()), s && !r && (r = this.renderer.text(s.text, 0, 0, s.useHTML).attr({
       align: s.align,
@@ -18514,7 +18513,7 @@ class rt {
       whiteSpace: "nowrap"
     }).add(), r.update = function(n, o) {
       i.applyDescription(t, n), i.layOutTitles(o);
-    }, this.styledMode || r.css(mt(t === "title" ? {
+    }, this.styledMode || r.css(dt(t === "title" ? {
       // #2944
       fontSize: this.options.isStock ? "1em" : "1.2em"
     } : {}, s.style)), r.textPxLength = r.getBBox().width, r.css({ whiteSpace: s.style?.whiteSpace }), this[t] = r);
@@ -18533,13 +18532,13 @@ class rt {
   layOutTitles(t = !0) {
     const e = [0, 0, 0], { options: i, renderer: s, spacingBox: r } = this;
     ["title", "subtitle", "caption"].forEach((o) => {
-      const a = this[o], l = this.options[o], h = at(r), d = a?.textPxLength || 0;
+      const a = this[o], l = this.options[o], c = nt(r), f = a?.textPxLength || 0;
       if (a && l) {
-        $(this, "layOutTitle", { alignTo: h, key: o, textPxLength: d });
-        const f = s.fontMetrics(a), p = f.b, u = f.h, g = l.verticalAlign || "top", x = g === "top", m = x && l.minScale || 1, b = o === "title" ? x ? -3 : 0 : (
+        E(this, "layOutTitle", { alignTo: c, key: o, textPxLength: f });
+        const d = s.fontMetrics(a), p = d.b, u = d.h, g = l.verticalAlign || "top", x = g === "top", m = x && l.minScale || 1, b = o === "title" ? x ? -3 : 0 : (
           // Floating subtitle (#6574)
           x ? e[0] + 2 : 0
-        ), y = Math.min(h.width / d, 1), v = Math.max(m, y), S = at({
+        ), y = Math.min(c.width / f, 1), v = Math.max(m, y), w = nt({
           y: g === "bottom" ? p : b + p
         }, {
           align: o === "title" ? (
@@ -18550,31 +18549,31 @@ class rt {
             // Subtitle defaults to the title.align
             this.title?.alignValue
           )
-        }, l), k = (l.width || (y > m ? (
+        }, l), S = (l.width || (y > m ? (
           // One line
           this.chartWidth
         ) : (
           // Allow word wrap
-          h.width
+          c.width
         )) / v) + "px";
-        a.alignValue !== S.align && (a.placed = !1);
-        const w = Math.round(a.css({ width: k }).getBBox(l.useHTML).height);
-        if (S.height = w, a.align(S, !1, h).attr({
-          align: S.align,
+        a.alignValue !== w.align && (a.placed = !1);
+        const k = Math.round(a.css({ width: S }).getBBox(l.useHTML).height);
+        if (w.height = k, a.align(w, !1, c).attr({
+          align: w.align,
           scaleX: v,
           scaleY: v,
-          "transform-origin": `${h.x + d * v * Ua(S.align)} ${u}`
+          "transform-origin": `${c.x + f * v * Sa(w.align)} ${u}`
         }), !l.floating) {
-          const M = w * // When scaling down the title, preserve the offset as
+          const M = k * // When scaling down the title, preserve the offset as
           // long as it's only one line, but scale down the offset
           // if the title wraps to multiple lines.
-          (w < u * 1.2 ? 1 : v);
+          (k < u * 1.2 ? 1 : v);
           g === "top" ? e[0] = Math.ceil(e[0] + M) : g === "bottom" && (e[2] = Math.ceil(e[2] + M));
         }
       }
     }, this), e[0] && (i.title?.verticalAlign || "top") === "top" && (e[0] += i.title?.margin || 0), e[2] && i.caption?.verticalAlign === "bottom" && (e[2] += i.caption?.margin || 0);
     const n = !this.titleOffset || this.titleOffset.join(",") !== e.join(",");
-    this.titleOffset = e, $(this, "afterLayOutTitles"), !this.isDirtyBox && n && (this.isDirtyBox = this.isDirtyLegend = n, this.hasRendered && t && this.isDirtyBox && this.redraw());
+    this.titleOffset = e, E(this, "afterLayOutTitles"), !this.isDirtyBox && n && (this.isDirtyBox = this.isDirtyLegend = n, this.hasRendered && t && this.isDirtyBox && this.redraw());
   }
   /**
    * Internal function to get the available size of the container element
@@ -18589,8 +18588,8 @@ class rt {
         return i.style.display = "none", [i, s];
       }
     }), e = {
-      width: Ci(this.renderTo, "width", !0) || 0,
-      height: Ci(this.renderTo, "height", !0) || 0
+      width: gi(this.renderTo, "width", !0) || 0,
+      height: gi(this.renderTo, "height", !0) || 0
     };
     return t.filter(Boolean).forEach(([i, s]) => {
       i.style.display = s;
@@ -18612,7 +18611,7 @@ class rt {
       0,
       i || r.width || 600
       // #1460
-    ), t.chartHeight = Math.max(0, nr(s, t.chartWidth) || (n ? 400 : r.height)), t.containerBox = r;
+    ), t.chartHeight = Math.max(0, Hs(s, t.chartWidth) || (n ? 400 : r.height)), t.containerBox = r;
   }
   /**
    * If the renderTo element has no offsetWidth, most likely one or more of
@@ -18630,16 +18629,16 @@ class rt {
     let e = this.renderTo, i;
     if (t)
       for (; e?.style; )
-        e.hcOrigStyle && (it(e, e.hcOrigStyle), delete e.hcOrigStyle), e.hcOrigDetached && (Kt.body.removeChild(e), e.hcOrigDetached = !1), e = e.parentNode;
+        e.hcOrigStyle && (it(e, e.hcOrigStyle), delete e.hcOrigStyle), e.hcOrigDetached && (Ht.body.removeChild(e), e.hcOrigDetached = !1), e = e.parentNode;
     else
-      for (; e?.style && (!Kt.body.contains(e) && !e.parentNode && (e.hcOrigDetached = !0, Kt.body.appendChild(e)), (Ci(e, "display", !1) === "none" || e.hcOricDetached) && (e.hcOrigStyle = {
+      for (; e?.style && (!Ht.body.contains(e) && !e.parentNode && (e.hcOrigDetached = !0, Ht.body.appendChild(e)), (gi(e, "display", !1) === "none" || e.hcOricDetached) && (e.hcOrigStyle = {
         display: e.style.display,
         height: e.style.height,
         overflow: e.style.overflow
       }, i = {
         display: "block",
         overflow: "hidden"
-      }, e !== this.renderTo && (i.height = 0), it(e, i), e.offsetWidth || e.style.setProperty("display", "block", "important")), e = e.parentNode, e !== Kt.body); )
+      }, e !== this.renderTo && (i.height = 0), it(e, i), e.offsetWidth || e.style.setProperty("display", "block", "important")), e = e.parentNode, e !== Ht.body); )
         ;
   }
   /**
@@ -18663,18 +18662,18 @@ class rt {
    * @emits Highcharts.Chart#event:afterGetContainer
    */
   getContainer() {
-    const t = this, e = t.options, i = e.chart, s = "data-highcharts-chart", r = Ja(), n = t.renderTo;
+    const t = this, e = t.options, i = e.chart, s = "data-highcharts-chart", r = Ca(), n = t.renderTo;
     let o;
-    const a = Za(sr(n, s));
-    It(a) && bt[a] && bt[a].hasRendered && bt[a].destroy(), sr(n, s, t.index), n.innerHTML = G.emptyHTML, !i.skipClone && !n.offsetWidth && t.temporaryDisplay(), t.getChartSize();
+    const a = ka(Fs(n, s));
+    Tt(a) && gt[a] && gt[a].hasRendered && gt[a].destroy(), Fs(n, s, t.index), n.innerHTML = X.emptyHTML, !i.skipClone && !n.offsetWidth && t.temporaryDisplay(), t.getChartSize();
     const l = t.chartHeight;
-    let h = t.chartWidth;
-    it(n, { overflow: "hidden" }), t.styledMode || (o = mt({
+    let c = t.chartWidth;
+    it(n, { overflow: "hidden" }), t.styledMode || (o = dt({
       position: "relative",
       // Needed for context menu (avoidscrollbars) and content
       // overflow in IE
       overflow: "hidden",
-      width: h + "px",
+      width: c + "px",
       height: l + "px",
       textAlign: "left",
       lineHeight: "normal",
@@ -18688,19 +18687,19 @@ class rt {
       outline: "none",
       padding: "0px"
     }, i.style || {}));
-    const d = Si("div", {
+    const f = fi("div", {
       id: r
     }, o, n);
-    t.container = d, t.getChartSize(), h !== t.chartWidth && (h = t.chartWidth, t.styledMode || it(d, {
-      width: _(i.style?.width, h + "px")
-    })), t.containerBox = t.getContainerBox(), t._cursor = d.style.cursor;
-    const f = i.renderer || !Ga ? Or.getRendererType(i.renderer) : Ui;
-    if (t.renderer = new f(d, h, l, void 0, i.forExport, e.exporting?.allowHTML, t.styledMode), yi(void 0, t), t.setClassName(i.className), !t.styledMode)
+    t.container = f, t.getChartSize(), c !== t.chartWidth && (c = t.chartWidth, t.styledMode || it(f, {
+      width: Z(i.style?.width, c + "px")
+    })), t.containerBox = t.getContainerBox(), t._cursor = f.style.cursor;
+    const d = i.renderer || !ya ? nr.getRendererType(i.renderer) : Di;
+    if (t.renderer = new d(f, c, l, void 0, i.forExport, e.exporting?.allowHTML, t.styledMode), li(void 0, t), t.setClassName(i.className), !t.styledMode)
       t.renderer.setStyle(i.style);
     else
       for (const p in e.defs)
         this.renderer.definition(e.defs[p]);
-    t.renderer.chartIndex = t.index, $(this, "afterGetContainer");
+    t.renderer.chartIndex = t.index, E(this, "afterGetContainer");
   }
   /**
    * Calculate margins by rendering axis labels in a preliminary position.
@@ -18713,7 +18712,7 @@ class rt {
    */
   getMargins(t) {
     const { spacing: e, margin: i, titleOffset: s } = this;
-    this.resetMargins(), s[0] && !gt(i[0]) && (this.plotTop = Math.max(this.plotTop, s[0] + e[0])), s[2] && !gt(i[2]) && (this.marginBottom = Math.max(this.marginBottom, s[2] + e[2])), this.legend?.display && this.legend.adjustMargins(i, e), $(this, "getMargins"), t || this.getAxisMargins();
+    this.resetMargins(), s[0] && !ct(i[0]) && (this.plotTop = Math.max(this.plotTop, s[0] + e[0])), s[2] && !ct(i[2]) && (this.marginBottom = Math.max(this.marginBottom, s[2] + e[2])), this.legend?.display && this.legend.adjustMargins(i, e), E(this, "getMargins"), t || this.getAxisMargins();
   }
   /**
    * @private
@@ -18725,8 +18724,8 @@ class rt {
         o.visible && o.getOffset();
       });
     };
-    t.hasCartesianSeries ? r(t.axes) : i?.length && r(i), er.forEach((n, o) => {
-      gt(s[o]) || (t[n] += e[o]);
+    t.hasCartesianSeries ? r(t.axes) : i?.length && r(i), zs.forEach((n, o) => {
+      ct(s[o]) || (t[n] += e[o]);
     }), t.setChartSize();
   }
   /**
@@ -18742,7 +18741,7 @@ class rt {
    * @since 11.1.0
    */
   getOptions() {
-    return rr(this.userOptions, bi);
+    return js(this.userOptions, hi);
   }
   /**
    * Reflows the chart to its container. By default, the Resize Observer is
@@ -18763,7 +18762,7 @@ class rt {
   reflow(t) {
     const e = this, i = e.containerBox, s = e.getContainerBox();
     delete e.pointer?.chartPosition, !e.exporting?.isPrinting && !e.isResizing && i && // When fired by resize observer inside hidden container
-    s.width && ((s.width !== i.width || s.height !== i.height) && (R.clearTimeout(e.reflowTimeout), e.reflowTimeout = _a(function() {
+    s.width && ((s.width !== i.width || s.height !== i.height) && (G.clearTimeout(e.reflowTimeout), e.reflowTimeout = Aa(function() {
       e.container && e.setSize(void 0, void 0, !1);
     }, t ? 100 : 0)), e.containerBox = s);
   }
@@ -18781,8 +18780,8 @@ class rt {
     if (typeof ResizeObserver == "function")
       new ResizeObserver(e).observe(t.renderTo);
     else {
-      const i = ki(ir, "resize", e);
-      ki(this, "destroy", i);
+      const i = di(Ws, "resize", e);
+      di(this, "destroy", i);
     }
   }
   /**
@@ -18820,18 +18819,18 @@ class rt {
    */
   setSize(t, e, i) {
     const s = this, r = s.renderer;
-    s.isResizing += 1, yi(i, s);
+    s.isResizing += 1, li(i, s);
     const n = r.globalAnimation;
     s.oldChartHeight = s.chartHeight, s.oldChartWidth = s.chartWidth, typeof t < "u" && (s.options.chart.width = t), typeof e < "u" && (s.options.chart.height = e), s.getChartSize();
-    const { chartWidth: o, chartHeight: a, scrollablePixelsX: l = 0, scrollablePixelsY: h = 0 } = s;
-    (s.isDirtyBox || o !== s.oldChartWidth || a !== s.oldChartHeight) && (s.styledMode || (n ? xi : it)(s.container, {
+    const { chartWidth: o, chartHeight: a, scrollablePixelsX: l = 0, scrollablePixelsY: c = 0 } = s;
+    (s.isDirtyBox || o !== s.oldChartWidth || a !== s.oldChartHeight) && (s.styledMode || (n ? ai : it)(s.container, {
       width: `${o + l}px`,
-      height: `${a + h}px`
-    }, n), s.setChartSize(!0), r.setSize(o, a, n), s.axes.forEach(function(d) {
-      d.isDirty = !0, d.setScale();
-    }), s.isDirtyLegend = !0, s.isDirtyBox = !0, s.layOutTitles(), s.getMargins(), s.redraw(n), s.oldChartHeight = void 0, $(s, "resize"), setTimeout(() => {
-      s && $(s, "endResize");
-    }, Xa(n).duration)), s.isResizing -= 1;
+      height: `${a + c}px`
+    }, n), s.setChartSize(!0), r.setSize(o, a, n), s.axes.forEach(function(f) {
+      f.isDirty = !0, f.setScale();
+    }), s.isDirtyLegend = !0, s.isDirtyBox = !0, s.layOutTitles(), s.getMargins(), s.redraw(n), s.oldChartHeight = void 0, E(s, "resize"), setTimeout(() => {
+      s && E(s, "endResize");
+    }, ma(n).duration)), s.isResizing -= 1;
   }
   /**
    * Set the public chart properties. This is done before and after the
@@ -18843,16 +18842,16 @@ class rt {
    */
   setChartSize(t) {
     const e = this, { chartHeight: i, chartWidth: s, inverted: r, spacing: n, renderer: o } = e, a = e.clipOffset, l = Math[r ? "floor" : "round"];
-    let h, d, f, p;
-    e.plotLeft = h = Math.round(e.plotLeft), e.plotTop = d = Math.round(e.plotTop), e.plotWidth = f = Math.max(0, Math.round(s - h - (e.marginRight ?? 0))), e.plotHeight = p = Math.max(0, Math.round(i - d - (e.marginBottom ?? 0))), e.plotSizeX = r ? p : f, e.plotSizeY = r ? f : p, e.spacingBox = o.spacingBox = {
+    let c, f, d, p;
+    e.plotLeft = c = Math.round(e.plotLeft), e.plotTop = f = Math.round(e.plotTop), e.plotWidth = d = Math.max(0, Math.round(s - c - (e.marginRight ?? 0))), e.plotHeight = p = Math.max(0, Math.round(i - f - (e.marginBottom ?? 0))), e.plotSizeX = r ? p : d, e.plotSizeY = r ? d : p, e.spacingBox = o.spacingBox = {
       x: n[3],
       y: n[0],
       width: s - n[3] - n[1],
       height: i - n[0] - n[2]
     }, e.plotBox = o.plotBox = {
-      x: h,
-      y: d,
-      width: f,
+      x: c,
+      y: f,
+      width: d,
       height: p
     }, a && (e.clipBox = {
       x: l(a[3]),
@@ -18861,7 +18860,7 @@ class rt {
       height: l(e.plotSizeY - a[0] - a[2])
     }), t || (e.axes.forEach(function(u) {
       u.setAxisSize(), u.setAxisTranslation();
-    }), o.alignElements()), $(e, "afterSetChartSize", { skipAxes: t });
+    }), o.alignElements()), E(e, "afterSetChartSize", { skipAxes: t });
   }
   /**
    * Initial margins before auto size margins are applied.
@@ -18870,10 +18869,10 @@ class rt {
    * @function Highcharts.Chart#resetMargins
    */
   resetMargins() {
-    $(this, "resetMargins");
+    E(this, "resetMargins");
     const t = this, e = t.options.chart, i = e.plotBorderWidth || 0, s = Math.round(i) / 2;
     ["margin", "spacing"].forEach((r) => {
-      const n = e[r], o = qa(n) ? n : [n, n, n, n];
+      const n = e[r], o = Ma(n) ? n : [n, n, n, n];
       [
         "Top",
         "Right",
@@ -18882,7 +18881,7 @@ class rt {
       ].forEach((a, l) => {
         t[r][l] = e[`${r}${a}`] ?? o[l];
       });
-    }), er.forEach((r, n) => {
+    }), zs.forEach((r, n) => {
       t[r] = t.margin[n] ?? t.spacing[n];
     }), t.axisOffset = [0, 0, 0, 0], t.clipOffset = [
       s,
@@ -18900,19 +18899,19 @@ class rt {
    * @emits Highcharts.Chart#event:afterDrawChartBox
    */
   drawChartBox() {
-    const t = this, e = t.options.chart, i = t.renderer, s = t.chartWidth, r = t.chartHeight, n = t.styledMode, o = t.plotBGImage, a = e.backgroundColor, l = e.plotBackgroundColor, h = e.plotBackgroundImage, d = t.plotLeft, f = t.plotTop, p = t.plotWidth, u = t.plotHeight, g = t.plotBox, x = t.clipRect, m = t.clipBox;
-    let b = t.chartBackground, y = t.plotBackground, v = t.plotBorder, S, k, w, M = "animate";
-    b || (t.chartBackground = b = i.rect().addClass("highcharts-background").add(), M = "attr"), n ? S = k = b.strokeWidth() : (S = e.borderWidth || 0, k = S + (e.shadow ? 8 : 0), w = {
+    const t = this, e = t.options.chart, i = t.renderer, s = t.chartWidth, r = t.chartHeight, n = t.styledMode, o = t.plotBGImage, a = e.backgroundColor, l = e.plotBackgroundColor, c = e.plotBackgroundImage, f = t.plotLeft, d = t.plotTop, p = t.plotWidth, u = t.plotHeight, g = t.plotBox, x = t.clipRect, m = t.clipBox;
+    let b = t.chartBackground, y = t.plotBackground, v = t.plotBorder, w, S, k, M = "animate";
+    b || (t.chartBackground = b = i.rect().addClass("highcharts-background").add(), M = "attr"), n ? w = S = b.strokeWidth() : (w = e.borderWidth || 0, S = w + (e.shadow ? 8 : 0), k = {
       fill: a || "none"
-    }, (S || b["stroke-width"]) && (w.stroke = e.borderColor, w["stroke-width"] = S), b.attr(w).shadow(e.shadow)), b[M]({
-      x: k / 2,
-      y: k / 2,
-      width: s - k - S % 2,
-      height: r - k - S % 2,
+    }, (w || b["stroke-width"]) && (k.stroke = e.borderColor, k["stroke-width"] = w), b.attr(k).shadow(e.shadow)), b[M]({
+      x: S / 2,
+      y: S / 2,
+      width: s - S - w % 2,
+      height: r - S - w % 2,
       r: e.borderRadius
     }), M = "animate", y || (M = "attr", t.plotBackground = y = i.rect().addClass("highcharts-plot-background").add()), y[M](g), n || (y.attr({
       fill: l || "none"
-    }).shadow(e.plotShadow), h && (o ? (h !== o.attr("href") && o.attr("href", h), o.animate(g)) : t.plotBGImage = i.image(h, d, f, p, u).add())), x ? x.animate({
+    }).shadow(e.plotShadow), c && (o ? (c !== o.attr("href") && o.attr("href", c), o.animate(g)) : t.plotBGImage = i.image(c, f, d, p, u).add())), x ? x.animate({
       width: m.width,
       height: m.height
     }) : t.clipRect = i.clipRect(m), M = "animate", v || (M = "attr", t.plotBorder = v = i.rect().addClass("highcharts-plot-border").attr({
@@ -18926,7 +18925,7 @@ class rt {
       g,
       // #3282 plotBorder should be negative
       -v.strokeWidth()
-    )), t.isDirtyBox = !1, $(this, "afterDrawChartBox");
+    )), t.isDirtyBox = !1, E(this, "afterDrawChartBox");
   }
   /**
    * Detect whether a certain chart property is needed based on inspecting its
@@ -18940,10 +18939,10 @@ class rt {
     const t = this, e = t.options.chart, i = t.options.series;
     let s, r, n;
     ["inverted", "angular", "polar"].forEach(function(o) {
-      for (r = vi[e.type], n = // It is set in the options:
+      for (r = ci[e.type], n = // It is set in the options:
       e[o] || // The default series class:
       r && r.prototype[o], s = i?.length; !n && s--; )
-        r = vi[i[s].type], r && r.prototype[o] && (n = !0);
+        r = ci[i[s].type], r && r.prototype[o] && (n = !0);
       t[o] = n;
     });
   }
@@ -18962,11 +18961,11 @@ class rt {
       s.linkedSeries.length = 0;
     }), i.forEach(function(s) {
       const { linkedTo: r } = s.options;
-      if (Se(r)) {
+      if (xe(r)) {
         let n;
-        r === ":previous" ? n = e.series[s.index - 1] : n = e.get(r), n && n.linkedParent !== s && (n.linkedSeries.push(s), s.linkedParent = n, n.enabledDataSorting && s.setDataSortingOptions(), s.visible = _(s.options.visible, n.options.visible, s.visible));
+        r === ":previous" ? n = e.series[s.index - 1] : n = e.get(r), n && n.linkedParent !== s && (n.linkedSeries.push(s), s.linkedParent = n, n.enabledDataSorting && s.setDataSortingOptions(), s.visible = Z(s.options.visible, n.options.visible, s.visible));
       }
-    }), $(this, "afterLinkSeries", { isUpdating: t });
+    }), E(this, "afterLinkSeries", { isUpdating: t });
   }
   /**
    * Render series for the chart.
@@ -18986,30 +18985,30 @@ class rt {
    * @function Highcharts.Chart#render
    */
   render() {
-    const t = this, e = t.axes, i = t.colorAxis, s = t.renderer, r = t.options.chart.axisLayoutRuns || 2, n = (d) => {
-      d.forEach((f) => {
-        f.visible && f.render();
+    const t = this, e = t.axes, i = t.colorAxis, s = t.renderer, r = t.options.chart.axisLayoutRuns || 2, n = (f) => {
+      f.forEach((d) => {
+        d.visible && d.render();
       });
     };
-    let o = 0, a = !0, l, h = 0;
-    t.setTitle(), $(t, "beforeMargins"), t.getStacks?.(), t.getMargins(!0), t.setChartSize();
-    for (const d of e) {
-      const { options: f } = d, { labels: p } = f;
+    let o = 0, a = !0, l, c = 0;
+    t.setTitle(), E(t, "beforeMargins"), t.getStacks?.(), t.getMargins(!0), t.setChartSize();
+    for (const f of e) {
+      const { options: d } = f, { labels: p } = d;
       if (t.hasCartesianSeries && // #20948
-      d.horiz && d.visible && p.enabled && d.series.length && d.coll !== "colorAxis" && !t.polar) {
-        o = f.tickLength, d.createGroups();
-        const u = new _t(d, 0, "", !0), g = u.createLabel("x", p);
-        if (u.destroy(), g && _(p.reserveSpace, !It(f.crossing)) && (o = g.getBBox().height + p.distance + Math.max(f.offset || 0, 0)), o) {
+      f.horiz && f.visible && p.enabled && f.series.length && f.coll !== "colorAxis" && !t.polar) {
+        o = d.tickLength, f.createGroups();
+        const u = new Gt(f, 0, "", !0), g = u.createLabel("x", p);
+        if (u.destroy(), g && Z(p.reserveSpace, !Tt(d.crossing)) && (o = g.getBBox().height + p.distance + Math.max(d.offset || 0, 0)), o) {
           g?.destroy();
           break;
         }
       }
     }
-    for (t.plotHeight = Math.max(t.plotHeight - o, 0); (a || l || r > 1) && h < r; ) {
-      const d = t.plotWidth, f = t.plotHeight;
+    for (t.plotHeight = Math.max(t.plotHeight - o, 0); (a || l || r > 1) && c < r; ) {
+      const f = t.plotWidth, d = t.plotHeight;
       for (const p of e)
-        h === 0 ? p.setScale() : (p.horiz && a || !p.horiz && l) && p.setTickInterval(!0);
-      h === 0 ? t.getAxisMargins() : t.getMargins(), a = d / t.plotWidth > (h ? 1 : 1.1), l = f / t.plotHeight > (h ? 1 : 1.05), h++;
+        c === 0 ? p.setScale() : (p.horiz && a || !p.horiz && l) && p.setTickInterval(!0);
+      c === 0 ? t.getAxisMargins() : t.getMargins(), a = f / t.plotWidth > (c ? 1 : 1.1), l = d / t.plotHeight > (c ? 1 : 1.05), c++;
     }
     t.drawChartBox(), t.hasCartesianSeries ? n(e) : i?.length && n(i), t.seriesGroup || (t.seriesGroup = s.g("series-group").attr({ zIndex: 3 }).shadow(t.options.chart.seriesGroupShadow).add()), t.dataLabelsGroup || (t.dataLabelsGroup = s.g("datalabels-group").attr({ zIndex: 6 }).add()), t.renderSeries(), t.addCredits(), t.setResponsive && t.setResponsive(), t.hasRendered = !0;
   }
@@ -19025,9 +19024,9 @@ class rt {
    * A configuration object for the new credits.
    */
   addCredits(t) {
-    const e = this, i = at(!0, this.options.credits, t);
+    const e = this, i = nt(!0, this.options.credits, t);
     i.enabled && !this.credits && (this.credits = this.renderer.text(i.text + (this.mapCredits || ""), 0, 0).addClass("highcharts-credits").on("click", function() {
-      i.href && (ir.location.href = i.href);
+      i.href && (Ws.location.href = i.href);
     }).attr({
       align: i.position.align,
       zIndex: 8
@@ -19052,7 +19051,7 @@ class rt {
   destroy() {
     const t = this, e = t.axes, i = t.series, s = t.container, r = s?.parentNode;
     let n;
-    for ($(t, "destroy"), t.renderer.forExport ? Va(bt, t) : bt[t.index] = void 0, N.chartCount--, t.renderTo.removeAttribute("data-highcharts-chart"), or(t), n = e.length; n--; )
+    for (E(t, "destroy"), t.renderer.forExport ? va(gt, t) : gt[t.index] = void 0, I.chartCount--, t.renderTo.removeAttribute("data-highcharts-chart"), Xs(t), n = e.length; n--; )
       e[n] = e[n].destroy();
     for (this.scroller?.destroy?.(), n = i.length; n--; )
       i[n] = i[n].destroy();
@@ -19074,7 +19073,7 @@ class rt {
       "renderer"
     ].forEach((o) => {
       t[o] = t[o]?.destroy?.();
-    }), s && (s.innerHTML = G.emptyHTML, or(s), r && Ya(s)), Ai(t, function(o, a) {
+    }), s && (s.innerHTML = X.emptyHTML, Xs(s), r && ba(s)), mi(t, function(o, a) {
       delete t[a];
     });
   }
@@ -19088,13 +19087,13 @@ class rt {
   firstRender() {
     const t = this, e = t.options;
     t.getContainer(), t.resetMargins(), t.setChartSize(), t.propFromSeries(), t.createAxes();
-    const i = Ka(e.series) ? e.series : [];
+    const i = wa(e.series) ? e.series : [];
     e.series = [], i.forEach(
       // #9680
       function(s) {
         t.initSeries(s);
       }
-    ), t.linkSeries(), t.setSortedData(), $(t, "beforeRender"), t.render(), t.pointer?.getChartPosition(), !t.renderer.imgCount && !t.hasLoaded && t.onload(), t.temporaryDisplay(!0);
+    ), t.linkSeries(), t.setSortedData(), E(t, "beforeRender"), t.render(), t.pointer?.getChartPosition(), !t.renderer.imgCount && !t.hasLoaded && t.onload(), t.temporaryDisplay(!0);
   }
   /**
    * Internal function that runs on chart load, async if any images are loaded
@@ -19109,7 +19108,7 @@ class rt {
   onload() {
     this.callbacks.concat([this.callback]).forEach(function(t) {
       t && typeof this.index < "u" && t.apply(this, [this]);
-    }, this), $(this, "load"), $(this, "render"), gt(this.index) && this.setReflow(), this.warnIfA11yModuleNotLoaded(), this.hasLoaded = !0;
+    }, this), E(this, "load"), E(this, "render"), ct(this.index) && this.setReflow(), this.warnIfA11yModuleNotLoaded(), this.hasLoaded = !0;
   }
   /**
    * Emit console warning if the a11y module is not loaded.
@@ -19120,7 +19119,7 @@ class rt {
     t && !this.accessibility && (this.renderer.boxWrapper.attr({
       role: "img",
       "aria-label": (e?.element.textContent || "").replace(/</g, "&lt;")
-    }), t.accessibility && t.accessibility.enabled === !1 || Mi('Highcharts warning: Consider including the "accessibility.js" module to make your chart more usable for people with disabilities. Set the "accessibility.enabled" option to false to remove this warning. See https://www.highcharts.com/docs/accessibility/accessibility-module.', !1, this));
+    }), t.accessibility && t.accessibility.enabled === !1 || pi('Highcharts warning: Consider including the "accessibility.js" module to make your chart more usable for people with disabilities. Set the "accessibility.enabled" option to false to remove this warning. See https://www.highcharts.com/docs/accessibility/accessibility-module.', !1, this));
   }
   /**
    * Add a series to the chart after render time. Note that this method should
@@ -19156,8 +19155,8 @@ class rt {
   addSeries(t, e, i) {
     const s = this;
     let r;
-    return t && (e = _(e, !0), $(s, "addSeries", { options: t }, function() {
-      r = s.initSeries(t), s.isDirtyLegend = !0, s.linkSeries(), r.enabledDataSorting && r.setData(t.data, !1), $(s, "afterAddSeries", { series: r }), e && s.redraw(i);
+    return t && (e = Z(e, !0), E(s, "addSeries", { options: t }, function() {
+      r = s.initSeries(t), s.isDirtyLegend = !0, s.linkSeries(), r.enabledDataSorting && r.setData(t.data, !1), E(s, "afterAddSeries", { series: r }), e && s.redraw(i);
     })), r;
   }
   /**
@@ -19237,8 +19236,8 @@ class rt {
    *         The newly generated Axis object.
    */
   createAxis(t, e) {
-    const i = new Nt(this, e.axis, t);
-    return _(e.redraw, !0) && this.redraw(e.animation), i;
+    const i = new Ut(this, e.axis, t);
+    return Z(e.redraw, !0) && this.redraw(e.animation), i;
   }
   /**
    * Dim the chart and show a loading text or symbol. Options for the loading
@@ -19269,14 +19268,14 @@ class rt {
       });
     };
     let n = e.loadingDiv, o = e.loadingSpan;
-    n || (e.loadingDiv = n = Si("div", {
+    n || (e.loadingDiv = n = fi("div", {
       className: "highcharts-loading highcharts-loading-hidden"
-    }, null, e.container)), o || (e.loadingSpan = o = Si("span", { className: "highcharts-loading-inner" }, null, n), ki(e, "redraw", r)), n.className = "highcharts-loading", G.setElementHTML(o, _(t, i.lang.loading, "")), e.styledMode || (it(n, mt(s.style, {
+    }, null, e.container)), o || (e.loadingSpan = o = fi("span", { className: "highcharts-loading-inner" }, null, n), di(e, "redraw", r)), n.className = "highcharts-loading", X.setElementHTML(o, Z(t, i.lang.loading, "")), e.styledMode || (it(n, dt(s.style, {
       zIndex: 10
     })), it(o, s.labelStyle), e.loadingShown || (it(n, {
       opacity: 0,
       display: ""
-    }), xi(n, {
+    }), ai(n, {
       opacity: s.style.opacity || 0.5
     }, {
       duration: s.showDuration || 0
@@ -19296,7 +19295,7 @@ class rt {
    */
   hideLoading() {
     const t = this.options, e = this.loadingDiv;
-    e && (e.className = "highcharts-loading highcharts-loading-hidden", this.styledMode || xi(e, {
+    e && (e.className = "highcharts-loading highcharts-loading-hidden", this.styledMode || ai(e, {
       opacity: 0
     }, {
       duration: t.loading.hideDuration || 100,
@@ -19368,18 +19367,18 @@ class rt {
       subtitle: "setSubtitle",
       caption: "setCaption"
     }, o = t.isResponsiveOptions, a = [];
-    let l, h, d;
-    $(r, "update", { options: t }), o || r.setResponsive(!1, !0), t = rr(t, r.options), r.userOptions = at(r.userOptions, t);
-    const f = t.chart;
-    f && (at(!0, r.options.chart, f), this.setZoomOptions(), "className" in f && r.setClassName(f.className), ("inverted" in f || "polar" in f || "type" in f) && (r.propFromSeries(), l = !0), "alignTicks" in f && (l = !0), "events" in f && tr(this, f), Ai(f, function(g, x) {
-      r.propsRequireUpdateSeries.indexOf("chart." + x) !== -1 && (h = !0), r.propsRequireDirtyBox.indexOf(x) !== -1 && (r.isDirtyBox = !0), r.propsRequireReflow.indexOf(x) !== -1 && (r.isDirtyBox = !0, o || (d = !0));
-    }), !r.styledMode && f.style && r.renderer.setStyle(r.options.chart.style || {})), !r.styledMode && t.colors && (this.options.colors = t.colors), Ai(t, function(g, x) {
-      r[x] && typeof r[x].update == "function" ? r[x].update(g, !1) : typeof r[n[x]] == "function" ? r[n[x]](g) : x !== "colors" && r.collectionsWithUpdate.indexOf(x) === -1 && at(!0, r.options[x], t[x]), x !== "chart" && r.propsRequireUpdateSeries.indexOf(x) !== -1 && (h = !0);
+    let l, c, f;
+    E(r, "update", { options: t }), o || r.setResponsive(!1, !0), t = js(t, r.options), r.userOptions = nt(r.userOptions, t);
+    const d = t.chart;
+    d && (nt(!0, r.options.chart, d), this.setZoomOptions(), "className" in d && r.setClassName(d.className), ("inverted" in d || "polar" in d || "type" in d) && (r.propFromSeries(), l = !0), "alignTicks" in d && (l = !0), "events" in d && Rs(this, d), mi(d, function(g, x) {
+      r.propsRequireUpdateSeries.indexOf("chart." + x) !== -1 && (c = !0), r.propsRequireDirtyBox.indexOf(x) !== -1 && (r.isDirtyBox = !0), r.propsRequireReflow.indexOf(x) !== -1 && (r.isDirtyBox = !0, o || (f = !0));
+    }), !r.styledMode && d.style && r.renderer.setStyle(r.options.chart.style || {})), !r.styledMode && t.colors && (this.options.colors = t.colors), mi(t, function(g, x) {
+      r[x] && typeof r[x].update == "function" ? r[x].update(g, !1) : typeof r[n[x]] == "function" ? r[n[x]](g) : x !== "colors" && r.collectionsWithUpdate.indexOf(x) === -1 && nt(!0, r.options[x], t[x]), x !== "chart" && r.propsRequireUpdateSeries.indexOf(x) !== -1 && (c = !0);
     }), this.collectionsWithUpdate.forEach(function(g) {
-      t[g] && (Me(t[g]).forEach(function(x, m) {
-        const b = gt(x.id);
+      t[g] && (ye(t[g]).forEach(function(x, m) {
+        const b = ct(x.id);
         let y;
-        b && (y = r.get(x.id)), !y && r[g] && (y = r[g][_(x.index, m)], y && (b && gt(y.options.id) || y.options.isInternal) && (y = void 0)), y && y.coll === g && (y.update(x, !1), i && (y.touched = !0)), !y && i && r.collectionsWithInit[g] && (r.collectionsWithInit[g][0].apply(
+        b && (y = r.get(x.id)), !y && r[g] && (y = r[g][Z(x.index, m)], y && (b && ct(y.options.id) || y.options.isInternal) && (y = void 0)), y && y.coll === g && (y.update(x, !1), i && (y.touched = !0)), !y && i && r.collectionsWithInit[g] && (r.collectionsWithInit[g][0].apply(
           r,
           // [newOptions, ...extraArguments, redraw=false]
           [
@@ -19398,15 +19397,15 @@ class rt {
       g.chart && g.remove && g.remove(!1);
     }), l && r.axes.forEach(function(g) {
       g.update({}, !1);
-    }), h && r.getSeriesOrderByLinks().forEach(function(g) {
+    }), c && r.getSeriesOrderByLinks().forEach(function(g) {
       g.chart && g.update({}, !1);
     }, this);
-    const p = f?.width, u = f && (Se(f.height) ? nr(f.height, p || r.chartWidth) : f.height);
+    const p = d?.width, u = d && (xe(d.height) ? Hs(d.height, p || r.chartWidth) : d.height);
     // In this case, run chart.setSize with newWidth and newHeight which
     // are undefined, only for reflowing chart elements because margin
     // or spacing has been set (#8190)
-    d || // In this case, the size is actually set
-    It(p) && p !== r.chartWidth || It(u) && u !== r.chartHeight ? r.setSize(p, u, s) : _(e, !0) && r.redraw(s), $(r, "afterUpdate", {
+    f || // In this case, the size is actually set
+    Tt(p) && p !== r.chartWidth || Tt(u) && u !== r.chartHeight ? r.setSize(p, u, s) : Z(e, !0) && r.redraw(s), E(r, "afterUpdate", {
       options: t,
       redraw: e,
       animation: s
@@ -19448,16 +19447,16 @@ class rt {
    * @emits Highcharts.Chart#event:beforeShowResetZoom
    */
   showResetZoom() {
-    const t = this, e = bi.lang, i = t.zooming.resetButton, s = i.theme, r = i.relativeTo === "chart" || i.relativeTo === "spacingBox" ? null : "plotBox";
+    const t = this, e = hi.lang, i = t.zooming.resetButton, s = i.theme, r = i.relativeTo === "chart" || i.relativeTo === "spacingBox" ? null : "plotBox";
     function n() {
       t.zoomOut();
     }
-    $(this, "beforeShowResetZoom", null, function() {
+    E(this, "beforeShowResetZoom", null, function() {
       t.resetZoomButton = t.renderer.button(e.resetZoom, null, null, n, s).attr({
         align: i.position.align,
         title: e.resetZoomTitle
       }).addClass("highcharts-reset-zoom").add().align(i.position, !1, r);
-    }), $(this, "afterShowResetZoom");
+    }), E(this, "afterShowResetZoom");
   }
   /**
    * Zoom the chart out after a user has zoomed in. See also
@@ -19468,7 +19467,7 @@ class rt {
    * @emits Highcharts.Chart#event:selection
    */
   zoomOut() {
-    $(this, "selection", { resetSelection: !0 }, () => this.transform({ reset: !0, trigger: "zoom" }));
+    E(this, "selection", { resetSelection: !0 }, () => this.transform({ reset: !0, trigger: "zoom" }));
   }
   /**
    * Pan the chart by dragging the mouse across the pane. This function is
@@ -19489,7 +19488,7 @@ class rt {
       xy: "axes",
       y: "yAxis"
     }[r]].filter((a) => a.options.panningEnabled && !a.options.isInternal), o = i.options.chart;
-    o?.panning && (o.panning = s), $(this, "pan", { originalEvent: t }, () => {
+    o?.panning && (o.panning = s), E(this, "pan", { originalEvent: t }, () => {
       i.transform({
         axes: n,
         event: t,
@@ -19519,37 +19518,37 @@ class rt {
    * @function Highcharts.Chart#transform
    */
   transform(t) {
-    const { axes: e = this.axes, event: i, from: s = {}, reset: r, selection: n, to: o = {}, trigger: a } = t, { inverted: l, time: h } = this;
-    this.hoverPoints?.forEach((u) => u.setState()), $(this, "transform", t);
-    let d = t.hasZoomed || !1, f, p;
+    const { axes: e = this.axes, event: i, from: s = {}, reset: r, selection: n, to: o = {}, trigger: a } = t, { inverted: l, time: c } = this;
+    this.hoverPoints?.forEach((u) => u.setState()), E(this, "transform", t);
+    let f = t.hasZoomed || !1, d, p;
     for (const u of e) {
-      const { horiz: g, len: x, minPointOffset: m = 0, options: b, reversed: y } = u, v = g ? "width" : "height", S = g ? "x" : "y", k = _(o[v], u.len), w = _(s[v], u.len), M = Math.abs(k) < 10 ? 1 : k / w, C = (s[S] || 0) + w / 2 - u.pos, A = (o[S] ?? u.pos) + k / 2 - u.pos, O = C - A / M, L = y && !l || !y && l ? -1 : 1, E = O;
-      if (!r && (C < 0 || C > u.len))
+      const { horiz: g, len: x, minPointOffset: m = 0, options: b, reversed: y } = u, v = g ? "width" : "height", w = g ? "x" : "y", S = Z(o[v], u.len), k = Z(s[v], u.len), M = Math.abs(S) < 10 ? 1 : S / k, A = (s[w] || 0) + k / 2 - u.pos, T = (o[w] ?? u.pos) + S / 2 - u.pos, O = A - T / M, B = y && !l || !y && l ? -1 : 1, $ = O;
+      if (!r && (A < 0 || A > u.len))
         continue;
-      const D = u.chart.polar || u.isOrdinal ? 0 : m * L || 0, I = u.toValue(E, !0), B = u.toValue(E + x / M, !0);
-      let W = I + D, Z = B - D, et = u.allExtremes;
+      const N = u.chart.polar || u.isOrdinal ? 0 : m * B || 0, P = u.toValue($, !0), D = u.toValue($ + x / M, !0);
+      let z = P + N, q = D - N, tt = u.allExtremes;
       if (n && n[u.coll].push({
         axis: u,
-        min: Math.min(I, B),
-        max: Math.max(I, B)
-      }), W > Z && ([W, Z] = [Z, W]), M === 1 && !r && u.coll === "yAxis" && !et) {
-        for (const ts of u.series) {
-          const oe = ts.getExtremes(ts.getProcessedData(!0).modified.getColumn("y") || [], !0);
-          et ?? (et = {
+        min: Math.min(P, D),
+        max: Math.max(P, D)
+      }), z > q && ([z, q] = [q, z]), M === 1 && !r && u.coll === "yAxis" && !tt) {
+        for (const Ri of u.series) {
+          const ee = Ri.getExtremes(Ri.getProcessedData(!0).modified.getColumn("y") || [], !0);
+          tt ?? (tt = {
             dataMin: Number.MAX_VALUE,
             dataMax: -Number.MAX_VALUE
-          }), It(oe.dataMin) && It(oe.dataMax) && (et.dataMin = Math.min(oe.dataMin, et.dataMin), et.dataMax = Math.max(oe.dataMax, et.dataMax));
+          }), Tt(ee.dataMin) && Tt(ee.dataMax) && (tt.dataMin = Math.min(ee.dataMin, tt.dataMin), tt.dataMax = Math.max(ee.dataMax, tt.dataMax));
         }
-        u.allExtremes = et;
+        u.allExtremes = tt;
       }
-      const { dataMin: ie, dataMax: Re, min: se, max: Tt } = mt(u.getExtremes(), et || {}), We = h.parse(b.min), He = h.parse(b.max), Zi = ie ?? We, _i = Re ?? He, Fe = Z - W, Ji = u.categories ? 0 : Math.min(Fe, _i - Zi), Xe = Zi - Ji * (gt(We) ? 0 : b.minPadding), je = _i + Ji * (gt(He) ? 0 : b.maxPadding), Qi = u.allowZoomOutside || M === 1 || a !== "zoom" && M > 1, re = Math.min(We ?? Xe, Xe, Qi ? se : Xe), ne = Math.max(He ?? je, je, Qi ? Tt : je);
-      (!u.isOrdinal || M !== 1 || r) && (W < re && (W = re, M >= 1 && (Z = W + Fe)), Z > ne && (Z = ne, M >= 1 && (W = Z - Fe)), (r || u.series.length && (W !== se || Z !== Tt) && W >= re && Z <= ne) && (n ? n[u.coll].push({
+      const { dataMin: _t, dataMax: Oe, min: Qt, max: wt } = dt(u.getExtremes(), tt || {}), Le = c.parse(b.min), Ee = c.parse(b.max), $i = _t ?? Le, Ii = Oe ?? Ee, Pe = q - z, Bi = u.categories ? 0 : Math.min(Pe, Ii - $i), De = $i - Bi * (ct(Le) ? 0 : b.minPadding), $e = Ii + Bi * (ct(Ee) ? 0 : b.maxPadding), Ni = u.allowZoomOutside || M === 1 || a !== "zoom" && M > 1, Jt = Math.min(Le ?? De, De, Ni ? Qt : De), te = Math.max(Ee ?? $e, $e, Ni ? wt : $e);
+      (!u.isOrdinal || M !== 1 || r) && (z < Jt && (z = Jt, M >= 1 && (q = z + Pe)), q > te && (q = te, M >= 1 && (z = q - Pe)), (r || u.series.length && (z !== Qt || q !== wt) && z >= Jt && q <= te) && (n ? n[u.coll].push({
         axis: u,
-        min: W,
-        max: Z
-      }) : (u.isPanning = a !== "zoom", u.isPanning && (p = !0), u.setExtremes(r ? void 0 : W, r ? void 0 : Z, !1, !1, { move: O, trigger: a, scale: M }), !r && (W > re || Z < ne) && a !== "mousewheel" && (f = !0)), d = !0), !this.hasCartesianSeries && !r && a !== "mousewheel" && (f = !0), i && (this[g ? "mouseDownX" : "mouseDownY"] = i[g ? "chartX" : "chartY"]));
+        min: z,
+        max: q
+      }) : (u.isPanning = a !== "zoom", u.isPanning && (p = !0), u.setExtremes(r ? void 0 : z, r ? void 0 : q, !1, !1, { move: O, trigger: a, scale: M }), !r && (z > Jt || q < te) && a !== "mousewheel" && (d = !0)), f = !0), !this.hasCartesianSeries && !r && a !== "mousewheel" && (d = !0), i && (this[g ? "mouseDownX" : "mouseDownY"] = i[g ? "chartX" : "chartY"]));
     }
-    return d && (n ? $(
+    return f && (n ? E(
       this,
       "selection",
       n,
@@ -19558,10 +19557,10 @@ class rt {
       () => {
         delete t.selection, t.trigger = "zoom", this.transform(t);
       }
-    ) : (f && !p && !this.resetZoomButton ? this.showResetZoom() : !f && this.resetZoomButton && (this.resetZoomButton = this.resetZoomButton.destroy()), this.redraw(a === "zoom" && (this.options.chart.animation ?? this.pointCount < 100)))), d;
+    ) : (d && !p && !this.resetZoomButton ? this.showResetZoom() : !d && this.resetZoomButton && (this.resetZoomButton = this.resetZoomButton.destroy()), this.redraw(a === "zoom" && (this.options.chart.animation ?? this.pointCount < 100)))), f;
   }
 }
-mt(rt.prototype, {
+dt(xt.prototype, {
   // Hook for adding callbacks in modules
   callbacks: [],
   /**
@@ -19576,9 +19575,9 @@ mt(rt.prototype, {
    */
   collectionsWithInit: {
     // CollectionName: [ initializingMethod, [extraArguments] ]
-    xAxis: [rt.prototype.addAxis, [!0]],
-    yAxis: [rt.prototype.addAxis, [!1]],
-    series: [rt.prototype.addSeries]
+    xAxis: [xt.prototype.addAxis, [!0]],
+    yAxis: [xt.prototype.addAxis, [!1]],
+    series: [xt.prototype.addSeries]
   },
   /**
    * These collections (arrays) implement update() methods with support for
@@ -19640,1529 +19639,14 @@ mt(rt.prototype, {
     "tooltip"
   ]
 });
-const Qa = {
-  /**
-   * @see [fillColor](#plotOptions.area.fillColor)
-   * @see [fillOpacity](#plotOptions.area.fillOpacity)
-   *
-   * @apioption plotOptions.area.color
-   */
-  /**
-   * Fill color or gradient for the area. When `undefined`, the series'
-   * `color` is used with the series' `fillOpacity`.
-   *
-   * In styled mode, the fill color can be set with the `.highcharts-area`
-   * class name.
-   *
-   * @see [color](#plotOptions.area.color)
-   * @see [fillOpacity](#plotOptions.area.fillOpacity)
-   *
-   * @sample {highcharts} highcharts/plotoptions/area-fillcolor-default/
-   *         Undefined by default
-   * @sample {highcharts} highcharts/plotoptions/area-fillcolor-gradient/
-   *         Gradient
-   *
-   * @type {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
-   * @product   highcharts highstock
-   * @apioption plotOptions.area.fillColor
-   */
-  /**
-   * Fill opacity for the area. When you set an explicit `fillColor`,
-   * the `fillOpacity` is not applied. Instead, you should define the
-   * opacity in the `fillColor` with an rgba color definition. The
-   * `fillOpacity` setting, also the default setting, overrides the alpha
-   * component of the `color` setting.
-   *
-   * In styled mode, the fill opacity can be set with the
-   * `.highcharts-area` class name.
-   *
-   * @see [color](#plotOptions.area.color)
-   * @see [fillColor](#plotOptions.area.fillColor)
-   *
-   * @sample {highcharts} highcharts/plotoptions/area-fillopacity/
-   *         Automatic fill color and fill opacity of 0.1
-   *
-   * @type      {number}
-   * @default   {highcharts} 0.75
-   * @default   {highstock} 0.75
-   * @product   highcharts highstock
-   * @apioption plotOptions.area.fillOpacity
-   */
-  /**
-   * A separate color for the graph line. By default the line takes the
-   * `color` of the series, but the lineColor setting allows setting a
-   * separate color for the line without altering the `fillColor`.
-   *
-   * In styled mode, the line stroke can be set with the
-   * `.highcharts-graph` class name.
-   *
-   * @sample {highcharts} highcharts/plotoptions/area-linecolor/
-   *         Dark gray line
-   *
-   * @type {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
-   * @product   highcharts highstock
-   * @apioption plotOptions.area.lineColor
-   */
-  /**
-   * A separate color for the negative part of the area. Note that `zones`
-   * takes precedence over the negative fill color.
-   *
-   * In styled mode, a negative color is set with the
-   * `.highcharts-negative` class name.
-   *
-   * @see [negativeColor](#plotOptions.area.negativeColor)
-   *
-   * @sample {highcharts} highcharts/css/series-negative-color/
-   *         Negative color in styled mode
-   *
-   * @type {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
-   * @since     3.0
-   * @product   highcharts
-   * @apioption plotOptions.area.negativeFillColor
-   */
-  /**
-   * Whether the whole area or just the line should respond to mouseover
-   * tooltips and other mouse or touch events.
-   *
-   * @sample {highcharts|highstock} highcharts/plotoptions/area-trackbyarea/
-   *         Display the tooltip when the area is hovered
-   *
-   * @type      {boolean}
-   * @default   false
-   * @since     1.1.6
-   * @product   highcharts highstock
-   * @apioption plotOptions.area.trackByArea
-   */
-  /**
-   * The Y axis value to serve as the base for the area, for
-   * distinguishing between values above and below a threshold. The area
-   * between the graph and the threshold is filled.
-   *
-   * * If a number is given, the Y axis will scale to the threshold.
-   * * If `null`, the scaling behaves like a line series with fill between
-   *   the graph and the Y axis minimum.
-   * * If `Infinity` or `-Infinity`, the area between the graph and the
-   *   corresponding Y axis extreme is filled (since v6.1.0).
-   *
-   * @sample {highcharts} highcharts/plotoptions/area-threshold/
-   *         A threshold of 100
-   * @sample {highcharts} highcharts/plotoptions/area-threshold-infinity/
-   *         A threshold of Infinity
-   *
-   * @type    {number|null}
-   * @since   2.0
-   * @product highcharts highstock
-   */
-  threshold: 0,
-  legendSymbol: "areaMarker"
-}, { seriesTypes: { line: Hi } } = dt, { extend: tl, merge: el, objectEach: il, pick: we } = R;
-class Ki extends Hi {
-  /* *
-   *
-   *  Functions
-   *
-   * */
-  /* eslint-disable valid-jsdoc */
-  /**
-   * Draw the graph and the underlying area. This method calls the Series
-   * base function and adds the area. The areaPath is calculated in the
-   * getSegmentPath method called from Series.prototype.drawGraph.
-   * @private
-   */
-  drawGraph() {
-    this.areaPath = [], super.drawGraph.apply(this);
-    const { areaPath: t, options: e } = this;
-    [this, ...this.zones].forEach((i, s) => {
-      const r = {}, n = i.fillColor || e.fillColor;
-      let o = i.area;
-      const a = o ? "animate" : "attr";
-      o ? (o.endX = this.preventGraphAnimation ? null : t.xMap, o.animate({ d: t })) : (r.zIndex = 0, o = i.area = this.chart.renderer.path(t).addClass("highcharts-area" + (s ? ` highcharts-zone-area-${s - 1} ` : " ") + (s && i.className || "")).add(this.group), o.isArea = !0), this.chart.styledMode || (r.fill = n || i.color || this.color, r["fill-opacity"] = n ? 1 : e.fillOpacity ?? 0.75, o.css({
-        pointerEvents: this.stickyTracking ? "none" : "auto"
-      })), o[a](r), o.startX = t.xMap, o.shiftUnit = e.step ? 2 : 1;
-    });
-  }
-  /**
-   * @private
-   */
-  getGraphPath(t) {
-    const e = Hi.prototype.getGraphPath, i = this.options, s = i.stacking, r = this.yAxis, n = [], o = [], a = this.index, l = r.stacking.stacks[this.stackKey], h = i.threshold, d = Math.round(
-      // #10909
-      r.getThreshold(i.threshold)
-    ), f = we(
-      // #10574
-      i.connectNulls,
-      s === "percent"
-    ), p = function(k, w, M) {
-      const C = t[k], A = s && l[C.x].points[a], O = C[M + "Null"] || 0, L = C[M + "Cliff"] || 0;
-      let E, D, I = !0;
-      L || O ? (E = (O ? A[0] : A[1]) + L, D = A[0] + L, I = !!O) : !s && t[w] && t[w].isNull && (E = D = h), typeof E < "u" && (o.push({
-        plotX: u,
-        plotY: E === null ? d : r.getThreshold(E),
-        isNull: I,
-        isCliff: !0
-      }), n.push({
-        plotX: u,
-        plotY: D === null ? d : r.getThreshold(D),
-        doCurve: !1
-        // #1041, gaps in areaspline areas
-      }));
-    };
-    let u, g, x;
-    t = t || this.points, s && (t = this.getStackPoints(t));
-    for (let k = 0, w = t.length; k < w; ++k)
-      s || (t[k].leftCliff = t[k].rightCliff = t[k].leftNull = t[k].rightNull = void 0), g = t[k].isNull, u = we(t[k].rectPlotX, t[k].plotX), x = s ? we(t[k].yBottom, d) : d, (!g || f) && (f || p(k, k - 1, "left"), g && !s && f || (o.push(t[k]), n.push({
-        x: k,
-        plotX: u,
-        plotY: x
-      })), f || p(k, k + 1, "right"));
-    const m = e.call(this, o, !0, !0);
-    n.reversed = !0;
-    const b = e.call(this, n, !0, !0), y = b[0];
-    y && y[0] === "M" && (b[0] = ["L", y[1], y[2]]);
-    const v = m.concat(b);
-    v.length && v.push(["Z"]);
-    const S = e.call(this, o, !1, f);
-    return this.chart.series.length > 1 && s && o.some((k) => k.isCliff) && (v.hasStackedCliffs = S.hasStackedCliffs = !0), v.xMap = m.xMap, this.areaPath = v, S;
-  }
-  /**
-   * Return an array of stacked points, where null and missing points are
-   * replaced by dummy points in order for gaps to be drawn correctly in
-   * stacks.
-   * @private
-   */
-  getStackPoints(t) {
-    const e = this, i = [], s = [], r = this.xAxis, n = this.yAxis, o = n.stacking.stacks[this.stackKey], a = {}, l = n.series, h = l.length, d = n.options.reversedStacks ? 1 : -1, f = l.indexOf(e);
-    if (t = t || this.points, this.options.stacking) {
-      for (let u = 0; u < t.length; u++)
-        t[u].leftNull = t[u].rightNull = void 0, a[t[u].x] = t[u];
-      il(o, function(u, g) {
-        u.total !== null && s.push(g);
-      }), s.sort(function(u, g) {
-        return u - g;
-      });
-      const p = l.map((u) => u.visible);
-      s.forEach(function(u, g) {
-        let x = 0, m, b;
-        if (a[u] && !a[u].isNull)
-          i.push(a[u]), [-1, 1].forEach(function(y) {
-            const v = y === 1 ? "rightNull" : "leftNull", S = y === 1 ? "rightCliff" : "leftCliff", k = o[s[g + y]];
-            let w = 0;
-            if (k) {
-              let M = f;
-              for (; M >= 0 && M < h; ) {
-                const C = l[M].index;
-                m = k.points[C], m || (C === e.index ? a[u][v] = !0 : p[M] && (b = o[u].points[C], b && (w -= b[1] - b[0]))), M += d;
-              }
-            }
-            a[u][S] = w;
-          });
-        else {
-          let y = f;
-          for (; y >= 0 && y < h; ) {
-            const v = l[y].index;
-            if (m = o[u].points[v], m) {
-              x = m[1];
-              break;
-            }
-            y += d;
-          }
-          x = we(x, 0), x = n.translate(
-            // #6272
-            x,
-            0,
-            1,
-            0,
-            1
-          ), i.push({
-            isNull: !0,
-            plotX: r.translate(
-              // #6272
-              u,
-              0,
-              0,
-              0,
-              1
-            ),
-            x: u,
-            plotY: x,
-            yBottom: x
-          });
-        }
-      });
-    }
-    return i;
-  }
-}
-Ki.defaultOptions = el(Hi.defaultOptions, Qa);
-tl(Ki.prototype, {
-  singleStacks: !1
-});
-dt.registerSeriesType("area", Ki);
-const sl = {
-  /**
-   * The corner radius of the border surrounding each column or bar. A number
-   * signifies pixels. A percentage string, like for example `50%`, signifies
-   * a relative size. For columns this is relative to the column width, for
-   * pies it is relative to the radius and the inner radius.
-   *
-   * @sample  {highcharts} highcharts/plotoptions/column-borderradius/
-   *          Rounded columns
-   * @sample  highcharts/plotoptions/series-border-radius
-   *          Column and pie with rounded border
-   *
-   * @type    {number|string|Highcharts.BorderRadiusOptionsObject}
-   * @product highcharts highstock gantt
-   */
-  borderRadius: 3,
-  /**
-   * When using automatic point colors pulled from the global
-   * [colors](colors) or series-specific
-   * [plotOptions.column.colors](series.colors) collections, this option
-   * determines whether the chart should receive one color per series or
-   * one color per point.
-   *
-   * In styled mode, the `colors` or `series.colors` arrays are not
-   * supported, and instead this option gives the points individual color
-   * class names on the form `highcharts-color-{n}`.
-   *
-   * @see [series colors](#plotOptions.column.colors)
-   *
-   * @sample {highcharts} highcharts/plotoptions/column-colorbypoint-false/
-   *         False by default
-   * @sample {highcharts} highcharts/plotoptions/column-colorbypoint-true/
-   *         True
-   *
-   * @type      {boolean}
-   * @default   false
-   * @since     2.0
-   * @product   highcharts highstock gantt
-   * @apioption plotOptions.column.colorByPoint
-   */
-  /**
-   * A series specific or series type specific color set to apply instead
-   * of the global [colors](#colors) when [colorByPoint](
-   * #plotOptions.column.colorByPoint) is true.
-   *
-   * @type      {Array<Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject>}
-   * @since     3.0
-   * @product   highcharts highstock gantt
-   * @apioption plotOptions.column.colors
-   */
-  /**
-   * When `true`, the columns will center in the category, ignoring null
-   * or missing points. When `false`, space will be reserved for null or
-   * missing points.
-   *
-   * @sample {highcharts} highcharts/series-column/centerincategory/
-   *         Center in category
-   * @sample {highcharts} highcharts/series/stack-centerincategory/
-   *         Center in category, stacked and grouped
-   *
-   * @since   8.0.1
-   * @product highcharts highstock gantt
-   */
-  centerInCategory: !1,
-  /**
-   * Padding between each value groups, in x axis units.
-   *
-   * @sample {highcharts} highcharts/plotoptions/column-grouppadding-default/
-   *         0.2 by default
-   * @sample {highcharts} highcharts/plotoptions/column-grouppadding-none/
-   *         No group padding - all columns are evenly spaced
-   *
-   * @product highcharts highstock gantt
-   */
-  groupPadding: 0.2,
-  /**
-   * Whether to group non-stacked columns or to let them render
-   * independent of each other. Non-grouped columns will be laid out
-   * individually and overlap each other.
-   *
-   * @sample {highcharts} highcharts/plotoptions/column-grouping-false/
-   *         Grouping disabled
-   * @sample {highstock} highcharts/plotoptions/column-grouping-false/
-   *         Grouping disabled
-   *
-   * @type      {boolean}
-   * @default   true
-   * @since     2.3.0
-   * @product   highcharts highstock gantt
-   * @apioption plotOptions.column.grouping
-   */
-  /** @ignore-option */
-  marker: null,
-  // Point options are specified in the base options
-  /**
-   * The maximum allowed pixel width for a column, translated to the
-   * height of a bar in a bar chart. This prevents the columns from
-   * becoming too wide when there is a small number of points in the
-   * chart.
-   *
-   * @see [pointWidth](#plotOptions.column.pointWidth)
-   *
-   * @sample {highcharts} highcharts/plotoptions/column-maxpointwidth-20/
-   *         Limited to 50
-   * @sample {highstock} highcharts/plotoptions/column-maxpointwidth-20/
-   *         Limited to 50
-   *
-   * @type      {number}
-   * @since     4.1.8
-   * @product   highcharts highstock gantt
-   * @apioption plotOptions.column.maxPointWidth
-   */
-  /**
-   * Padding between each column or bar, in x axis units.
-   *
-   * @sample {highcharts} highcharts/plotoptions/column-pointpadding-default/
-   *         0.1 by default
-   * @sample {highcharts} highcharts/plotoptions/column-pointpadding-025/
-   *          0.25
-   * @sample {highcharts} highcharts/plotoptions/column-pointpadding-none/
-   *         0 for tightly packed columns
-   *
-   * @product highcharts highstock gantt
-   */
-  pointPadding: 0.1,
-  /**
-   * A pixel value specifying a fixed width for each column or bar point.
-   * When set to `undefined`, the width is calculated from the
-   * `pointPadding` and `groupPadding`. The width effects the dimension
-   * that is not based on the point value. For column series it is the
-   * horizontal length and for bar series it is the vertical length.
-   *
-   * @see [maxPointWidth](#plotOptions.column.maxPointWidth)
-   *
-   * @sample {highcharts} highcharts/plotoptions/column-pointwidth-20/
-   *         20px wide columns regardless of chart width or the amount of
-   *         data points
-   *
-   * @type      {number}
-   * @since     1.2.5
-   * @product   highcharts highstock gantt
-   * @apioption plotOptions.column.pointWidth
-   */
-  /**
-   * A pixel value specifying a fixed width for the column or bar.
-   * Overrides pointWidth on the series.
-   *
-   * @see [series.pointWidth](#plotOptions.column.pointWidth)
-   *
-   * @type      {number}
-   * @default   undefined
-   * @since     7.0.0
-   * @product   highcharts highstock gantt
-   * @apioption series.column.data.pointWidth
-   */
-  /**
-   * The minimal height for a column or width for a bar. By default,
-   * 0 values are not shown. To visualize a 0 (or close to zero) point,
-   * set the minimal point length to a pixel value like 3\. In stacked
-   * column charts, minPointLength might not be respected for tightly
-   * packed values.
-   *
-   * @sample {highcharts} highcharts/plotoptions/column-minpointlength/
-   *         Zero base value
-   * @sample {highcharts} highcharts/plotoptions/column-minpointlength-pos-and-neg/
-   *         Positive and negative close to zero values
-   *
-   * @product highcharts highstock gantt
-   */
-  minPointLength: 0,
-  /**
-   * When the series contains less points than the crop threshold, all
-   * points are drawn, event if the points fall outside the visible plot
-   * area at the current zoom. The advantage of drawing all points
-   * (including markers and columns), is that animation is performed on
-   * updates. On the other hand, when the series contains more points than
-   * the crop threshold, the series data is cropped to only contain points
-   * that fall within the plot area. The advantage of cropping away
-   * invisible points is to increase performance on large series.
-   *
-   * @product highcharts highstock gantt
-   */
-  cropThreshold: 50,
-  /**
-   * The X axis range that each point is valid for. This determines the
-   * width of the column. On a categorized axis, the range will be 1
-   * by default (one category unit). On linear and datetime axes, the
-   * range will be computed as the distance between the two closest data
-   * points.
-   *
-   * The default `null` means it is computed automatically, but this
-   * option can be used to override the automatic value.
-   *
-   * This option is set by default to 1 if data sorting is enabled.
-   *
-   * @sample {highcharts} highcharts/plotoptions/column-pointrange/
-   *         Set the point range to one day on a data set with one week
-   *         between the points
-   *
-   * @type    {number|null}
-   * @since   2.3
-   * @product highcharts highstock gantt
-   */
-  pointRange: null,
-  states: {
-    /**
-     * Options for the hovered point. These settings override the normal
-     * state options when a point is moused over or touched.
-     *
-     * @extends   plotOptions.series.states.hover
-     * @excluding halo, lineWidth, lineWidthPlus, marker
-     * @product   highcharts highstock gantt
-     */
-    hover: {
-      /** @ignore-option */
-      halo: !1,
-      /**
-       * A specific border color for the hovered point. Defaults to
-       * inherit the normal state border color.
-       *
-       * @type      {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
-       * @product   highcharts gantt
-       * @apioption plotOptions.column.states.hover.borderColor
-       */
-      /**
-       * A specific color for the hovered point.
-       *
-       * @type      {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
-       * @product   highcharts gantt
-       * @apioption plotOptions.column.states.hover.color
-       */
-      /**
-       * How much to brighten the point on interaction.
-       *
-       * In styled mode, the hover brightening is by default replaced
-       * with a fill-opacity set in the `.highcharts-point:hover`
-       * rule.
-       *
-       * @sample {highcharts} highcharts/plotoptions/column-states-hover-brightness/
-       *         Brighten by 0.5
-       *
-       * @product highcharts highstock gantt
-       */
-      brightness: 0.1
-    },
-    /**
-     * Options for the selected point. These settings override the
-     * normal state options when a point is selected.
-     *
-     * @extends   plotOptions.series.states.select
-     * @excluding halo, lineWidth, lineWidthPlus, marker
-     * @product   highcharts highstock gantt
-     */
-    select: {
-      /**
-       * A specific color for the selected point.
-       *
-       * @type    {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
-       * @default #cccccc
-       * @product highcharts highstock gantt
-       */
-      color: "#cccccc",
-      /**
-       * A specific border color for the selected point.
-       *
-       * @type    {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
-       * @default #000000
-       * @product highcharts highstock gantt
-       */
-      borderColor: "#000000"
-      /* Palette.neutralColor100 */
-    }
-  },
-  dataLabels: {
-    align: void 0,
-    verticalAlign: void 0,
-    /**
-     * The y position offset of the label relative to the point in
-     * pixels.
-     *
-     * @type {number}
-     */
-    y: void 0
-  },
-  // False doesn't work well: https://jsfiddle.net/highcharts/hz8fopan/14/
-  /** @ignore-option */
-  startFromThreshold: !0,
-  stickyTracking: !1,
-  tooltip: {
-    distance: 6
-  },
-  /**
-   * The Y axis value to serve as the base for the columns, for
-   * distinguishing between values above and below a threshold. If `null`,
-   * the columns extend from the padding Y axis minimum.
-   *
-   * @type    {number|null}
-   * @since   2.0
-   * @product highcharts
-   */
-  threshold: 0,
-  /**
-   * The width of the border surrounding each column or bar. Defaults to
-   * `1` when there is room for a border, but to `0` when the columns are
-   * so dense that a border would cover the next column.
-   *
-   * In styled mode, the stroke width can be set with the
-   * `.highcharts-point` rule.
-   *
-   * @sample {highcharts} highcharts/plotoptions/column-borderwidth/
-   *         2px black border
-   *
-   * @type      {number}
-   * @default   undefined
-   * @product   highcharts highstock gantt
-   * @apioption plotOptions.column.borderWidth
-   */
-  /**
-   * The color of the border surrounding each column or bar.
-   *
-   * In styled mode, the border stroke can be set with the
-   * `.highcharts-point` rule.
-   *
-   * @sample {highcharts} highcharts/plotoptions/column-bordercolor/
-   *         Dark gray border
-   *
-   * @type      {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
-   * @default   #ffffff
-   * @product   highcharts highstock gantt
-   */
-  borderColor: "#ffffff"
-  /* Palette.backgroundColor */
-}, { animObject: rl } = At, { parse: nl } = V, { noop: ol } = N, { clamp: Ce, crisp: Ae, defined: ar, extend: Pr, fireEvent: lr, isArray: hr, isNumber: Te, merge: Fi, pick: qt, objectEach: al } = R;
-class qi extends K {
-  /* *
-   *
-   *  Functions
-   *
-   * */
-  /* eslint-disable valid-jsdoc */
-  /**
-   * Animate the column heights one by one from zero.
-   *
-   * @private
-   * @function Highcharts.seriesTypes.column#animate
-   *
-   * @param {boolean} init
-   *        Whether to initialize the animation or run it
-   */
-  animate(t) {
-    const e = this, i = this.yAxis, s = i.pos, r = i.reversed, n = e.options, { clipOffset: o, inverted: a } = this.chart, l = {}, h = a ? "translateX" : "translateY";
-    let d, f;
-    t && o ? (l.scaleY = 1e-3, f = Ce(i.toPixels(n.threshold || 0), s, s + i.len), a ? (f += r ? -Math.floor(o[0]) : Math.ceil(o[2]), l.translateX = f - i.len) : (f += r ? Math.ceil(o[0]) : -Math.floor(o[2]), l.translateY = f), e.clipBox && e.setClip(), e.group.attr(l)) : (d = Number(e.group.attr(h)), e.group.animate({ scaleY: 1 }, Pr(rl(e.options.animation), {
-      // Do the scale synchronously to ensure smooth
-      // updating (#5030, #7228)
-      step: function(p, u) {
-        e.group && (l[h] = d + u.pos * (s - d), e.group.attr(l));
-      }
-    })));
-  }
-  /**
-   * Initialize the series. Extends the basic Series.init method by
-   * marking other series of the same type as dirty.
-   *
-   * @private
-   * @function Highcharts.seriesTypes.column#init
-   */
-  init(t, e) {
-    super.init.apply(this, arguments);
-    const i = this;
-    t = i.chart, t.hasRendered && t.series.forEach(function(s) {
-      s.type === i.type && (s.isDirty = !0);
-    });
-  }
-  /**
-   * Return the width and x offset of the columns adjusted for grouping,
-   * groupPadding, pointPadding, pointWidth etc.
-   *
-   * @private
-   * @function Highcharts.seriesTypes.column#getColumnMetrics
-   */
-  getColumnMetrics() {
-    const t = this, e = t.options, i = t.xAxis, s = t.yAxis, r = i.options.reversedStacks, n = i.reversed && !r || !i.reversed && r, o = {};
-    let a, l = 0;
-    e.grouping === !1 ? l = 1 : t.chart.series.forEach(function(b) {
-      const y = b.yAxis, v = b.options;
-      let S;
-      b.type === t.type && b.reserveSpace() && s.len === y.len && s.pos === y.pos && (v.stacking && v.stacking !== "group" ? (a = b.stackKey, typeof o[a] > "u" && (o[a] = l++), S = o[a]) : v.grouping !== !1 && (S = l++), b.columnIndex = S);
-    });
-    const h = Math.min(
-      Math.abs(i.transA) * (!i.brokenAxis?.hasBreaks && i.ordinal?.slope || e.pointRange || i.closestPointRange || i.tickInterval || 1),
-      // #2610
-      i.len
-      // #1535
-    ), d = h * e.groupPadding, f = h - 2 * d, p = f / (l || 1), u = Math.min(e.maxPointWidth || i.len, qt(e.pointWidth, p * (1 - 2 * e.pointPadding))), g = (p - u) / 2, x = (t.columnIndex || 0) + (n ? 1 : 0), m = g + (d + x * p - h / 2) * (n ? -1 : 1);
-    return t.columnMetrics = {
-      width: u,
-      offset: m,
-      paddedWidth: p,
-      columnCount: l
-    }, t.columnMetrics;
-  }
-  /**
-   * Make the columns crisp. The edges are rounded to the nearest full
-   * pixel.
-   *
-   * @private
-   * @function Highcharts.seriesTypes.column#crispCol
-   */
-  crispCol(t, e, i, s) {
-    const r = this.borderWidth, n = this.chart.inverted, o = Ae(e + s, r, n);
-    if (e = Ae(e, r, n), s = o - e, this.options.crisp) {
-      const a = Ae(t + i, r);
-      t = Ae(t, r), i = a - t;
-    }
-    return { x: t, y: e, width: i, height: s };
-  }
-  /**
-   * Adjust for missing columns, according to the `centerInCategory`
-   * option. Missing columns are either single points or stacks where the
-   * point or points are either missing or null.
-   *
-   * @private
-   * @function Highcharts.seriesTypes.column#adjustForMissingColumns
-   * @param {number} x
-   * The x coordinate of the column, left side
-   *
-   * @param {number} pointWidth
-   * The pointWidth, already computed upstream
-   *
-   * @param {Highcharts.ColumnPoint} point
-   * The point instance
-   *
-   * @param {Highcharts.ColumnMetricsObject} metrics
-   * The series-wide column metrics
-   *
-   * @return {number}
-   * The adjusted x position, or the original if not adjusted
-   */
-  adjustForMissingColumns(t, e, i, s) {
-    if (!i.isNull && s.columnCount > 1) {
-      const r = this.xAxis.series.filter((l) => l.visible).map((l) => l.index);
-      let n = 0, o = 0;
-      al(this.xAxis.stacking?.stacks, (l) => {
-        const h = typeof i.x == "number" ? l[i.x.toString()]?.points : void 0, d = h?.[this.index], f = {};
-        if (h && hr(d)) {
-          let p = this.index;
-          const u = Object.keys(h).filter((g) => (
-            // Filter out duplicate X's
-            !g.match(",") && // Filter out null points
-            h[g] && h[g].length > 1
-          )).map(parseFloat).filter((g) => r.indexOf(g) !== -1).filter((g) => {
-            const x = this.chart.series[g].options, m = x.stacking && x.stack;
-            if (ar(m)) {
-              if (Te(f[m]))
-                return p === g && (p = f[m]), !1;
-              f[m] = g;
-            }
-            return !0;
-          }).sort((g, x) => x - g);
-          n = u.indexOf(p), o = u.length;
-        }
-      }), n = this.xAxis.reversed ? o - 1 - n : n;
-      const a = (o - 1) * s.paddedWidth + e;
-      t = (i.plotX || 0) + a / 2 - e - n * s.paddedWidth;
-    }
-    return t;
-  }
-  /**
-   * Translate each point to the plot area coordinate system and find
-   * shape positions
-   *
-   * @private
-   * @function Highcharts.seriesTypes.column#translate
-   */
-  translate() {
-    const t = this, e = t.chart, i = t.options, s = t.dense = t.closestPointRange * t.xAxis.transA < 2, r = t.borderWidth = qt(
-      i.borderWidth,
-      s ? 0 : 1
-      // #3635
-    ), n = t.xAxis, o = t.yAxis, a = i.threshold, l = qt(i.minPointLength, 5), h = t.getColumnMetrics(), d = h.width, f = t.pointXOffset = h.offset, p = t.dataMin, u = t.dataMax, g = t.translatedThreshold = o.getThreshold(a);
-    let x = t.barW = Math.max(d, 1 + 2 * r);
-    i.pointPadding && i.crisp && (x = Math.ceil(x)), K.prototype.translate.apply(t), t.points.forEach(function(m) {
-      const b = qt(m.yBottom, g), y = 999 + Math.abs(b), v = m.plotX || 0, S = Ce(m.plotY, -y, o.len + y);
-      let k, w = Math.min(S, b), M = Math.max(S, b) - w, C = d, A = v + f, O = x;
-      l && Math.abs(M) < l && (M = l, k = !o.reversed && !m.negative || o.reversed && m.negative, Te(a) && Te(u) && m.y === a && u <= a && // And if there's room for it (#7311)
-      (o.min || 0) < a && // If all points are the same value (i.e zero) not draw
-      // as negative points (#10646), but only if there's room
-      // for it (#14876)
-      (p !== u || (o.max || 0) <= a) && (k = !k, m.negative = !m.negative), w = Math.abs(w - g) > l ? (
-        // ...keep position
-        b - l
-      ) : (
-        // #1485, #4051
-        g - (k ? l : 0)
-      )), ar(m.options.pointWidth) && (C = O = Math.ceil(m.options.pointWidth), A -= Math.round((C - d) / 2)), i.centerInCategory && (A = t.adjustForMissingColumns(A, C, m, h)), m.barX = A, m.pointWidth = C, m.tooltipPos = e.inverted ? [
-        Ce(o.len + o.pos - e.plotLeft - S, o.pos - e.plotLeft, o.len + o.pos - e.plotLeft),
-        n.len + n.pos - e.plotTop - A - O / 2,
-        M
-      ] : [
-        n.left - e.plotLeft + A + O / 2,
-        Ce(S + o.pos - e.plotTop, o.pos - e.plotTop, o.len + o.pos - e.plotTop),
-        M
-      ], m.shapeType = t.pointClass.prototype.shapeType || "roundedRect", m.shapeArgs = t.crispCol(
-        A,
-        // #3169, drilldown from null must have a position to work from.
-        // #6585, dataLabel should be placed on xAxis, not floating in
-        // the middle of the chart.
-        w,
-        O,
-        m.isNull ? 0 : M
-      );
-    }), lr(this, "afterColumnTranslate");
-  }
-  /**
-   * Columns have no graph
-   *
-   * @private
-   * @function Highcharts.seriesTypes.column#drawGraph
-   */
-  drawGraph() {
-    this.group[this.dense ? "addClass" : "removeClass"]("highcharts-dense-data");
-  }
-  /**
-   * Get presentational attributes
-   *
-   * @private
-   * @function Highcharts.seriesTypes.column#pointAttribs
-   */
-  pointAttribs(t, e) {
-    const i = this.options, s = this.pointAttrToOptions || {}, r = s.stroke || "borderColor", n = s["stroke-width"] || "borderWidth";
-    let o, a, l, h = t && t.color || this.color, d = t && t[r] || i[r] || h, f = t && t.options.dashStyle || i.dashStyle, p = t && t[n] || i[n] || this[n] || 0, u = t?.isNull && i.nullInteraction ? 0 : t?.opacity ?? i.opacity ?? 1;
-    t && this.zones.length && (a = t.getZone(), h = t.options.color || a && (a.color || t.nonZonedColor) || this.color, a && (d = a.borderColor || d, f = a.dashStyle || f, p = a.borderWidth || p)), e && t && (o = Fi(
-      i.states[e],
-      // #6401
-      t.options.states && t.options.states[e] || {}
-    ), l = o.brightness, h = o.color || typeof l < "u" && nl(h).brighten(o.brightness).get() || h, d = o[r] || d, p = o[n] || p, f = o.dashStyle || f, u = qt(o.opacity, u));
-    const g = {
-      fill: h,
-      stroke: d,
-      "stroke-width": p,
-      opacity: u
-    };
-    return f && (g.dashstyle = f), g;
-  }
-  /**
-   * Draw the columns. For bars, the series.group is rotated, so the same
-   * coordinates apply for columns and bars. This method is inherited by
-   * scatter series.
-   *
-   * @private
-   * @function Highcharts.seriesTypes.column#drawPoints
-   */
-  drawPoints(t = this.points) {
-    const e = this, i = this.chart, s = e.options, r = s.nullInteraction, n = i.renderer, o = s.animationLimit || 250;
-    let a;
-    t.forEach(function(l) {
-      const h = l.plotY;
-      let d = l.graphic, f = !!d, p = d && i.pointCount < o ? "animate" : "attr";
-      Te(h) && (l.y !== null || r) ? (a = l.shapeArgs, d && l.hasNewShapeType() && (d = d.destroy()), e.enabledDataSorting && (l.startXPos = e.xAxis.reversed ? -(a && a.width || 0) : e.xAxis.width), d || (l.graphic = d = n[l.shapeType](a).add(l.group || e.group), d && e.enabledDataSorting && i.hasRendered && i.pointCount < o && (d.attr({
-        x: l.startXPos
-      }), f = !0, p = "animate")), d && f && d[p](Fi(a)), i.styledMode || d[p](e.pointAttribs(l, l.selected && "select")).shadow(l.allowShadow !== !1 && s.shadow), d && (d.addClass(l.getClassName(), !0), d.attr({
-        visibility: l.visible ? "inherit" : "hidden"
-      }))) : d && (l.graphic = d.destroy());
-    });
-  }
-  /**
-   * Draw the tracker for a point.
-   * @private
-   */
-  drawTracker(t = this.points) {
-    const e = this, i = e.chart, s = i.pointer, r = function(o) {
-      s?.normalize(o);
-      const a = s?.getPointFromEvent(o);
-      s && a && e.options.enableMouseTracking && // Run point events only for points inside plot area, #21136
-      (i.isInsidePlot(o.chartX - i.plotLeft, o.chartY - i.plotTop, {
-        visiblePlotOnly: !0
-      }) || s?.inClass(o.target, "highcharts-data-label")) && (s.isDirectTouch = !0, a.onMouseOver(o));
-    };
-    let n;
-    t.forEach(function(o) {
-      n = hr(o.dataLabels) ? o.dataLabels : o.dataLabel ? [o.dataLabel] : [], o.graphic && (o.graphic.element.point = o), n.forEach(function(a) {
-        (a.div || a.element).point = o;
-      });
-    }), e._hasTracking || (e.trackerGroups.forEach(function(o) {
-      e[o] && (e[o].addClass("highcharts-tracker").on("mouseover", r).on("mouseout", function(a) {
-        s?.onTrackerMouseOut(a);
-      }).on("touchstart", r), !i.styledMode && e.options.cursor && e[o].css({ cursor: e.options.cursor }));
-    }), e._hasTracking = !0), lr(this, "afterDrawTracker");
-  }
-  /**
-   * Remove this series from the chart
-   *
-   * @private
-   * @function Highcharts.seriesTypes.column#remove
-   */
-  remove() {
-    const t = this, e = t.chart;
-    e.hasRendered && e.series.forEach(function(i) {
-      i.type === t.type && (i.isDirty = !0);
-    }), K.prototype.remove.apply(t, arguments);
-  }
-}
-qi.defaultOptions = Fi(K.defaultOptions, sl);
-Pr(qi.prototype, {
-  // When tooltip is not shared, this series (and derivatives) requires
-  // direct touch/hover. KD-tree does not apply.
-  directTouch: !0,
-  getSymbol: ol,
-  // Use separate negative stacks, unlike area stacks where a negative
-  // point is subtracted from previous (#1910)
-  negStacks: !0,
-  trackerGroups: ["group", "dataLabelsGroup"]
-});
-dt.registerSeriesType("column", qi);
-const { defined: ll, merge: Er, isObject: hl } = R;
-class Ir extends K {
-  /* *
-   *
-   *  Functions
-   *
-   * */
-  /**
-   * Draw the graph. Called internally when rendering line-like series
-   * types. The first time it generates the `series.graph` item and
-   * optionally other series-wide items like `series.area` for area
-   * charts. On subsequent calls these items are updated with new
-   * positions and attributes.
-   *
-   * @function Highcharts.Series#drawGraph
-   */
-  drawGraph() {
-    const t = this.options, e = (this.gappedPath || this.getGraphPath).call(this), i = this.chart.styledMode;
-    [this, ...this.zones].forEach((s, r) => {
-      let n, o = s.graph;
-      const a = o ? "animate" : "attr", l = s.dashStyle || t.dashStyle;
-      o ? (o.endX = this.preventGraphAnimation ? null : e.xMap, o.animate({ d: e })) : e.length && (s.graph = o = this.chart.renderer.path(e).addClass("highcharts-graph" + (r ? ` highcharts-zone-graph-${r - 1} ` : " ") + (r && s.className || "")).attr({ zIndex: 1 }).add(this.group)), o && !i && (n = {
-        stroke: !r && t.lineColor || // Series only
-        s.color || this.color || "#cccccc",
-        "stroke-width": t.lineWidth || 0,
-        // Polygon series use filled graph
-        fill: this.fillGraph && this.color || "none"
-      }, l ? n.dashstyle = l : t.linecap !== "square" && (n["stroke-linecap"] = n["stroke-linejoin"] = "round"), o[a](n).shadow(t.shadow && // If shadow is defined, call function with
-      // `filterUnits: 'userSpaceOnUse'` to avoid known
-      // SVG filter bug (#19093)
-      Er({ filterUnits: "userSpaceOnUse" }, hl(t.shadow) ? t.shadow : {}))), o && (o.startX = e.xMap, o.isArea = e.isArea);
-    });
-  }
-  // eslint-disable-next-line valid-jsdoc
-  /**
-   * Get the graph path.
-   *
-   * @private
-   */
-  getGraphPath(t, e, i) {
-    const s = this, r = s.options, n = [], o = [];
-    let a, l = r.step;
-    t = t || s.points;
-    const h = t.reversed;
-    return h && t.reverse(), l = {
-      right: 1,
-      center: 2
-    }[l] || l && 3, l && h && (l = 4 - l), t = this.getValidPoints(t, !1, r.nullInteraction || !(r.connectNulls && !e && !i)), t.forEach(function(d, f) {
-      const p = d.plotX, u = d.plotY, g = t[f - 1], x = d.isNull || typeof u != "number";
-      let m;
-      (d.leftCliff || g?.rightCliff) && !i && (a = !0), x && !ll(e) && f > 0 ? a = !r.connectNulls : x && !e ? a = !0 : (f === 0 || a ? m = [[
-        "M",
-        d.plotX,
-        d.plotY
-      ]] : s.getPointSpline ? m = [s.getPointSpline(t, d, f)] : l ? (l === 1 ? m = [[
-        "L",
-        g.plotX,
-        u
-      ]] : l === 2 ? m = [[
-        "L",
-        (g.plotX + p) / 2,
-        g.plotY
-      ], [
-        "L",
-        (g.plotX + p) / 2,
-        u
-      ]] : m = [[
-        "L",
-        p,
-        g.plotY
-      ]], m.push([
-        "L",
-        p,
-        u
-      ])) : m = [[
-        "L",
-        p,
-        u
-      ]], o.push(d.x), l && (o.push(d.x), l === 2 && o.push(d.x)), n.push.apply(n, m), a = !1);
-    }), n.xMap = o, s.graphPath = n, n;
-  }
-}
-Ir.defaultOptions = Er(
-  K.defaultOptions,
-  /**
-   * General options for all series types.
-   *
-   * @optionparent plotOptions.series
-   */
-  {
-    legendSymbol: "lineMarker"
-  }
-);
-dt.registerSeriesType("line", Ir);
-const { clamp: cl, pick: dl, pushUnique: fl, stableSort: Ti } = R;
-var Xi;
-(function(c) {
-  function t(e, i, s) {
-    const r = e, n = r.reducedLen || i, o = (S, k) => (k.rank || 0) - (S.rank || 0), a = (S, k) => S.target - k.target, l = [], h = e.length, d = [], f = l.push;
-    let p, u, g, x = !0, m, b, y = 0, v;
-    for (p = h; p--; )
-      y += e[p].size;
-    if (y > n) {
-      for (Ti(e, o), v = e[0].rank === e[e.length - 1].rank, g = v ? h / 2 : -1, u = v ? g : h - 1; g && y > n; )
-        p = Math.floor(u), m = e[p], fl(d, p) && (y -= m.size), u += g, v && u >= e.length && (g /= 2, u = g);
-      d.sort((S, k) => k - S).forEach((S) => f.apply(l, e.splice(S, 1)));
-    }
-    for (Ti(e, a), e = e.map((S) => ({
-      size: S.size,
-      targets: [S.target],
-      align: dl(S.align, 0.5)
-    })); x; ) {
-      for (p = e.length; p--; )
-        m = e[p], b = (Math.min.apply(0, m.targets) + Math.max.apply(0, m.targets)) / 2, m.pos = cl(b - m.size * m.align, 0, i - m.size);
-      for (p = e.length, x = !1; p--; )
-        p > 0 && e[p - 1].pos + e[p - 1].size > e[p].pos && (e[p - 1].size += e[p].size, e[p - 1].targets = e[p - 1].targets.concat(e[p].targets), e[p - 1].align = 0.5, e[p - 1].pos + e[p - 1].size > i && (e[p - 1].pos = i - e[p - 1].size), e.splice(p, 1), x = !0);
-    }
-    return f.apply(r, l), p = 0, e.some((S) => {
-      let k = 0;
-      return (S.targets || []).some(() => (r[p].pos = S.pos + k, typeof s < "u" && Math.abs(r[p].pos - r[p].target) > s ? (r.slice(0, p + 1).forEach((w) => delete w.pos), r.reducedLen = (r.reducedLen || i) - i * 0.1, r.reducedLen > i * 0.1 && t(r, i, s), !0) : (k += r[p].size, p++, !1)));
-    }), Ti(r, a), r;
-  }
-  c.distribute = t;
-})(Xi || (Xi = {}));
-const pl = Xi, { animObject: ul, setAnimation: gl } = At, { registerEventOptions: cr } = ze, { composed: ml, marginNames: dr } = N, { distribute: xl } = pl, { format: yl } = ee, { addEvent: Ee, createElement: bl, css: vl, defined: Oi, discardElement: kl, find: Sl, fireEvent: ct, isNumber: fr, merge: vt, pick: st, pushUnique: Ml, relativeLength: wl, stableSort: Cl, syncTimeout: Al } = R;
-class ji {
-  /* *
-   *
-   *  Functions
-   *
-   * */
-  /**
-   * Initialize the legend.
-   *
-   * @private
-   * @function Highcharts.Legend#init
-   *
-   * @param {Highcharts.Chart} chart
-   * The chart instance.
-   *
-   * @param {Highcharts.LegendOptions} options
-   * Legend options.
-   */
-  constructor(t, e) {
-    this.allItems = [], this.initialItemY = 0, this.itemHeight = 0, this.itemMarginBottom = 0, this.itemMarginTop = 0, this.itemX = 0, this.itemY = 0, this.lastItemY = 0, this.lastLineHeight = 0, this.legendHeight = 0, this.legendWidth = 0, this.maxItemWidth = 0, this.maxLegendWidth = 0, this.offsetWidth = 0, this.padding = 0, this.pages = [], this.symbolHeight = 0, this.symbolWidth = 0, this.titleHeight = 0, this.totalItemWidth = 0, this.widthOption = 0, this.chart = t, this.setOptions(e), e.enabled && (this.render(), cr(this, e), Ee(this.chart, "endResize", function() {
-      this.legend.positionCheckboxes();
-    })), Ee(this.chart, "render", () => {
-      this.options.enabled && this.proximate && (this.proximatePositions(), this.positionItems());
-    });
-  }
-  /**
-   * @private
-   * @function Highcharts.Legend#setOptions
-   * @param {Highcharts.LegendOptions} options
-   */
-  setOptions(t) {
-    const e = st(t.padding, 8);
-    this.options = t, this.chart.styledMode || (this.itemStyle = t.itemStyle, this.itemHiddenStyle = vt(this.itemStyle, t.itemHiddenStyle)), this.itemMarginTop = t.itemMarginTop, this.itemMarginBottom = t.itemMarginBottom, this.padding = e, this.initialItemY = e - 5, this.symbolWidth = st(t.symbolWidth, 16), this.pages = [], this.proximate = t.layout === "proximate" && !this.chart.inverted, this.baseline = void 0;
-  }
-  /**
-   * Update the legend with new options. Equivalent to running `chart.update`
-   * with a legend configuration option.
-   *
-   * @sample highcharts/legend/legend-update/
-   *         Legend update
-   *
-   * @function Highcharts.Legend#update
-   *
-   * @param {Highcharts.LegendOptions} options
-   * Legend options.
-   *
-   * @param {boolean} [redraw=true]
-   * Whether to redraw the chart after the axis is altered. If doing more
-   * operations on the chart, it is a good idea to set redraw to false and
-   * call {@link Chart#redraw} after. Whether to redraw the chart.
-   *
-   * @emits Highcharts.Legends#event:afterUpdate
-   */
-  update(t, e) {
-    const i = this.chart;
-    this.setOptions(vt(!0, this.options, t)), "events" in this.options && cr(this, this.options), this.destroy(), i.isDirtyLegend = i.isDirtyBox = !0, st(e, !0) && i.redraw(), ct(this, "afterUpdate", { redraw: e });
-  }
-  /**
-   * Set the colors for the legend item.
-   *
-   * @private
-   * @function Highcharts.Legend#colorizeItem
-   * @param {Highcharts.BubbleLegendItem|Highcharts.Point|Highcharts.Series} item
-   *        A Series or Point instance
-   * @param {boolean} [visible=false]
-   *        Dimmed or colored
-   *
-   * @todo
-   * Make events official: Fires the event `afterColorizeItem`.
-   */
-  colorizeItem(t, e) {
-    const i = t.color, { area: s, group: r, label: n, line: o, symbol: a } = t.legendItem || {};
-    if ((t instanceof K || t instanceof lt) && (t.color = t.options?.legendSymbolColor || i), r?.[e ? "removeClass" : "addClass"]("highcharts-legend-item-hidden"), !this.chart.styledMode) {
-      const { itemHiddenStyle: l = {} } = this, h = l.color, { fillColor: d, fillOpacity: f, lineColor: p, marker: u } = t.options, g = (x) => (e || (x.fill && (x.fill = h), x.stroke && (x.stroke = h)), x);
-      n?.css(vt(e ? this.itemStyle : l)), o?.attr(g({ stroke: p || t.color })), a && a.attr(g(u && a.isMarker ? (
-        // #585
-        t.pointAttribs()
-      ) : { fill: t.color })), s?.attr(g({
-        fill: d || t.color,
-        "fill-opacity": d ? 1 : f ?? 0.75
-      }));
-    }
-    t.color = i, ct(this, "afterColorizeItem", { item: t, visible: e });
-  }
-  /**
-   * @private
-   * @function Highcharts.Legend#positionItems
-   */
-  positionItems() {
-    this.allItems.forEach(this.positionItem, this), this.chart.isResizing || this.positionCheckboxes();
-  }
-  /**
-   * Position the legend item.
-   *
-   * @private
-   * @function Highcharts.Legend#positionItem
-   * @param {Highcharts.BubbleLegendItem|Highcharts.Point|Highcharts.Series} item
-   * The item to position
-   */
-  positionItem(t) {
-    const e = this, { group: i, x: s = 0, y: r = 0 } = t.legendItem || {}, n = e.options, o = n.symbolPadding, a = !n.rtl, l = t.checkbox;
-    if (i?.element) {
-      const h = {
-        translateX: a ? s : e.legendWidth - s - 2 * o - 4,
-        translateY: r
-      }, d = () => {
-        ct(this, "afterPositionItem", { item: t });
-      };
-      i[Oi(i.translateY) ? "animate" : "attr"](h, void 0, d);
-    }
-    l && (l.x = s, l.y = r);
-  }
-  /**
-   * Destroy a single legend item, used internally on removing series items.
-   *
-   * @private
-   * @function Highcharts.Legend#destroyItem
-   * @param {Highcharts.BubbleLegendItem|Highcharts.Point|Highcharts.Series} item
-   * The item to remove
-   */
-  destroyItem(t) {
-    const e = t.legendItem || {};
-    for (const i of ["group", "label", "line", "symbol"])
-      e[i] && (e[i] = e[i].destroy());
-    t.checkbox = kl(t.checkbox), t.legendItem = void 0;
-  }
-  /**
-   * Destroy the legend. Used internally. To reflow objects, `chart.redraw`
-   * must be called after destruction.
-   *
-   * @private
-   * @function Highcharts.Legend#destroy
-   */
-  destroy() {
-    const t = this;
-    for (const e of this.getAllItems())
-      this.destroyItem(e);
-    for (const e of [
-      "clipRect",
-      "up",
-      "down",
-      "pager",
-      "nav",
-      "box",
-      "title",
-      "group"
-    ])
-      t[e] && (t[e] = t[e].destroy());
-    this.display = null;
-  }
-  /**
-   * Position the checkboxes after the width is determined.
-   *
-   * @private
-   * @function Highcharts.Legend#positionCheckboxes
-   */
-  positionCheckboxes() {
-    const t = this.group?.alignAttr, e = this.clipHeight || this.legendHeight, i = this.titleHeight;
-    let s;
-    t && (s = t.translateY, this.allItems.forEach(function(r) {
-      const n = r.checkbox;
-      let o;
-      n && (o = s + i + n.y + (this.scrollOffset || 0) + 3, vl(n, {
-        left: t.translateX + r.checkboxOffset + n.x - 20 + "px",
-        top: o + "px",
-        display: this.proximate || o > s - 6 && o < s + e - 6 ? "" : "none"
-      }));
-    }, this));
-  }
-  /**
-   * Render the legend title on top of the legend.
-   *
-   * @private
-   * @function Highcharts.Legend#renderTitle
-   */
-  renderTitle() {
-    const t = this.options, e = this.padding, i = t.title;
-    let s, r = 0;
-    i.text && (this.title || (this.title = this.chart.renderer.label(i.text, e - 3, e - 4, void 0, void 0, void 0, t.useHTML, void 0, "legend-title").attr({ zIndex: 1 }), this.chart.styledMode || this.title.css(i.style), this.title.add(this.group)), i.width || this.title.css({
-      width: this.maxLegendWidth + "px"
-    }), s = this.title.getBBox(), r = s.height, this.offsetWidth = s.width, this.contentGroup.attr({ translateY: r })), this.titleHeight = r;
-  }
-  /**
-   * Set the legend item text.
-   *
-   * @function Highcharts.Legend#setText
-   * @param {Highcharts.Point|Highcharts.Series} item
-   *        The item for which to update the text in the legend.
-   */
-  setText(t) {
-    const e = this.options;
-    t.legendItem.label.attr({
-      text: e.labelFormat ? yl(e.labelFormat, t, this.chart) : e.labelFormatter.call(t)
-    });
-  }
-  /**
-   * Render a single specific legend item. Called internally from the `render`
-   * function.
-   *
-   * @private
-   * @function Highcharts.Legend#renderItem
-   * @param {Highcharts.BubbleLegendItem|Highcharts.Point|Highcharts.Series} item
-   * The item to render.
-   */
-  renderItem(t) {
-    const e = this, i = t.legendItem = t.legendItem || {}, s = e.chart, r = s.renderer, n = e.options, o = n.layout === "horizontal", a = e.symbolWidth, l = n.symbolPadding || 0, h = e.itemStyle, d = e.itemHiddenStyle, f = o ? st(n.itemDistance, 20) : 0, p = !n.rtl, u = !t.series, g = !u && t.series.drawLegendSymbol ? t.series : t, x = g.options, m = !!e.createCheckboxForItem && x && x.showCheckbox, b = n.useHTML, y = t.options.className;
-    let v = i.label, S = a + l + f + (m ? 20 : 0);
-    v || (i.group = r.g("legend-item").addClass("highcharts-" + g.type + "-series highcharts-color-" + t.colorIndex + (y ? " " + y : "") + (u ? " highcharts-series-" + t.index : "")).attr({ zIndex: 1 }).add(e.scrollGroup), i.label = v = r.text("", p ? a + l : -l, e.baseline || 0, b), s.styledMode || v.css(vt(t.visible ? h : d)), v.attr({
-      align: p ? "left" : "right",
-      zIndex: 2
-    }).add(i.group), e.baseline || (e.fontMetrics = r.fontMetrics(v), e.baseline = e.fontMetrics.f + 3 + e.itemMarginTop, v.attr("y", e.baseline), e.symbolHeight = st(n.symbolHeight, e.fontMetrics.f), n.squareSymbol && (e.symbolWidth = st(n.symbolWidth, Math.max(e.symbolHeight, 16)), S = e.symbolWidth + l + f + (m ? 20 : 0), p && v.attr("x", e.symbolWidth + l))), g.drawLegendSymbol(e, t), e.setItemEvents && e.setItemEvents(t, v, b)), m && !t.checkbox && e.createCheckboxForItem && e.createCheckboxForItem(t), e.colorizeItem(t, t.visible), (s.styledMode || !h.width) && v.css({
-      width: (n.itemWidth || e.widthOption || s.spacingBox.width) - S + "px"
-    }), e.setText(t);
-    const k = v.getBBox(), w = e.fontMetrics?.h || 0;
-    t.itemWidth = t.checkboxOffset = n.itemWidth || i.labelWidth || k.width + S, e.maxItemWidth = Math.max(e.maxItemWidth, t.itemWidth), e.totalItemWidth += t.itemWidth, e.itemHeight = t.itemHeight = Math.round(i.labelHeight || // Use bBox for multiline (#16398)
-    (k.height > w * 1.5 ? k.height : w));
-  }
-  /**
-   * Get the position of the item in the layout. We now know the
-   * maxItemWidth from the previous loop.
-   *
-   * @private
-   * @function Highcharts.Legend#layoutItem
-   * @param {Highcharts.BubbleLegendItem|Highcharts.Point|Highcharts.Series} item
-   */
-  layoutItem(t) {
-    const e = this.options, i = this.padding, s = e.layout === "horizontal", r = t.itemHeight, n = this.itemMarginBottom, o = this.itemMarginTop, a = s ? st(e.itemDistance, 20) : 0, l = this.maxLegendWidth, h = e.alignColumns && this.totalItemWidth > l ? this.maxItemWidth : t.itemWidth, d = t.legendItem || {};
-    s && this.itemX - i + h > l && (this.itemX = i, this.lastLineHeight && (this.itemY += o + this.lastLineHeight + n), this.lastLineHeight = 0), this.lastItemY = o + this.itemY + n, this.lastLineHeight = Math.max(
-      // #915
-      r,
-      this.lastLineHeight
-    ), d.x = this.itemX, d.y = this.itemY, s ? this.itemX += h : (this.itemY += o + r + n, this.lastLineHeight = r), this.offsetWidth = this.widthOption || Math.max((s ? this.itemX - i - (t.checkbox ? (
-      // Decrease by itemDistance only when no checkbox #4853
-      0
-    ) : a) : h) + i, this.offsetWidth);
-  }
-  /**
-   * Get all items, which is one item per series for most series and one
-   * item per point for pie series and its derivatives. Fires the event
-   * `afterGetAllItems`.
-   *
-   * @private
-   * @function Highcharts.Legend#getAllItems
-   * @return {Array<(Highcharts.BubbleLegendItem|Highcharts.Point|Highcharts.Series)>}
-   * The current items in the legend.
-   * @emits Highcharts.Legend#event:afterGetAllItems
-   */
-  getAllItems() {
-    let t = [];
-    return this.chart.series.forEach(function(e) {
-      const i = e?.options;
-      e && st(i.showInLegend, Oi(i.linkedTo) ? !1 : void 0, !0) && (t = t.concat(e.legendItem?.labels || (i.legendType === "point" ? e.data : e)));
-    }), ct(this, "afterGetAllItems", { allItems: t }), t;
-  }
-  /**
-   * Get a short, three letter string reflecting the alignment and layout.
-   *
-   * @private
-   * @function Highcharts.Legend#getAlignment
-   * @return {string}
-   * The alignment, empty string if floating
-   */
-  getAlignment() {
-    const t = this.options;
-    return this.proximate ? t.align.charAt(0) + "tv" : t.floating ? "" : t.align.charAt(0) + t.verticalAlign.charAt(0) + t.layout.charAt(0);
-  }
-  /**
-   * Adjust the chart margins by reserving space for the legend on only one
-   * side of the chart. If the position is set to a corner, top or bottom is
-   * reserved for horizontal legends and left or right for vertical ones.
-   *
-   * @private
-   * @function Highcharts.Legend#adjustMargins
-   * @param {Array<number>} margin
-   * @param {Array<number>} spacing
-   */
-  adjustMargins(t, e) {
-    const i = this.chart, s = this.options, r = this.getAlignment();
-    r && [
-      /(lth|ct|rth)/,
-      /(rtv|rm|rbv)/,
-      /(rbh|cb|lbh)/,
-      /(lbv|lm|ltv)/
-    ].forEach((n, o) => {
-      n.test(r) && !Oi(t[o]) && (i[dr[o]] = Math.max(i[dr[o]], i.legend[(o + 1) % 2 ? "legendHeight" : "legendWidth"] + [1, -1, -1, 1][o] * s[o % 2 ? "x" : "y"] + (s.margin ?? 12) + e[o] + (i.titleOffset[o] || 0)));
-    });
-  }
-  /**
-   * @private
-   * @function Highcharts.Legend#proximatePositions
-   */
-  proximatePositions() {
-    const t = this.chart, e = [], i = this.options.align === "left";
-    this.allItems.forEach(function(r) {
-      let n, o, a = i, l, h;
-      r.yAxis && (r.xAxis.options.reversed && (a = !a), r.points && (n = Sl(a ? r.points : r.points.slice(0).reverse(), function(d) {
-        return fr(d.plotY);
-      })), o = this.itemMarginTop + r.legendItem.label.getBBox().height + this.itemMarginBottom, h = r.yAxis.top - t.plotTop, r.visible ? (l = n ? n.plotY : r.yAxis.height, l += h - 0.3 * o) : l = h + r.yAxis.height, e.push({
-        target: l,
-        size: o,
-        item: r
-      }));
-    }, this);
-    let s;
-    for (const r of xl(e, t.plotHeight))
-      s = r.item.legendItem || {}, fr(r.pos) && (s.y = t.plotTop - t.spacing[0] + r.pos);
-  }
-  /**
-   * Render the legend. This method can be called both before and after
-   * `chart.render`. If called after, it will only rearrange items instead
-   * of creating new ones. Called internally on initial render and after
-   * redraws.
-   *
-   * @private
-   * @function Highcharts.Legend#render
-   */
-  render() {
-    const t = this, e = t.chart, i = e.renderer, s = t.options, r = t.padding, n = t.getAllItems();
-    let o, a, l, h = t.group, d, f = t.box;
-    t.itemX = r, t.itemY = t.initialItemY, t.offsetWidth = 0, t.lastItemY = 0, t.widthOption = wl(s.width, e.spacingBox.width - r), d = e.spacingBox.width - 2 * r - s.x, ["rm", "lm"].indexOf(t.getAlignment().substring(0, 2)) > -1 && (d /= 2), t.maxLegendWidth = t.widthOption || d, h || (t.group = h = i.g("legend").addClass(s.className || "").attr({ zIndex: 7 }).add(), t.contentGroup = i.g().attr({ zIndex: 1 }).add(h), t.scrollGroup = i.g().add(t.contentGroup)), t.renderTitle(), Cl(n, (p, u) => (p.options?.legendIndex || 0) - (u.options?.legendIndex || 0)), s.reversed && n.reverse(), t.allItems = n, t.display = o = !!n.length, t.lastLineHeight = 0, t.maxItemWidth = 0, t.totalItemWidth = 0, t.itemHeight = 0, n.forEach(t.renderItem, t), n.forEach(t.layoutItem, t), a = (t.widthOption || t.offsetWidth) + r, l = t.lastItemY + t.lastLineHeight + t.titleHeight, l = t.handleOverflow(l), l += r, f || (t.box = f = i.rect().addClass("highcharts-legend-box").attr({
-      r: s.borderRadius
-    }).add(h)), e.styledMode || f.attr({
-      stroke: s.borderColor,
-      "stroke-width": s.borderWidth || 0,
-      fill: s.backgroundColor || "none"
-    }).shadow(s.shadow), a > 0 && l > 0 && f[f.placed ? "animate" : "attr"](f.crisp.call({}, {
-      x: 0,
-      y: 0,
-      width: a,
-      height: l
-    }, f.strokeWidth())), h[o ? "show" : "hide"](), e.styledMode && h.getStyle("display") === "none" && (a = l = 0), t.legendWidth = a, t.legendHeight = l, o && t.align(), this.proximate || this.positionItems(), ct(this, "afterRender");
-  }
-  /**
-   * Align the legend to chart's box.
-   *
-   * @private
-   * @function Highcharts.align
-   * @param {Highcharts.BBoxObject} alignTo
-   */
-  align(t = this.chart.spacingBox) {
-    const e = this.chart, i = this.options;
-    let s = t.y;
-    /(lth|ct|rth)/.test(this.getAlignment()) && e.titleOffset[0] > 0 ? s += e.titleOffset[0] : /(lbh|cb|rbh)/.test(this.getAlignment()) && e.titleOffset[2] > 0 && (s -= e.titleOffset[2]), s !== t.y && (t = vt(t, { y: s })), e.hasRendered || (this.group.placed = !1), this.group.align(vt(i, {
-      width: this.legendWidth,
-      height: this.legendHeight,
-      verticalAlign: this.proximate ? "top" : i.verticalAlign
-    }), !0, t);
-  }
-  /**
-   * Set up the overflow handling by adding navigation with up and down arrows
-   * below the legend.
-   *
-   * @private
-   * @function Highcharts.Legend#handleOverflow
-   */
-  handleOverflow(t) {
-    const e = this, i = this.chart, s = i.renderer, r = this.options, n = r.y, o = r.verticalAlign === "top", a = this.padding, l = r.maxHeight, h = r.navigation, d = st(h.animation, !0), f = h.arrowSize || 12, p = this.pages, u = this.allItems, g = function(M) {
-      typeof M == "number" ? w.attr({
-        height: M
-      }) : w && (e.clipRect = w.destroy(), e.contentGroup.clip()), e.contentGroup.div && (e.contentGroup.div.style.clip = M ? "rect(" + a + "px,9999px," + (a + M) + "px,0)" : "auto");
-    }, x = function(M) {
-      return e[M] = s.circle(0, 0, f * 1.3).translate(f / 2, f / 2).add(k), i.styledMode || e[M].attr("fill", "rgba(0,0,0,0.0001)"), e[M];
-    };
-    let m, b, y, v, S = i.spacingBox.height + (o ? -n : n) - a, k = this.nav, w = this.clipRect;
-    return r.layout === "horizontal" && r.verticalAlign !== "middle" && !r.floating && (S /= 2), l && (S = Math.min(S, l)), p.length = 0, t && S > 0 && t > S && h.enabled !== !1 ? (this.clipHeight = m = Math.max(S - 20 - this.titleHeight - a, 0), this.currentPage = st(this.currentPage, 1), this.fullHeight = t, u.forEach((M, C) => {
-      y = M.legendItem || {};
-      const A = y.y || 0, O = Math.round(y.label.getBBox().height);
-      let L = p.length;
-      (!L || A - p[L - 1] > m && (b || A) !== p[L - 1]) && (p.push(b || A), L++), y.pageIx = L - 1, b && v && (v.pageIx = L - 1), // Check the last item
-      C === u.length - 1 && // If adding next page is needed (#18768)
-      A + O - p[L - 1] > m && A > p[L - 1] && (p.push(A), y.pageIx = L), A !== b && (b = A), v = y;
-    }), w || (w = e.clipRect = s.clipRect(0, a - 2, 9999, 0), e.contentGroup.clip(w)), g(m), k || (this.nav = k = s.g().attr({ zIndex: 1 }).add(this.group), this.up = s.symbol("triangle", 0, 0, f, f).add(k), x("upTracker").on("click", function() {
-      e.scroll(-1, d);
-    }), this.pager = s.text("", 15, 10).addClass("highcharts-legend-navigation"), !i.styledMode && h.style && this.pager.css(h.style), this.pager.add(k), this.down = s.symbol("triangle-down", 0, 0, f, f).add(k), x("downTracker").on("click", function() {
-      e.scroll(1, d);
-    })), e.scroll(0), t = S) : k && (g(), this.nav = k.destroy(), this.scrollGroup.attr({
-      translateY: 1
-    }), this.clipHeight = 0), t;
-  }
-  /**
-   * Scroll the legend by a number of pages.
-   *
-   * @private
-   * @function Highcharts.Legend#scroll
-   *
-   * @param {number} scrollBy
-   *        The number of pages to scroll.
-   *
-   * @param {boolean|Partial<Highcharts.AnimationOptionsObject>} [animation]
-   *        Whether and how to apply animation.
-   *
-   */
-  scroll(t, e) {
-    const i = this.chart, s = this.pages, r = s.length, n = this.clipHeight, o = this.options.navigation, a = this.pager, l = this.padding;
-    let h = this.currentPage + t;
-    if (h > r && (h = r), h > 0) {
-      typeof e < "u" && gl(e, i), this.nav.attr({
-        translateX: l,
-        translateY: n + this.padding + 7 + this.titleHeight,
-        visibility: "inherit"
-      }), [this.up, this.upTracker].forEach(function(f) {
-        f.attr({
-          class: h === 1 ? "highcharts-legend-nav-inactive" : "highcharts-legend-nav-active"
-        });
-      }), a.attr({
-        text: h + "/" + r
-      }), [this.down, this.downTracker].forEach(function(f) {
-        f.attr({
-          // Adjust to text width
-          x: 18 + this.pager.getBBox().width,
-          class: h === r ? "highcharts-legend-nav-inactive" : "highcharts-legend-nav-active"
-        });
-      }, this), i.styledMode || (this.up.attr({
-        fill: h === 1 ? o.inactiveColor : o.activeColor
-      }), this.upTracker.css({
-        cursor: h === 1 ? "default" : "pointer"
-      }), this.down.attr({
-        fill: h === r ? o.inactiveColor : o.activeColor
-      }), this.downTracker.css({
-        cursor: h === r ? "default" : "pointer"
-      })), this.scrollOffset = -s[h - 1] + this.initialItemY, this.scrollGroup.animate({
-        translateY: this.scrollOffset
-      }), this.currentPage = h, this.positionCheckboxes();
-      const d = ul(st(e, i.renderer.globalAnimation, !0));
-      Al(() => {
-        ct(this, "afterScroll", { currentPage: h });
-      }, d.duration);
-    }
-  }
-  /**
-   * @private
-   * @function Highcharts.Legend#setItemEvents
-   * @param {Highcharts.BubbleLegendItem|Point|Highcharts.Series} item
-   * @param {Highcharts.SVGElement} legendLabel
-   * @param {boolean} [useHTML=false]
-   * @emits Highcharts.Legend#event:itemClick
-   */
-  setItemEvents(t, e, i) {
-    const s = this, r = t.legendItem || {}, n = s.chart.renderer.boxWrapper, o = t instanceof lt, a = t instanceof K, l = "highcharts-legend-" + (o ? "point" : "series") + "-active", h = s.chart.styledMode, d = i ? [e, r.symbol] : [r.group], f = (p) => {
-      s.allItems.forEach((u) => {
-        t !== u && [u].concat(u.linkedSeries || []).forEach((g) => {
-          g.setState(p, !o);
-        });
-      });
-    };
-    for (const p of d)
-      p && p.on("mouseover", function() {
-        t.visible && f("inactive"), t.setState("hover"), t.visible && n.addClass(l), h || e.css(s.options.itemHoverStyle);
-      }).on("mouseout", function() {
-        s.chart.styledMode || e.css(vt(t.visible ? s.itemStyle : s.itemHiddenStyle)), f(""), n.removeClass(l), t.setState();
-      }).on("click", function(u) {
-        const g = function() {
-          t.setVisible && t.setVisible(), f(t.visible ? "inactive" : "");
-        };
-        n.removeClass(l), ct(s, "itemClick", {
-          // Pass over the click/touch event. #4.
-          browserEvent: u,
-          legendItem: t
-        }, g), o ? t.firePointEvent("legendItemClick", {
-          browserEvent: u
-        }) : a && ct(t, "legendItemClick", {
-          browserEvent: u
-        });
-      });
-  }
-  /**
-   * @private
-   * @function Highcharts.Legend#createCheckboxForItem
-   * @param {Highcharts.BubbleLegendItem|Point|Highcharts.Series} item
-   * @emits Highcharts.Series#event:checkboxClick
-   */
-  createCheckboxForItem(t) {
-    const e = this;
-    t.checkbox = bl("input", {
-      type: "checkbox",
-      className: "highcharts-legend-checkbox",
-      checked: t.selected,
-      defaultChecked: t.selected
-      // Required by IE7
-    }, e.options.itemCheckboxStyle, e.chart.container), Ee(t.checkbox, "click", function(i) {
-      const s = i.target;
-      ct(t.series || t, "checkboxClick", {
-        checked: s.checked,
-        item: t
-      }, function() {
-        t.select();
-      });
-    });
-  }
-}
-(function(c) {
-  function t(e) {
-    Ml(ml, "Core.Legend") && Ee(e, "beforeMargins", function() {
-      this.legend = new c(this, this.options.legend);
-    });
-  }
-  c.compose = t;
-})(ji || (ji = {}));
-const Tl = ji;
-console.log("aaaa", rt);
-Tl.compose(rt);
-Nt.compose(rt);
-class Ol {
+console.log("zzzz", xt);
+class Ta {
   constructor() {
   }
   // Operations - Render.
   render = (t) => {
-    try {
-      console.log("0000", rt);
-      const e = new rt(t, {
-        chart: { type: "column", reflow: !1 },
-        title: { text: "Fruit Consumption" },
-        xAxis: { categories: ["Apples", "Bananas", "Oranges"] },
-        yAxis: { title: { text: "Fruit eaten" } },
-        series: [
-          { name: "Jane", data: [1, 0, 4] },
-          { name: "John", data: [15, 17, 13] }
-        ]
-      });
-      return console.log(1111, e), { chart: e, resize: () => e.reflow() };
-    } catch (e) {
-      console.log(2222, e);
-    }
   };
 }
 export {
-  Ol as default
+  Ta as default
 };

@@ -1,4 +1,7 @@
+/**
+ * Highcharts tool class.
+ */
 export default class HighchartsTool {
     constructor();
-    render: (renderTo: HTMLElement) => unknown;
+    render: (renderTo: HTMLElement) => void;
 }
