@@ -2,6 +2,8 @@
  * Highcharts tool class.
  */
 
+import 'highcharts/es-modules/Core/Defaults.js';
+
 // Core Highcharts
 import Chart from 'highcharts/es-modules/Core/Chart/Chart.js';
 
@@ -13,6 +15,8 @@ import 'highcharts/es-modules/Series/Line/LineSeries.js';
 // Required compositions for axis and legend functionality
 import Axis from 'highcharts/es-modules/Core/Axis/Axis.js';
 import Legend from 'highcharts/es-modules/Core/Legend/Legend.js';
+
+console.log('aaaa', Chart);
 
 // Compose the required functionality
 Legend.compose(Chart);
