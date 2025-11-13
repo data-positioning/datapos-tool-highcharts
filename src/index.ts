@@ -8,6 +8,8 @@ console.log('Chart', Chart);
 
 import ColumnSeries from 'highcharts/es-modules/Series/Column/ColumnSeries.js';
 console.log('ColumnSeries', ColumnSeries);
+import ColumnDataLabel from 'highcharts/es-modules/Series/Column/ColumnDataLabel.js';
+ColumnDataLabel.compose(ColumnSeries);
 
 import LineSeries from 'highcharts/es-modules/Series/Line/LineSeries.js';
 console.log('LineSeries', LineSeries);
