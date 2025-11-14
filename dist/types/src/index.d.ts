@@ -8,6 +8,8 @@ declare class HighchartsTool {
     renderCartesianChart(type: PresentationVisualCartesianViewType, contentConfig: PresentationVisualContentConfig, element: HTMLElement, callback?: () => void): Promise<HighchartsView>;
     renderPolarChart(type: PresentationVisualPolarViewType, content: PresentationVisualContentConfig, element: HTMLElement, callback?: () => void): Promise<HighchartsView>;
     renderRangeChart(type: PresentationVisualRangeViewType, content: PresentationVisualContentConfig, element: HTMLElement, callback?: () => void): Promise<HighchartsView>;
-    private loadHighchartsMoreModule;
+    private loadDependencyWheelAndSankeyModules;
+    private loadHighchartsMore;
+    private loadStreamgraphModule;
 }
 export { HighchartsTool, HighchartsView };

@@ -26,7 +26,9 @@ interface HighchartsView extends PresentationView {
 const HIGHCHARTS_ID = 'highcharts';
 
 // Module Variables
-let highchartsMoreModuleLoaded = false;
+let dependencyWheelAndSankeyModulesLoaded = false;
+let highchartsMoreLoaded = false;
+let streamgraphModuleLoaded = false;
 
 // Classes - Highcharts tool.
 class HighchartsTool {
@@ -41,7 +43,6 @@ class HighchartsTool {
     ): Promise<HighchartsView> {
         const series: SeriesOptionsType[] = [];
         for (const measure of contentConfig.data.measures) {
-            // series.push({ type: type.options.highchartsType, name: measure.name, data: getMeasureValues([measure.id]) });
             series.push({ type: type.options.highchartsType, name: measure.name, data: measure.data });
         }
         const options: Options = {
@@ -58,10 +59,9 @@ class HighchartsTool {
 
     // Operations - Render polar chart.
     async renderPolarChart(type: PresentationVisualPolarViewType, content: PresentationVisualContentConfig, element: HTMLElement, callback?: () => void): Promise<HighchartsView> {
-        await Promise.all([this.loadHighchartsMoreModule()]);
+        await Promise.all([this.loadHighchartsMore()]);
         const series: SeriesOptionsType[] = [];
         for (const measure of content.data.measures) {
-            // series.push({ type: type.options.highchartsType, name: measure.name, data: getMeasureValues([measure.id]) });
             series.push({ type: type.options.highchartsType, name: measure.name, data: measure.data });
         }
         const options: Options = {
@@ -78,9 +78,8 @@ class HighchartsTool {
 
     // Operations - Render range chart.
     async renderRangeChart(type: PresentationVisualRangeViewType, content: PresentationVisualContentConfig, element: HTMLElement, callback?: () => void): Promise<HighchartsView> {
-        await Promise.all([this.loadHighchartsMoreModule()]);
+        await Promise.all([this.loadHighchartsMore()]);
         const series: SeriesOptionsType[] = [];
-        // series.push({ type: type.options.highchartsType, name: 'Unknown', data: getMeasureValues([content.data.measures[0].id, content.data.measures[1].id]) });
         const data = [];
         for (let index = 0; index < content.data.measures[0].data!.length; index++) {
             data.push([content.data.measures[0].data![index][0], content.data.measures[1].data![index][0]]);
@@ -98,12 +97,28 @@ class HighchartsTool {
         return { chart, resize: () => chart.reflow(), vendorId: HIGHCHARTS_ID };
     }
 
-    // Utilities - Load Highcharts more module.
-    private async loadHighchartsMoreModule(): Promise<void> {
-        if (highchartsMoreModuleLoaded) return;
+    // Utilities - Load dependency wheel and sankey modules.
+    private async loadDependencyWheelAndSankeyModules(): Promise<void> {
+        if (dependencyWheelAndSankeyModulesLoaded) return;
+
+        await Promise.all([import('highcharts/modules/dependency-wheel'), import('highcharts/modules/sankey')]);
+        dependencyWheelAndSankeyModulesLoaded = true;
+    }
+
+    // Utilities - Load Highcharts more.
+    private async loadHighchartsMore(): Promise<void> {
+        if (highchartsMoreLoaded) return;
 
         await import('highcharts/highcharts-more');
-        highchartsMoreModuleLoaded = true;
+        highchartsMoreLoaded = true;
+    }
+
+    // Utilities - Load streamgraph module.
+    private async loadStreamgraphModule(): Promise<void> {
+        if (streamgraphModuleLoaded) return;
+
+        await import('highcharts/modules/streamgraph');
+        streamgraphModuleLoaded = true;
     }
 }
 
