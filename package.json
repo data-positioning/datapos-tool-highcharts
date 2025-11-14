@@ -1,6 +1,6 @@
 {
     "name": "@datapos/datapos-tool-highcharts",
-    "version": "0.0.28",
+    "version": "0.0.29",
     "description": "A TypeScript wrapper for Highcharts that implements the Data Positioning chart-rendering interface. It optimizes browser memory usage by maintaining a single Highcharts instance shared across all presenters, loading optional modules only as needed.",
     "license": "MIT",
     "private": false,
@@ -55,7 +55,7 @@
         "format": "prettier --write src/",
         "lint": "eslint .",
         "publish:toNPM": "npm publish --access public",
-        "release": "npm run _bump:version && npm run _build:config && npm run build && npm run sync:withGitHub && npm _upload && npm run publish:toNPM",
+        "release": "npm run _bump:version && npm run _build:config && npm run build && npm run sync:withGitHub && npm run _upload && npm run publish:toNPM",
         "sync:withGitHub": "node -e \"import('@datapos/datapos-development').then(m => m.syncWithGitHub())\"",
         "send:deployNotice": "node -e \"import('@datapos/datapos-development').then(m => m.echoScriptNotImplemented('Send deployment notice'))\"",
         "test": "node -e \"import('@datapos/datapos-development').then(m => m.echoScriptNotImplemented('Test'))\"",
