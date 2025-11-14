@@ -8,6 +8,39 @@ A TypeScript wrapper for Highcharts that implements the Data Positioning chart-r
 
 There’s no need to install this tool manually. Once released, it’s uploaded to the Data Positioning Engine cloud and becomes instantly available to all new instances of the browser app. A notification about the new version is also sent to all existing browser apps.
 
+## Usage
+
+```typescript
+import type { Presenter, PresenterConfig } from '@datapos/datapos-shared';
+import config from '~/config.json';
+
+class MyPresenter implements Presenter {
+
+    highchartsTool?: HighchartsTool;
+
+    constructor(toolModuleConfigs: ToolModuleConfig[]) {
+        this.config = config as PresenterConfig;
+        this.toolModuleConfigs = toolModuleConfigs;
+    }
+
+    private async function loadHighchartsTool(version: string): Promise<HighchartsTool> {
+        if (this.highchartsTool) return this.highchartsTool;
+
+        const URL = `https://engine-eu.datapos.app/tools/v${version}/datapos-tool-highcharts.es.js`;
+        const HighchartsTool = (await import(/* @vite-ignore */ URL)).HighchartsTool as new () => HighchartsTool;
+        return new HighchartsTool();
+    }
+
+    this.highchartsTool = await loadHighchartsTool('n.n.nnn');
+
+    await this.highchartsTool.renderCartesianChart(...);
+    await this.highchartsTool.renderPolarChart(...);
+    await this.highchartsTool.renderRangeChart(...);
+
+    ...
+}
+```
+
 ## Repository Management Commands
 
 The following list details the repository management commands implementation by this project. For more details, please refer to the scripts section of the 'package.json' file in this project.
