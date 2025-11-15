@@ -5,11 +5,12 @@
  * Templating: https://www.highcharts.com/docs/chart-concepts/templating.
  */
 
-// Dependencies - Highcharts.
+// Dependencies - Highcharts core.
 import Highcharts from 'highcharts';
 import type { Chart, Options, SeriesOptionsType } from 'highcharts';
 
-// Dependencies - Highcharts core modules.
+// Dependencies - Highcharts theme and core modules.
+import 'highcharts/themes/adaptive';
 import 'highcharts/modules/accessibility';
 
 // Dependencies - Framework.
