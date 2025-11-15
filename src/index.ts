@@ -13,6 +13,7 @@ import type { Chart, Options, SeriesOptionsType } from 'highcharts';
 // Dependencies - Highcharts theme and core modules.
 import 'highcharts/themes/adaptive';
 import 'highcharts/modules/accessibility';
+import 'highcharts/modules/pattern-fill';
 
 // Dependencies - Framework.
 import type {
