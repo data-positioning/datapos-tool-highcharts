@@ -1,7 +1,7 @@
-import { E as e, U as t, Z as n, it as r, n as i, ot as a, q as o } from "./AnimationUtilities-CfxhHVEw.js";
-import { t as s } from "./SeriesRegistry-Drf7P7c8.js";
-import { t as c } from "./SVGElement-B5kGfp8c.js";
-import { n as l, t as u } from "./TextPath-lds_aJTY.js";
+import { E as e, U as t, Z as n, it as r, n as i, ot as a, q as o } from "./AnimationUtilities-Bby2idBR.js";
+import { t as s } from "./SeriesRegistry-0cj0ZJqn.js";
+import { t as c } from "./SVGElement-BmvC_qu3.js";
+import { n as l, t as u } from "./TextPath-DK4Jkzd7.js";
 //#region node_modules/highcharts/es-modules/Series/DependencyWheel/DependencyWheelPoint.js
 var { sankey: { prototype: { pointClass: d } } } = s.seriesTypes, f = class extends d {
 	getSumTo() {
@@ -94,28 +94,28 @@ var v = class extends _ {
 		let e = this, t = e.options, r = 2 * Math.PI / (e.chart.plotHeight + e.getNodePadding()), i = e.getCenter(), a = ((t.startAngle || 0) - 90) * h, o = t.borderRadius, s = typeof o == "object" ? o.radius : o;
 		super.translate();
 		for (let e of this.nodeColumns[0]) if (e.sum) {
-			let o = e.shapeArgs, c = i[0], l = i[1], u = i[2] / 2, d = u - n((t.nodeWidth === "auto" ? 20 : t.nodeWidth) || 0, u), f = a + r * (o.y || 0), p = a + r * ((o.y || 0) + (o.height || 0));
-			e.angle = f + (p - f) / 2, e.shapeType = "arc", e.shapeArgs = {
+			let o = e.shapeArgs, c = i[0], l = i[1], u = i[2] / 2, d = t.nodeWidth === "auto" ? 20 : t.nodeWidth, f = u - n(d || 0, u), p = a + r * (o.y || 0), m = a + r * ((o.y || 0) + (o.height || 0));
+			e.angle = p + (m - p) / 2, e.shapeType = "arc", e.shapeArgs = {
 				x: c,
 				y: l,
 				r: u,
-				innerR: d,
-				start: f,
-				end: p,
+				innerR: f,
+				start: p,
+				end: m,
 				borderRadius: s
 			}, e.dlBox = {
-				x: c + Math.cos((f + p) / 2) * (u + d) / 2,
-				y: l + Math.sin((f + p) / 2) * (u + d) / 2,
+				x: c + Math.cos((p + m) / 2) * (u + f) / 2,
+				y: l + Math.sin((p + m) / 2) * (u + f) / 2,
 				width: 1,
 				height: 1
 			};
 			for (let n of e.linksFrom) if (n.linkBase) {
 				let e, i, o = n.linkBase.map((o, s) => {
-					let u = r * o, f = Math.cos(a + u) * (d + 1), p = Math.sin(a + u) * (d + 1);
-					return e = t.curveFactor || 0, i = Math.abs(n.linkBase[3 - s] * r - u), i > Math.PI && (i = 2 * Math.PI - i), i *= d, i < d && (e *= i / d), {
-						x: c + f,
+					let u = r * o, d = Math.cos(a + u) * (f + 1), p = Math.sin(a + u) * (f + 1);
+					return e = t.curveFactor || 0, i = Math.abs(n.linkBase[3 - s] * r - u), i > Math.PI && (i = 2 * Math.PI - i), i *= f, i < f && (e *= i / f), {
+						x: c + d,
 						y: l + p,
-						cpX: c + (1 - e) * f,
+						cpX: c + (1 - e) * d,
 						cpY: l + (1 - e) * p
 					};
 				});
@@ -127,8 +127,8 @@ var v = class extends _ {
 					],
 					[
 						"A",
-						d,
-						d,
+						f,
+						f,
 						0,
 						0,
 						1,
@@ -146,8 +146,8 @@ var v = class extends _ {
 					],
 					[
 						"A",
-						d,
-						d,
+						f,
+						f,
 						0,
 						0,
 						1,
@@ -191,4 +191,4 @@ var y = a;
 //#endregion
 export { y as default };
 
-//# sourceMappingURL=dependency-wheel.src-dRVAmx_u.js.map
+//# sourceMappingURL=dependency-wheel.src-BHmwx9rW.js.map

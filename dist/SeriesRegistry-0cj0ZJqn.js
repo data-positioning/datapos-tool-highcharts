@@ -1,4 +1,4 @@
-import { B as e, D as t, E as n, G as r, H as i, I as a, N as o, Q as s, T as c, U as l, V as u, Y as d, _ as f, a as p, b as m, et as h, f as g, h as _, k as v, n as y, ot as b, rt as x, s as S, u as C, v as w, y as T, z as E } from "./AnimationUtilities-CfxhHVEw.js";
+import { B as e, D as t, E as n, G as r, H as i, I as a, N as o, Q as s, T as c, U as l, V as u, Y as d, _ as f, a as p, b as m, et as h, f as g, h as _, k as v, n as y, ot as b, rt as x, s as S, u as C, v as w, y as T, z as E } from "./AnimationUtilities-Bby2idBR.js";
 //#region node_modules/highcharts/es-modules/Core/Renderer/HTML/AST.js
 var { SVG_NS: D, win: O } = b, { trustedTypes: k } = O, A = k && E(k.createPolicy) && k.createPolicy("highcharts", { createHTML: (e) => e }), j = A ? A.createHTML("") : "", M = class e {
 	static filterUserAttributes(t) {
@@ -128,7 +128,7 @@ function B(e = "", t, n) {
 			length: h[0].length
 		});
 		let i = (g.isBlock ? n : h)[1].split(" ")[0].replace("#", "");
-		I[i] && (g.isBlock && i === g.fn && _++, g.fn ||= i);
+		I[i] && (g.isBlock && i === g.fn && _++, g.fn || (g.fn = i));
 		let o = h[1] === "else";
 		if (g.isBlock && g.fn && (h[1] === `/${g.fn}` || o)) if (_) o || _--;
 		else {
@@ -180,7 +180,7 @@ var H = {
 	}
 	applyOptions(r, i, a) {
 		let o = this, s = o.series, c = s.options.pointValKey || s.pointValKey;
-		return r = t.prototype.optionsToObject.call(this, r), n(o, r), o.options ? o.options = s.chart.options.chart.allowMutatingData ? n(o.options, r) : l(o.options, r) : o.options = r, c && (o.y = t.prototype.getNestedProperty.call(o, c)), e(i) && (o.x = i), a || (o.selected && (o.state = "select"), r.group && delete o.group, r.dataLabels && delete o.dataLabels, o.isNull = o.isValid && !o.isValid(), o.formatPrefix = o.isNull ? "null" : "point"), o;
+		return r = t.prototype.optionsToObject.call(this, r), n(o, r), o.options = o.options ? s.chart.options.chart.allowMutatingData ? n(o.options, r) : l(o.options, r) : r, c && (o.y = t.prototype.getNestedProperty.call(o, c)), e(i) && (o.x = i), a || (o.selected && (o.state = "select"), r.group && delete o.group, r.dataLabels && delete o.dataLabels, o.isNull = o.isValid && !o.isValid(), o.formatPrefix = o.isNull ? "null" : "point"), o;
 	}
 	getOrigin({ x: e = 0, y: t = 0 }, n = {}) {
 		let { graphic: r, series: i } = this;
@@ -231,7 +231,7 @@ var H = {
 	getZone() {
 		let e = this.series, t = e.zones, n = e.zoneAxis || "y", r, i = 0;
 		for (r = t[i]; this[n] >= r.value;) r = t[++i];
-		return this.nonZonedColor ||= this.color, r?.color && !this.options.color ? this.color = r.color : this.color = this.nonZonedColor, r;
+		return this.nonZonedColor ||= this.color, this.color = r?.color && !this.options.color ? r.color : this.nonZonedColor, r;
 	}
 	hasNewShapeType() {
 		let e = this;
@@ -352,12 +352,14 @@ var H = {
 	e.seriesTypes = b.seriesTypes;
 	function r(t, n) {
 		let r = q.plotOptions || {}, i = n.defaultOptions, a = n.prototype;
-		return a.type = t, a.pointClass ||= K, e.seriesTypes[t] ? !1 : (i && (r[t] = i), e.seriesTypes[t] = n, !0);
+		return a.type = t, a.pointClass ||= K, !e.seriesTypes[t] && (i && (r[t] = i), e.seriesTypes[t] = n, !0);
 	}
 	e.registerSeriesType = r;
 	function i(i, a, o, s, c) {
 		let u = q.plotOptions || {};
-		if (a ||= "", u[i] = l(u[a], o), delete e.seriesTypes[i], r(i, t(e.seriesTypes[a] || b.Series, s)), e.seriesTypes[i].prototype.type = i, c) {
+		a ||= "", u[i] = l(u[a], o), delete e.seriesTypes[i];
+		let d = e.seriesTypes[a] || b.Series;
+		if (r(i, t(d, s)), e.seriesTypes[i].prototype.type = i, c) {
 			class t extends K {}
 			n(t.prototype, c), e.seriesTypes[i].prototype.pointClass = t;
 		}
@@ -369,4 +371,4 @@ var Y = J;
 //#endregion
 export { M as i, K as n, H as r, Y as t };
 
-//# sourceMappingURL=SeriesRegistry-Drf7P7c8.js.map
+//# sourceMappingURL=SeriesRegistry-0cj0ZJqn.js.map

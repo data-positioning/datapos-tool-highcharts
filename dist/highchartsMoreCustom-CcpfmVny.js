@@ -1,6 +1,6 @@
-import { A as e, B as t, E as n, G as r, I as i, O as a, U as o, V as s, X as c, Y as l, Z as u, _ as d, a as f, et as p, f as m, g as h, it as g, k as _, m as v, n as y, ot as b, p as x, u as S, x as C, y as w } from "./AnimationUtilities-CfxhHVEw.js";
-import { n as T, t as E } from "./SeriesRegistry-Drf7P7c8.js";
-import { a as D, i as O, n as k, o as A, r as ee } from "./BorderRadius-7nQt-8g5.js";
+import { A as e, B as t, E as n, G as r, I as i, O as a, U as o, V as s, X as c, Y as l, Z as u, _ as d, a as f, et as p, f as m, g as h, it as g, k as _, m as v, n as y, ot as b, p as x, u as S, x as C, y as w } from "./AnimationUtilities-Bby2idBR.js";
+import { n as T, t as E } from "./SeriesRegistry-0cj0ZJqn.js";
+import { a as D, i as O, n as k, o as A, r as ee } from "./BorderRadius-2zMZW_aK.js";
 //#region node_modules/highcharts/es-modules/Series/AreaRange/AreaRangePoint.js
 var { area: { prototype: { pointClass: te, pointClass: { prototype: j } } } } = E.seriesTypes, M = class extends te {
 	setState() {
@@ -80,14 +80,14 @@ var { area: { prototype: { pointClass: te, pointClass: { prototype: j } } } } = 
 			if (i(a) ? (u = a[0] || { enabled: !1 }, d = a[1] || { enabled: !1 }) : (u = n({}, a), u.x = a.xHigh, u.y = a.yHigh, d = n({}, a), d.x = a.xLow, d.y = a.yLow), u.enabled || this.hasDataLabels?.()) {
 				for (s = t; s--;) if (c = e[s], c) {
 					let { plotHigh: e = 0, plotLow: t = 0 } = c;
-					l = u.inside ? e < t : e > t, c.y = c.high, c._plotY = c.plotY, c.plotY = e, r[s] = c.dataLabel, c.dataLabel = c.dataLabelUpper, c.below = l, o ? u.align ||= l ? "right" : "left" : u.verticalAlign ||= l ? "top" : "bottom";
+					l = u.inside ? e < t : e > t, c.y = c.high, c._plotY = c.plotY, c.plotY = e, r[s] = c.dataLabel, c.dataLabel = c.dataLabelUpper, c.below = l, o ? u.align || (u.align = l ? "right" : "left") : u.verticalAlign || (u.verticalAlign = l ? "top" : "bottom");
 				}
 				for (this.options.dataLabels = u, F.drawDataLabels && F.drawDataLabels.apply(this, arguments), s = t; s--;) c = e[s], c && (c.dataLabelUpper = c.dataLabel, c.dataLabel = r[s], delete c.dataLabels, c.y = c.low, c.plotY = c._plotY);
 			}
 			if (d.enabled || this.hasDataLabels?.()) {
 				for (s = t; s--;) if (c = e[s], c) {
 					let { plotHigh: e = 0, plotLow: t = 0 } = c;
-					l = d.inside ? e < t : e > t, c.below = !l, o ? d.align ||= l ? "left" : "right" : d.verticalAlign ||= l ? "bottom" : "top";
+					l = d.inside ? e < t : e > t, c.below = !l, o ? d.align || (d.align = l ? "left" : "right") : d.verticalAlign || (d.verticalAlign = l ? "bottom" : "top");
 				}
 				this.options.dataLabels = d, F.drawDataLabels && F.drawDataLabels.apply(this, arguments);
 			}
@@ -589,7 +589,7 @@ var _e = {
 		e.setAxisSize.call(this), this.isRadial && (this.pane.updateCenter(), t = this.center = this.pane.center.slice(), this.isCircular ? (this.sector = this.endAngleRad - this.startAngleRad, this.len = this.width = this.height = t[2] * this.sector / 2) : (n = this.postTranslate(this.angleRad, t[3] / 2), t[0] = n.x - this.chart.plotLeft, t[1] = n.y - this.chart.plotTop, this.len = this.width = this.height = (t[2] - t[3]) / 2));
 	}
 	function R() {
-		this.constructor.prototype.setAxisTranslation.call(this), this.center && (this.isCircular ? this.transA = (this.endAngleRad - this.startAngleRad) / (this.max - this.min || 1) : this.transA = (this.center[2] - this.center[3]) / 2 / (this.max - this.min || 1), this.isXAxis ? this.minPixelPadding = this.transA * this.minPointOffset : this.minPixelPadding = 0);
+		this.constructor.prototype.setAxisTranslation.call(this), this.center && (this.transA = this.isCircular ? (this.endAngleRad - this.startAngleRad) / (this.max - this.min || 1) : (this.center[2] - this.center[3]) / 2 / (this.max - this.min || 1), this.minPixelPadding = this.isXAxis ? this.transA * this.minPointOffset : 0);
 	}
 	function z(t) {
 		let { coll: n } = this, { angular: r, inverted: i, polar: a } = this.chart, c = {};
@@ -774,7 +774,7 @@ function Re() {
 	if (a.isRadial) for (m = e.points, _ = m.length, v = o.translate(o.min), y = o.translate(o.max), f = n.threshold || 0, i.inverted && t(f) && (p = o.translate(f), C(p) && (p < 0 ? p = 0 : p > d && (p = d), e.translatedThreshold = p + l)); _--;) {
 		if (g = m[_], O = g.barX, w = g.x, T = g.y, g.shapeType = "arc", i.inverted) {
 			g.plotY = o.translate(T), r && o.stacking ? (D = o.stacking.stacks[(T < 0 ? "-" : "") + e.stackKey], e.visible && D && D[w] && (g.isNull || (E = D[w].points[e.getStackIndicator(void 0, w, e.index).key], b = o.translate(E[0]), x = o.translate(E[1]), C(b) && (b = h(b, 0, d))))) : (b = p, x = g.plotY), b > x && (x = [b, b = x][0]), s ? x > v ? x = v : b < y ? b = y : (b > v || x < y) && (b = x = d) : b < v ? b = v : x > y ? x = y : (x < v || b > y) && (b = x = 0), o.min > o.max && (b = x = s ? d : 0), b += l, x += l, c && (g.barX = O += c[3] / 2), k = Math.max(O, 0), A = Math.max(O + (g.pointWidth || 0), 0);
-			let t = n.borderRadius, i = u((typeof t == "object" ? t.radius : t) || 0, A - k);
+			let t = n.borderRadius, i = typeof t == "object" ? t.radius : t, a = u(i || 0, A - k);
 			g.shapeArgs = {
 				x: c[0],
 				y: c[1],
@@ -782,7 +782,7 @@ function Re() {
 				innerR: k,
 				start: b,
 				end: x,
-				borderRadius: i
+				borderRadius: a
 			}, g.opacity = b === x ? 0 : void 0, g.plotY = (C(e.translatedThreshold) && (b < e.translatedThreshold ? b : x)) - l;
 		} else b = O + l, g.shapeArgs = e.polar.arc(g.yBottom, g.plotY, b, b + (g.pointWidth || 0)), g.shapeArgs.borderRadius = 0;
 		e.polar.toXY(g), i.inverted ? (S = o.postTranslate(g.rectPlotY, O + (g.pointWidth || 0) / 2), g.tooltipPos = [S.x - i.plotLeft, S.y - i.plotTop]) : g.tooltipPos = [g.plotX, g.plotY], c && (g.ttBelow = g.plotY > c[1]);
@@ -1094,7 +1094,7 @@ Q.defaultOptions = o(X.defaultOptions, Xe), Q.compose = Je.compose, n(Q.prototyp
 				i && (i.x = r, i.label = f[r].label, i.setOffset(e.pointXOffset || 0, e.barW || 0, e.stackedYNeg[r], e.stackedYPos[r], void 0, this.xAxis));
 			}
 		} else g = Math.max(h, h + C) + S[0], x.y = a.translate(g, !1, !0, !1, !0), l.isSum ? (x.y = a.translate(S[1], !1, !0, !1, !0), x.height = Math.min(a.translate(S[0], !1, !0, !1, !0), a.len) - x.y, l.below = S[1] <= u) : l.isIntermediateSum ? (C >= 0 ? (g = S[1] + m, v = m) : (g = m, v = S[1] + m), a.reversed && ([g, v] = [v, g]), x.y = a.translate(g, !1, !0, !1, !0), x.height = Math.abs(x.y - Math.min(a.translate(v, !1, !0, !1, !0), a.len)), m += S[1], l.below = g <= u) : (x.height = y > 0 ? a.translate(h, !1, !0, !1, !0) - x.y : a.translate(h + y, !1, !0, !1, !0) - a.translate(h, !1, !0, !1, !0), h += y, l.below = h < u);
-		x.height < 0 && (x.y += x.height, x.height *= -1), l.plotY = x.y, l.yBottom = x.y + x.height, x.height <= s && !l.isNull ? (x.height = s, x.y -= c, l.yBottom = x.y + x.height, l.plotY = x.y, C < 0 ? l.minPointLengthOffset = -c : l.minPointLengthOffset = c) : (l.isNull && (x.width = 0), l.minPointLengthOffset = 0);
+		x.height < 0 && (x.y += x.height, x.height *= -1), l.plotY = x.y, l.yBottom = x.y + x.height, x.height <= s && !l.isNull ? (x.height = s, x.y -= c, l.yBottom = x.y + x.height, l.plotY = x.y, l.minPointLengthOffset = C < 0 ? -c : c) : (l.isNull && (x.width = 0), l.minPointLengthOffset = 0);
 		let T = l.plotY + (l.negative ? x.height : 0);
 		l.below && (l.plotY += x.height), l.tooltipPos && (e.chart.inverted ? l.tooltipPos[0] = a.len - T : l.tooltipPos[1] = T), l.isInside = this.isPointInside(l);
 		let E = w(l.yBottom, e.borderWidth);
@@ -1107,4 +1107,4 @@ var $ = b;
 $.RadialAxis = be, K.compose($.Chart, $.Pointer), Ge.compose($.Axis, $.Chart, $.Pointer, $.Series, $.Tick, $.Point, E.seriesTypes.areasplinerange, E.seriesTypes.column, E.seriesTypes.line, E.seriesTypes.spline), Q.compose($.Axis, $.Chart);
 //#endregion
 
-//# sourceMappingURL=highchartsMoreCustom-Bi7S8DFN.js.map
+//# sourceMappingURL=highchartsMoreCustom-CcpfmVny.js.map

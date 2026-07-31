@@ -1,7 +1,7 @@
-import { B as e, E as t, I as n, O as r, U as i, V as a, Y as o, Z as s, f as c, g as l, i as u, ot as d, tt as f, x as p, y as m } from "./AnimationUtilities-CfxhHVEw.js";
-import { n as h, t as g } from "./SeriesRegistry-Drf7P7c8.js";
-import { t as _ } from "./SVGElement-B5kGfp8c.js";
-import { n as v, t as y } from "./TextPath-lds_aJTY.js";
+import { B as e, E as t, I as n, O as r, U as i, V as a, Y as o, Z as s, f as c, g as l, i as u, ot as d, tt as f, x as p, y as m } from "./AnimationUtilities-Bby2idBR.js";
+import { n as h, t as g } from "./SeriesRegistry-0cj0ZJqn.js";
+import { t as _ } from "./SVGElement-BmvC_qu3.js";
+import { n as v, t as y } from "./TextPath-DK4Jkzd7.js";
 //#region node_modules/highcharts/es-modules/Series/NodesComposition.js
 var { series: { prototype: b, prototype: { pointClass: { prototype: x } } } } = g, S;
 (function(e) {
@@ -100,7 +100,7 @@ var C = S, { column: w } = g.seriesTypes, T = class extends w.prototype.pointCla
 	}
 	setNodeColumn() {
 		let e = this;
-		p(e.options.column) || (e.linksTo.length === 0 ? e.column = 0 : e.column = e.getFromNode().fromColumn + 1);
+		p(e.options.column) || (e.column = e.linksTo.length === 0 ? 0 : e.getFromNode().fromColumn + 1);
 	}
 	isValid() {
 		return this.isNode || typeof this.weight == "number";
@@ -521,4 +521,4 @@ var z = d;
 //#endregion
 export { z as default };
 
-//# sourceMappingURL=sankey.src-DCYYFonz.js.map
+//# sourceMappingURL=sankey.src-DocCurOx.js.map

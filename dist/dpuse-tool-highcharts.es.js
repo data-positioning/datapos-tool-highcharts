@@ -1,7 +1,7 @@
-import { $ as e, A as t, B as n, C as r, D as i, E as a, F as o, G as s, H as c, I as l, J as u, K as d, L as f, M as p, N as m, O as h, P as g, Q as _, R as v, S as y, T as b, U as x, V as S, W as C, X as w, Y as T, Z as E, _ as D, a as O, at as k, b as A, c as j, d as M, et as N, f as P, g as F, h as I, i as L, it as ee, j as R, k as z, l as te, m as ne, n as B, nt as V, o as re, ot as H, p as ie, q as ae, r as oe, rt as se, s as U, tt as ce, u as le, v as W, w as ue, x as G, y as de, z as fe } from "./AnimationUtilities-CfxhHVEw.js";
-import { i as K, n as pe, r as q, t as J } from "./SeriesRegistry-Drf7P7c8.js";
-import { t as me } from "./SVGElement-B5kGfp8c.js";
-import { a as he, c as ge, i as _e, l as ve, o as ye, r as be, s as xe, t as Se } from "./BorderRadius-7nQt-8g5.js";
+import { $ as e, A as t, B as n, C as r, D as i, E as a, F as o, G as s, H as c, I as l, J as u, K as d, L as f, M as p, N as m, O as h, P as g, Q as _, R as v, S as y, T as b, U as x, V as S, W as C, X as w, Y as T, Z as E, _ as D, a as O, at as k, b as A, c as j, d as M, et as N, f as P, g as F, h as I, i as L, it as ee, j as R, k as z, l as te, m as ne, n as B, nt as V, o as re, ot as H, p as ie, q as ae, r as oe, rt as se, s as U, tt as ce, u as le, v as W, w as ue, x as G, y as de, z as fe } from "./AnimationUtilities-Bby2idBR.js";
+import { i as K, n as pe, r as q, t as J } from "./SeriesRegistry-0cj0ZJqn.js";
+import { t as me } from "./SVGElement-BmvC_qu3.js";
+import { a as he, c as ge, i as _e, l as ve, o as ye, r as be, s as xe, t as Se } from "./BorderRadius-2zMZW_aK.js";
 //#region node_modules/highcharts/es-modules/Core/Renderer/RendererUtilities.js
 var Ce;
 (function(e) {
@@ -1337,10 +1337,10 @@ var lt = ct, { deg2rad: ut } = H, dt = class {
 		};
 		z(this, "labelFormat", S);
 		let C = (e) => u.formatter ? u.formatter.call(e, e) : u.format ? (e.text = t.defaultLabelFormatter.call(e), q.format(u.format, e, i)) : t.defaultLabelFormatter.call(e), w = C.call(S, S), E = y?.list;
-		E ? e.shortenLabel = function() {
+		e.shortenLabel = E ? function() {
 			for (b = 0; b < E.length; b++) if (a(S, { dateTimeLabelFormat: E[b] }), _.attr({ text: C.call(S, S) }), _.getBBox().width < t.getSlotWidth(e) - 2 * (u.padding || 0)) return;
 			_.attr({ text: "" });
-		} : e.shortenLabel = void 0, _ ? _.textStr !== w && (_.textWidth && !u.style.width && !_.styles.width && _.css({ width: void 0 }), _.attr({ text: w }), _.textPxLength = _.getBBox().width) : (e.label = _ = e.createLabel(w, u), e.rotation = 0);
+		} : void 0, _ ? _.textStr !== w && (_.textWidth && !u.style.width && !_.styles.width && _.css({ width: void 0 }), _.attr({ text: w }), _.textPxLength = _.getBBox().width) : (e.label = _ = e.createLabel(w, u), e.rotation = 0);
 	}
 	createLabel(e, t, n) {
 		let r = this.axis, { renderer: i, styledMode: a } = r.chart, o = t.style.whiteSpace, s = G(e) && t.enabled ? i.text(e, n?.x, n?.y, t.useHTML).add(r.labelGroup) : void 0;
@@ -1596,7 +1596,7 @@ var bt = class e {
 			}
 			!i.polar && t.min > t.max && (G(u.min) ? t.max = t.min : G(u.max) && (t.min = t.max)), w = t.max - t.min;
 		}
-		if (t.min === t.max || !n(t.min) || !n(t.max) ? t.tickInterval = 1 : b && !O && x === b.options.tickPixelInterval ? t.tickInterval = O = b.tickInterval : t.tickInterval = T(O, this.tickAmount ? w / Math.max(this.tickAmount - 1, 1) : void 0, r ? 1 : w * x / Math.max(t.len, x)), c && !e) {
+		if (t.tickInterval = t.min === t.max || !n(t.min) || !n(t.max) ? 1 : b && !O && x === b.options.tickPixelInterval ? O = b.tickInterval : T(O, this.tickAmount ? w / Math.max(this.tickAmount - 1, 1) : void 0, r ? 1 : w * x / Math.max(t.len, x)), c && !e) {
 			let e = t.min !== t.old?.min || t.max !== t.old?.max;
 			t.series.forEach(function(t) {
 				t.forceCrop = t.forceCropping?.(), t.processData(e);
@@ -3280,20 +3280,24 @@ var Ut = Ht, { animObject: Wt, setAnimation: Gt } = B, { registerEventOptions: K
 	}
 	scroll(e, t) {
 		let n = this.chart, r = this.pages, i = r.length, a = this.clipHeight, o = this.options.navigation, s = this.pager, c = this.padding, l = this.currentPage + e;
-		l > i && (l = i), l > 0 && (t !== void 0 && Gt(t, n), this.nav.attr({
-			translateX: c,
-			translateY: a + this.padding + 7 + this.titleHeight,
-			visibility: "inherit"
-		}), [this.up, this.upTracker].forEach(function(e) {
-			e.attr({ class: l === 1 ? "highcharts-legend-nav-inactive" : "highcharts-legend-nav-active" });
-		}), s.attr({ text: l + "/" + i }), [this.down, this.downTracker].forEach(function(e) {
-			e.attr({
-				x: 18 + this.pager.getBBox().width,
-				class: l === i ? "highcharts-legend-nav-inactive" : "highcharts-legend-nav-active"
-			});
-		}, this), n.styledMode || (this.up.attr({ fill: l === 1 ? o.inactiveColor : o.activeColor }), this.upTracker.css({ cursor: l === 1 ? "default" : "pointer" }), this.down.attr({ fill: l === i ? o.inactiveColor : o.activeColor }), this.downTracker.css({ cursor: l === i ? "default" : "pointer" })), this.scrollOffset = -r[l - 1] + this.initialItemY, this.scrollGroup.animate({ translateY: this.scrollOffset }), this.currentPage = l, this.positionCheckboxes(), V(() => {
-			z(this, "afterScroll", { currentPage: l });
-		}, Wt(T(t, n.renderer.globalAnimation, !0)).duration));
+		if (l > i && (l = i), l > 0) {
+			t !== void 0 && Gt(t, n), this.nav.attr({
+				translateX: c,
+				translateY: a + this.padding + 7 + this.titleHeight,
+				visibility: "inherit"
+			}), [this.up, this.upTracker].forEach(function(e) {
+				e.attr({ class: l === 1 ? "highcharts-legend-nav-inactive" : "highcharts-legend-nav-active" });
+			}), s.attr({ text: l + "/" + i }), [this.down, this.downTracker].forEach(function(e) {
+				e.attr({
+					x: 18 + this.pager.getBBox().width,
+					class: l === i ? "highcharts-legend-nav-inactive" : "highcharts-legend-nav-active"
+				});
+			}, this), n.styledMode || (this.up.attr({ fill: l === 1 ? o.inactiveColor : o.activeColor }), this.upTracker.css({ cursor: l === 1 ? "default" : "pointer" }), this.down.attr({ fill: l === i ? o.inactiveColor : o.activeColor }), this.downTracker.css({ cursor: l === i ? "default" : "pointer" })), this.scrollOffset = -r[l - 1] + this.initialItemY, this.scrollGroup.animate({ translateY: this.scrollOffset }), this.currentPage = l, this.positionCheckboxes();
+			let e = Wt(T(t, n.renderer.globalAnimation, !0));
+			V(() => {
+				z(this, "afterScroll", { currentPage: l });
+			}, e.duration);
+		}
 	}
 	setItemEvents(e, t, n) {
 		let r = this, i = e.legendItem || {}, a = r.chart.renderer.boxWrapper, o = e instanceof pe, s = e instanceof ye, c = "highcharts-legend-" + (o ? "point" : "series") + "-active", l = r.chart.styledMode, u = n ? [t, i.symbol] : [i.group], d = (t) => {
@@ -6581,9 +6585,9 @@ var Qi = class extends di {
 		let n = this.chart, r = n.langFormat("accessibility.screenReaderSection." + t + "RegionLabel", {
 			chart: n,
 			chartTitle: Ii(n)
-		});
+		}), i = `highcharts-screen-reader-region-${t}-${n.index}`;
 		I(e, {
-			id: `highcharts-screen-reader-region-${t}-${n.index}`,
+			id: i,
 			"aria-label": r || void 0
 		}), e.style.position = "relative", r && e.setAttribute("role", n.options.accessibility.landmarkVerbosity === "all" ? "region" : "group");
 	}
@@ -7350,7 +7354,7 @@ var Ra = class {
 //#endregion
 //#region node_modules/highcharts/es-modules/Stock/Navigator/NavigatorSymbols.js
 function Va(e, t, n, r, i = {}) {
-	let a = i.width ? i.width / 2 : n, o = 1.5, s = E(i.borderRadius || 0, Math.min(a * 2, r));
+	let a = i.width ? i.width / 2 : n, o = E(i.borderRadius || 0, Math.min(a * 2, r));
 	return r = i.height || r, [
 		[
 			"M",
@@ -7364,15 +7368,15 @@ function Va(e, t, n, r, i = {}) {
 		],
 		[
 			"M",
-			o - 1,
+			.5,
 			r / 2 - 3.5
 		],
 		[
 			"L",
-			o - 1,
+			.5,
 			r / 2 + 4.5
 		],
-		...ze.rect(-a - 1, .5, a * 2 + 1, r, { r: s })
+		...ze.rect(-a - 1, .5, a * 2 + 1, r, { r: o })
 	];
 }
 var Ha = { "navigator-handle": Va };
@@ -7380,7 +7384,7 @@ var Ha = { "navigator-handle": Va };
 //#region node_modules/highcharts/es-modules/Stock/Utilities/StockUtilities.js
 function Ua(e) {
 	let t = this.xAxis[0];
-	G(t.dataMax) && G(t.dataMin) && e ? this.fixedRange = Math.min(e, t.dataMax - t.dataMin) : this.fixedRange = e;
+	this.fixedRange = G(t.dataMax) && G(t.dataMin) && e ? Math.min(e, t.dataMax - t.dataMin) : e;
 }
 var Wa = { setFixedRange: Ua }, { defaultOptions: Ga } = O, { composed: Ka } = H, { setFixedRange: qa } = Wa;
 function Ja(e, t, n) {
@@ -9155,7 +9159,7 @@ var Is = class {
 		if (!n[0] || !n[0].points) return !1;
 		if (!r) l = e ? n[0].points[0] : s;
 		else if (c = n[r.series.index + (e ? 1 : -1)], l = a[i + (e ? 1 : -1)], !l && c && (l = c.points[e ? 0 : c.points.length - 1]), !l) return !1;
-		return As(l) ? (c = l.series, ks(c) ? t.highlightedPoint = e ? c.points[c.points.length - 1] : c.points[0] : t.highlightedPoint = l, t.highlightAdjacentPoint(e)) : l.highlight();
+		return As(l) ? (c = l.series, t.highlightedPoint = ks(c) ? e ? c.points[c.points.length - 1] : c.points[0] : l, t.highlightAdjacentPoint(e)) : l.highlight();
 	}
 	function n(e) {
 		let t = this.highlightedPoint, n = Infinity, r;
@@ -9269,11 +9273,11 @@ var Ws = class extends di {
 		});
 	}
 	setMapNavButtonAttrs(e, t) {
-		let n = this.chart;
+		let n = this.chart, r = n.langFormat(t, { chart: n });
 		I(e, {
 			tabindex: -1,
 			role: "button",
-			"aria-label": n.langFormat(t, { chart: n })
+			"aria-label": r
 		});
 	}
 	onChartRender() {
@@ -9367,7 +9371,8 @@ var Ws = class extends di {
 				let n = e === r.tab && t.shiftKey || e === r.left || e === r.up;
 				return this.response[n ? "prev" : "next"];
 			}], [[r.space, r.enter], function() {
-				return T(n(this, a), this.response.success);
+				let e = n(this, a);
+				return T(e, this.response.success);
 			}]],
 			validate: function() {
 				return a[e] && a[e].box && i[t].innerElement;
@@ -10131,16 +10136,16 @@ var mc = {
 		typeof document > "u" || (document.documentElement.classList.toggle("highcharts-dark", e === "dark"), document.documentElement.classList.toggle("highcharts-light", e !== "dark"));
 	}
 	async loadDependencyWheelAndSankeyModules() {
-		vc.isDependencyWheelAndSankeyModulesLoaded ||= (await Promise.all([import("./dependency-wheel.src-dRVAmx_u.js"), import("./sankey.src-DCYYFonz.js")]), !0);
+		vc.isDependencyWheelAndSankeyModulesLoaded ||= (await Promise.all([import("./dependency-wheel.src-BHmwx9rW.js"), import("./sankey.src-DocCurOx.js")]), !0);
 	}
 	async loadHighchartsMore() {
-		vc.isHighchartsMoreLoaded ||= (await import("./highchartsMoreCustom-Bi7S8DFN.js"), !0);
+		vc.isHighchartsMoreLoaded ||= (await import("./highchartsMoreCustom-CcpfmVny.js"), !0);
 	}
 	async loadPatternFill() {
-		vc.isPatternFillLoaded ||= (await import("./pattern-fill.src-CvycQkcy.js"), !0);
+		vc.isPatternFillLoaded ||= (await import("./pattern-fill.src-BPmr3DQg.js"), !0);
 	}
 	async loadStreamGraphModule() {
-		vc.isStreamgraphModuleLoaded ||= (await import("./streamgraph.src-DzwaRGXG.js"), !0);
+		vc.isStreamgraphModuleLoaded ||= (await import("./streamgraph.src-Bn6PY8Fd.js"), !0);
 	}
 };
 //#endregion

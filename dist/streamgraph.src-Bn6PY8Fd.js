@@ -1,5 +1,5 @@
-import { E as e, U as t, f as n } from "./AnimationUtilities-CfxhHVEw.js";
-import { t as r } from "./SeriesRegistry-Drf7P7c8.js";
+import { E as e, U as t, f as n } from "./AnimationUtilities-Bby2idBR.js";
+import { t as r } from "./SeriesRegistry-0cj0ZJqn.js";
 //#region node_modules/highcharts/es-modules/Series/Streamgraph/StreamgraphSeriesDefaults.js
 var i = {
 	fillOpacity: 1,
@@ -16,4 +16,4 @@ o.defaultOptions = t(a.defaultOptions, i), n(o, "afterGetExtremes", (e) => {
 }), e(o.prototype, { negStacks: !1 }), r.registerSeriesType("streamgraph", o);
 //#endregion
 
-//# sourceMappingURL=streamgraph.src-DzwaRGXG.js.map
+//# sourceMappingURL=streamgraph.src-Bn6PY8Fd.js.map

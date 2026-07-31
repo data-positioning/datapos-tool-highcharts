@@ -102,7 +102,7 @@ _Note: Sonda's Vite reports currently exclude CSS files, since Vite does not gen
 
 |Chunk/Module/File|Composition|
 |:------ |:-----------|
-| dist/dpuse-tool-highcharts.es.js | 403.1 kB · brotli 96.5 kB |
+| dist/dpuse-tool-highcharts.es.js | 403.0 kB · brotli 96.4 kB |
 | &nbsp;&nbsp;&nbsp;&nbsp;highcharts | `████████████░░░░░░░░` 59.7% |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;es-modules/Core/Axis/Axis.js | `█░░░░░░░░░░░░░░░░░░░` 5.3% |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;es-modules/Core/Chart/Chart.js | `█░░░░░░░░░░░░░░░░░░░` 4.8% |
@@ -188,7 +188,7 @@ _Note: Sonda's Vite reports currently exclude CSS files, since Vite does not gen
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;es-modules/masters/themes/adaptive.src.js | `░░░░░░░░░░░░░░░░░░░░` 0.0% |
 | &nbsp;&nbsp;&nbsp;&nbsp;(unassigned) → [unassigned] | `█░░░░░░░░░░░░░░░░░░░` 4.4% |
 | &nbsp;&nbsp;&nbsp;&nbsp;src → index.ts | `░░░░░░░░░░░░░░░░░░░░` 0.6% |
-| dist/BorderRadius-7nQt-8g5.js | 62.1 kB · brotli 19.0 kB |
+| dist/BorderRadius-2zMZW_aK.js | 62.1 kB · brotli 19.0 kB |
 | &nbsp;&nbsp;&nbsp;&nbsp;highcharts | `██░░░░░░░░░░░░░░░░░░` 9.3% |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;es-modules/Core/Series/Series.js | `█░░░░░░░░░░░░░░░░░░░` 5.8% |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;es-modules/Series/Column/ColumnSeries.js | `░░░░░░░░░░░░░░░░░░░░` 1.2% |
@@ -202,7 +202,7 @@ _Note: Sonda's Vite reports currently exclude CSS files, since Vite does not gen
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;es-modules/Series/Column/ColumnSeriesDefaults.js | `░░░░░░░░░░░░░░░░░░░░` 0.1% |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;es-modules/Core/Foundation.js | `░░░░░░░░░░░░░░░░░░░░` 0.1% |
 | &nbsp;&nbsp;&nbsp;&nbsp;(unassigned) → [unassigned] | `░░░░░░░░░░░░░░░░░░░░` 0.7% |
-| dist/highchartsMoreCustom-Bi7S8DFN.js | 52.5 kB · brotli 15.2 kB |
+| dist/highchartsMoreCustom-CcpfmVny.js | 52.5 kB · brotli 15.2 kB |
 | &nbsp;&nbsp;&nbsp;&nbsp;highcharts | `██░░░░░░░░░░░░░░░░░░` 7.9% |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;es-modules/Series/PolarComposition.js | `░░░░░░░░░░░░░░░░░░░░` 2.2% |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;es-modules/Core/Axis/RadialAxis.js | `░░░░░░░░░░░░░░░░░░░░` 1.9% |
@@ -221,7 +221,7 @@ _Note: Sonda's Vite reports currently exclude CSS files, since Vite does not gen
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;es-modules/Series/Waterfall/WaterfallSeriesDefaults.js | `░░░░░░░░░░░░░░░░░░░░` 0.0% |
 | &nbsp;&nbsp;&nbsp;&nbsp;(unassigned) → [unassigned] | `░░░░░░░░░░░░░░░░░░░░` 0.5% |
 | &nbsp;&nbsp;&nbsp;&nbsp;src → highchartsMoreCustom.ts | `░░░░░░░░░░░░░░░░░░░░` 0.0% |
-| dist/AnimationUtilities-CfxhHVEw.js | 33.7 kB · brotli 10.6 kB |
+| dist/AnimationUtilities-Bby2idBR.js | 33.7 kB · brotli 10.6 kB |
 | &nbsp;&nbsp;&nbsp;&nbsp;highcharts | `█░░░░░░░░░░░░░░░░░░░` 4.9% |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;es-modules/Shared/Utilities.js | `░░░░░░░░░░░░░░░░░░░░` 1.3% |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;es-modules/Shared/TimeBase.js | `░░░░░░░░░░░░░░░░░░░░` 0.8% |
@@ -235,17 +235,17 @@ _Note: Sonda's Vite reports currently exclude CSS files, since Vite does not gen
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;es-modules/Core/Chart/ChartDefaults.js | `░░░░░░░░░░░░░░░░░░░░` 0.1% |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;es-modules/Core/Color/PaletteDefaults.js | `░░░░░░░░░░░░░░░░░░░░` 0.0% |
 | &nbsp;&nbsp;&nbsp;&nbsp;(unassigned) → [unassigned] | `░░░░░░░░░░░░░░░░░░░░` 0.5% |
-| dist/SeriesRegistry-Drf7P7c8.js | 19.7 kB · brotli 7.0 kB |
+| dist/SeriesRegistry-0cj0ZJqn.js | 19.7 kB · brotli 7.0 kB |
 | &nbsp;&nbsp;&nbsp;&nbsp;highcharts | `█░░░░░░░░░░░░░░░░░░░` 3.0% |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;es-modules/Core/Series/Point.js | `░░░░░░░░░░░░░░░░░░░░` 1.7% |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;es-modules/Core/Renderer/HTML/AST.js | `░░░░░░░░░░░░░░░░░░░░` 0.6% |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;es-modules/Core/Templating.js | `░░░░░░░░░░░░░░░░░░░░` 0.6% |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;es-modules/Core/Series/SeriesRegistry.js | `░░░░░░░░░░░░░░░░░░░░` 0.1% |
 | &nbsp;&nbsp;&nbsp;&nbsp;(unassigned) → [unassigned] | `░░░░░░░░░░░░░░░░░░░░` 0.2% |
-| dist/SVGElement-B5kGfp8c.js | 16.2 kB · brotli 5.4 kB |
+| dist/SVGElement-BmvC_qu3.js | 16.2 kB · brotli 5.4 kB |
 | &nbsp;&nbsp;&nbsp;&nbsp;highcharts → es-modules/Core/Renderer/SVG/SVGElement.js | `░░░░░░░░░░░░░░░░░░░░` 2.4% |
 | &nbsp;&nbsp;&nbsp;&nbsp;(unassigned) → [unassigned] | `░░░░░░░░░░░░░░░░░░░░` 0.2% |
-| dist/sankey.src-DCYYFonz.js | 16.0 kB · brotli 5.1 kB |
+| dist/sankey.src-DocCurOx.js | 16.0 kB · brotli 5.1 kB |
 | &nbsp;&nbsp;&nbsp;&nbsp;highcharts | `░░░░░░░░░░░░░░░░░░░░` 2.2% |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;es-modules/Series/Sankey/SankeySeries.js | `░░░░░░░░░░░░░░░░░░░░` 1.1% |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;es-modules/Series/NodesComposition.js | `░░░░░░░░░░░░░░░░░░░░` 0.5% |
@@ -254,28 +254,30 @@ _Note: Sonda's Vite reports currently exclude CSS files, since Vite does not gen
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;es-modules/Series/Sankey/SankeyPoint.js | `░░░░░░░░░░░░░░░░░░░░` 0.1% |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;es-modules/masters/modules/sankey.src.js | `░░░░░░░░░░░░░░░░░░░░` 0.0% |
 | &nbsp;&nbsp;&nbsp;&nbsp;(unassigned) → [unassigned] | `░░░░░░░░░░░░░░░░░░░░` 0.3% |
-| dist/pattern-fill.src-CvycQkcy.js | 8.7 kB · brotli 2.8 kB |
+| dist/pattern-fill.src-BPmr3DQg.js | 8.7 kB · brotli 2.8 kB |
 | &nbsp;&nbsp;&nbsp;&nbsp;highcharts | `░░░░░░░░░░░░░░░░░░░░` 1.3% |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;es-modules/Extensions/PatternFill.js | `░░░░░░░░░░░░░░░░░░░░` 1.3% |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;es-modules/masters/modules/pattern-fill.src.js | `░░░░░░░░░░░░░░░░░░░░` 0.0% |
 | &nbsp;&nbsp;&nbsp;&nbsp;(unassigned) → [unassigned] | `░░░░░░░░░░░░░░░░░░░░` 0.1% |
-| dist/dependency-wheel.src-dRVAmx_u.js | 5.5 kB · brotli 2.0 kB |
+| dist/dependency-wheel.src-BHmwx9rW.js | 5.5 kB · brotli 2.0 kB |
 | &nbsp;&nbsp;&nbsp;&nbsp;highcharts | `░░░░░░░░░░░░░░░░░░░░` 0.7% |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;es-modules/Series/DependencyWheel/DependencyWheelSeries.js | `░░░░░░░░░░░░░░░░░░░░` 0.5% |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;es-modules/Series/DependencyWheel/DependencyWheelPoint.js | `░░░░░░░░░░░░░░░░░░░░` 0.1% |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;es-modules/Series/DependencyWheel/DependencyWheelSeriesDefaults.js | `░░░░░░░░░░░░░░░░░░░░` 0.1% |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;es-modules/masters/modules/dependency-wheel.src.js | `░░░░░░░░░░░░░░░░░░░░` 0.0% |
 | &nbsp;&nbsp;&nbsp;&nbsp;(unassigned) → [unassigned] | `░░░░░░░░░░░░░░░░░░░░` 0.2% |
-| dist/TextPath-lds_aJTY.js | 4.7 kB · brotli 1.8 kB |
+| dist/TextPath-DK4Jkzd7.js | 4.7 kB · brotli 1.8 kB |
 | &nbsp;&nbsp;&nbsp;&nbsp;highcharts | `░░░░░░░░░░░░░░░░░░░░` 0.7% |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;es-modules/Extensions/TextPath.js | `░░░░░░░░░░░░░░░░░░░░` 0.4% |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;es-modules/Series/Sankey/SankeyColumnComposition.js | `░░░░░░░░░░░░░░░░░░░░` 0.3% |
 | &nbsp;&nbsp;&nbsp;&nbsp;(unassigned) → [unassigned] | `░░░░░░░░░░░░░░░░░░░░` 0.1% |
-| dist/streamgraph.src-DzwaRGXG.js | 788 B · brotli 432 B |
+| dist/streamgraph.src-Bn6PY8Fd.js | 788 B · brotli 434 B |
 | &nbsp;&nbsp;&nbsp;&nbsp;highcharts | `░░░░░░░░░░░░░░░░░░░░` 0.1% |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;es-modules/Series/Streamgraph/StreamgraphSeries.js | `░░░░░░░░░░░░░░░░░░░░` 0.1% |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;es-modules/Series/Streamgraph/StreamgraphSeriesDefaults.js | `░░░░░░░░░░░░░░░░░░░░` 0.0% |
 | &nbsp;&nbsp;&nbsp;&nbsp;(unassigned) → [unassigned] | `░░░░░░░░░░░░░░░░░░░░` 0.0% |
+
+(unassigned) = bytes Sonda can't trace to a specific source line (whitespace, stray keywords, bundler-injected region markers) — not actual missing/unknown code.
 
 <!-- BUNDLE_END -->
 

@@ -1,4 +1,4 @@
-import { $ as e, A as t, B as n, E as r, G as i, H as a, I as o, T as s, U as c, V as l, X as u, Y as d, b as f, f as p, h as m, i as h, k as g, n as _, nt as v, ot as y, q as b, u as x, v as S, x as C, y as w, z as T } from "./AnimationUtilities-CfxhHVEw.js";
+import { $ as e, A as t, B as n, E as r, G as i, H as a, I as o, T as s, U as c, V as l, X as u, Y as d, b as f, f as p, h as m, i as h, k as g, n as _, nt as v, ot as y, q as b, u as x, v as S, x as C, y as w, z as T } from "./AnimationUtilities-Bby2idBR.js";
 //#region node_modules/highcharts/es-modules/Core/Renderer/SVG/SVGElement.js
 var { animate: E, animObject: D, stop: O } = _, { deg2rad: k, doc: A, svg: j, SVG_NS: M, win: N, isFirefox: P } = y, F = class _ {
 	_defaultGetter(e) {
@@ -50,19 +50,19 @@ var { animate: E, animObject: D, stop: O } = _, { deg2rad: k, doc: A, svg: j, SV
 		}, a)), this;
 	}
 	applyTextOutline(e) {
-		let t = this.element, n = e.indexOf("contrast") !== -1, r = {};
-		n && (r.textOutline = e = e.replace(/contrast/g, this.renderer.getContrast(t.style.fill)));
-		let i = e.indexOf(" "), a = e.substring(i + 1), o = e.substring(0, i);
-		if (o && o !== "none" && y.svg) {
-			this.fakeTS = !0, o = o.replace(/(^[\d\.]+)(.*?)$/g, function(e, t, n) {
+		let t = this.element;
+		e.indexOf("contrast") !== -1 && (e = e.replace(/contrast/g, this.renderer.getContrast(t.style.fill)));
+		let n = e.indexOf(" "), r = e.substring(n + 1), i = e.substring(0, n);
+		if (i && i !== "none" && y.svg) {
+			this.fakeTS = !0, i = i.replace(/(^[\d\.]+)(.*?)$/g, function(e, t, n) {
 				return 2 * Number(t) + n;
 			}), this.removeTextOutline();
 			let e = A.createElementNS(M, "tspan");
 			m(e, {
 				class: "highcharts-text-outline",
-				fill: a,
-				stroke: a,
-				"stroke-width": o,
+				fill: r,
+				stroke: r,
+				"stroke-width": i,
 				"stroke-linejoin": "round"
 			});
 			let n = t.querySelector("textPath") || t;
@@ -75,15 +75,15 @@ var { animate: E, animObject: D, stop: O } = _, { deg2rad: k, doc: A, svg: j, SV
 					"stroke"
 				].forEach((e) => n.removeAttribute(e)), e.appendChild(n);
 			});
-			let r = 0;
+			let a = 0;
 			[].forEach.call(n.querySelectorAll("text tspan"), (e) => {
-				r += Number(e.getAttribute("dy"));
+				a += Number(e.getAttribute("dy"));
 			});
-			let i = A.createElementNS(M, "tspan");
-			i.textContent = "​", m(i, {
+			let o = A.createElementNS(M, "tspan");
+			o.textContent = "​", m(o, {
 				x: Number(t.getAttribute("x")),
-				dy: -r
-			}), e.appendChild(i), n.insertBefore(e, n.firstChild);
+				dy: -a
+			}), e.appendChild(o), n.insertBefore(e, n.firstChild);
 		}
 	}
 	attr(e, t, n, r) {
@@ -391,4 +391,4 @@ F.symbolCustomAttribs = [
 //#endregion
 export { F as t };
 
-//# sourceMappingURL=SVGElement-B5kGfp8c.js.map
+//# sourceMappingURL=SVGElement-BmvC_qu3.js.map

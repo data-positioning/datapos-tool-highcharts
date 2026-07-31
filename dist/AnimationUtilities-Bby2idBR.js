@@ -145,7 +145,7 @@ function v(e, t, n, r) {
 			if (!o && r && r.indexOf(c) > -1 && t[c]) {
 				n = L(n), i[c] = [];
 				for (let e = 0; e < Math.max(n.length, t[c].length); e++) t[c][e] && (n[e] === void 0 ? i[c][e] = t[c][e] : (i[c][e] = {}, a(n[e], t[c][e], i[c][e], o + 1)));
-			} else k(n, !0) && !n.nodeType ? (i[c] = O(n) ? [] : {}, a(n, t[c] || {}, i[c], o + 1), Object.keys(i[c]).length === 0 && !(c === "colorAxis" && o === 0) && delete i[c]) : (e[c] !== t[c] || c in e && !(c in t)) && c !== "__proto__" && c !== "constructor" && (i[c] = s[c]);
+			} else k(n, !0) && !n.nodeType ? (i[c] = O(n) ? [] : {}, a(n, t[c] || {}, i[c], o + 1), Object.keys(i[c]).length === 0 && (c !== "colorAxis" || o !== 0) && delete i[c]) : (e[c] !== t[c] || c in e && !(c in t)) && c !== "__proto__" && c !== "constructor" && (i[c] = s[c]);
 		});
 	}
 	return a(e, t, i, 0), i;
@@ -261,7 +261,7 @@ function k(e, t) {
 function A(e, ...t) {
 	let n, r = [e, ...t], i = {}, a = function(e, t) {
 		return typeof e != "object" && (e = {}), j(t, function(n, r) {
-			r === "__proto__" || r === "constructor" || (k(n, !0) && !T(n) && !w(n) ? e[r] = a(e[r] || {}, n) : e[r] = t[r]);
+			r !== "__proto__" && r !== "constructor" && (k(n, !0) && !T(n) && !w(n) ? e[r] = a(e[r] || {}, n) : e[r] = t[r]);
 		}), e;
 	};
 	e === !0 && (i = r[1], r = Array.prototype.slice.call(r, 2));
@@ -426,10 +426,10 @@ var V = {
 	second: 1e3,
 	minute: 6e4,
 	hour: 36e5,
-	day: 24 * 36e5,
-	week: 168 * 36e5,
-	month: 672 * 36e5,
-	year: 364 * 24 * 36e5
+	day: 864e5,
+	week: 6048e5,
+	month: 24192e5,
+	year: 314496e5
 };
 Math.easeInOutSine = function(e) {
 	return -.5 * (Math.cos(Math.PI * e) - 1);
@@ -515,7 +515,7 @@ var { pageLang: ve, win: U } = t, ye = t.isSafari && U.Intl && !U.Intl.DateTimeF
 		D(e) && (e = this.str2dtf(e));
 		let i = this.dTLCache[r];
 		if (!i) {
-			e.timeZone ??= this.timezone;
+			e.timeZone ?? (e.timeZone = this.timezone);
 			try {
 				i = new Intl.DateTimeFormat(n, e);
 			} catch (t) {
@@ -615,7 +615,7 @@ var { pageLang: ve, win: U } = t, ye = t.isSafari && U.Intl && !U.Intl.DateTimeF
 				if (D(e)) for (; e.indexOf("%" + i) !== -1;) e = e.replace("%" + i, typeof t == "function" ? t.call(r, n, r) : t);
 			});
 		} else if (k(e)) {
-			let t = (this.getTimezoneOffset(n) || 0) / (6e4 * 60), r = this.timezone || "Etc/GMT" + (t >= 0 ? "+" : "") + t, { prefix: i = "", suffix: a = "" } = e;
+			let t = (this.getTimezoneOffset(n) || 0) / 36e5, r = this.timezone || "Etc/GMT" + (t >= 0 ? "+" : "") + t, { prefix: i = "", suffix: a = "" } = e;
 			e = i + this.dateTimeFormat(b({ timeZone: r }, e), n) + a;
 		}
 		return r ? R(e) : e;
@@ -1040,7 +1040,7 @@ var { parse: X } = Y, { win: De } = t, Z = class e {
 			let a = t[e], o = n[e], s = [];
 			for (let e = 0; e < o.length; e++) {
 				let t = a[e], n = o[e];
-				E(t) && E(n) && !(o[0] === "A" && (e === 4 || e === 5)) ? s[e] = t + r * (n - t) : s[e] = n;
+				E(t) && E(n) && (o[0] !== "A" || e !== 4 && e !== 5) ? s[e] = t + r * (n - t) : s[e] = n;
 			}
 			i.push(s);
 		}
@@ -1074,7 +1074,7 @@ var { parse: X } = Y, { win: De } = t, Z = class e {
 		function m(e, t) {
 			for (; e.length < u;) {
 				let n = e[0], r = t[u - e.length];
-				if (r && n[0] === "M" && (r[0] === "C" ? e[0] = [
+				if (r && n[0] === "M" && (e[0] = r[0] === "C" ? [
 					"C",
 					n[1],
 					n[2],
@@ -1082,7 +1082,7 @@ var { parse: X } = Y, { win: De } = t, Z = class e {
 					n[2],
 					n[1],
 					n[2]
-				] : e[0] = [
+				] : [
 					"L",
 					n[1],
 					n[2]
@@ -1173,4 +1173,4 @@ var je = {
 //#endregion
 export { ue as $, te as A, E as B, v as C, ee as D, b as E, ae as F, j as G, D as H, O as I, N as J, M as K, T as L, S as M, re as N, ie as O, C as P, I as Q, w as R, g as S, y as T, A as U, k as V, se as W, ce as X, P as Y, le as Z, d as _, Te as a, r as at, m as b, he as c, _e as d, L as et, o as f, u as g, l as h, Y as i, pe as it, ne as j, x as k, V as l, s as m, je as n, fe as nt, W as o, t as ot, c as p, F as q, Z as r, R as rt, B as s, Q as t, de as tt, ge as u, f as v, _ as w, h as x, p as y, oe as z };
 
-//# sourceMappingURL=AnimationUtilities-CfxhHVEw.js.map
+//# sourceMappingURL=AnimationUtilities-Bby2idBR.js.map
