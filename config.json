@@ -1,5 +1,5 @@
 {
-    "id": "dpuse-tool-highcharts",
+    "id": "dpuse-tool-highcharts-visualiser",
     "label": {
         "en": "Highcharts Visualiser"
     },
@@ -12,5 +12,5 @@
     "iconDark": null,
     "statusId": "alpha",
     "typeId": "tool",
-    "version": "0.0.75"
+    "version": "0.0.76"
 }

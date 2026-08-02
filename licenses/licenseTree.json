@@ -1,10 +1,10 @@
 {
-  "version": "0.0.58",
-  "name": "@dpuse/dpuse-tool-highcharts",
+  "version": "0.0.75",
+  "name": "@dpuse/dpuse-tool-highcharts-visualiser",
   "dependencies": {
     "@dpuse/dpuse-shared": {
-      "version": "0.3.743",
-      "resolved": "https://registry.npmjs.org/@dpuse/dpuse-shared/-/dpuse-shared-0.3.743.tgz",
+      "version": "0.3.760",
+      "resolved": "https://registry.npmjs.org/@dpuse/dpuse-shared/-/dpuse-shared-0.3.760.tgz",
       "overridden": false
     },
     "highcharts": {

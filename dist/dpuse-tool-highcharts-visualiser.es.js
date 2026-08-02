@@ -10151,4 +10151,4 @@ var mc = {
 //#endregion
 export { yc as HighchartsTool };
 
-//# sourceMappingURL=dpuse-tool-highcharts.es.js.map
+//# sourceMappingURL=dpuse-tool-highcharts-visualiser.es.js.map
