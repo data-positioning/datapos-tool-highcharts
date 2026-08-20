@@ -1,13 +1,13 @@
-import { A as e, E as t, U as n, X as r, Z as i, f as a, ot as o, u as s, x as c } from "./AnimationUtilities-Bby2idBR.js";
+import { $ as e, K as t, N as n, et as r, h as i, k as a, lt as o, p as s, w as c } from "./AnimationUtilities-CJw-tdb_.js";
 //#region node_modules/highcharts/es-modules/Series/Sankey/SankeyColumnComposition.js
 var l;
-(function(t) {
-	function n(e, t) {
+(function(e) {
+	function t(e, t) {
 		let n = e;
-		return n.sankeyColumn = new r(n, t), n;
+		return n.sankeyColumn = new i(n, t), n;
 	}
-	t.compose = n;
-	class r {
+	e.compose = t;
+	class i {
 		constructor(e, t) {
 			this.points = e, this.series = t;
 		}
@@ -21,13 +21,13 @@ var l;
 			for (let e of n) t.push(e);
 			return o;
 		}
-		top(t) {
-			let n = this.series, r = n.nodePadding, i = this.points.reduce((e, i) => {
-				e > 0 && (e += r);
-				let a = Math.max(i.getSum() * t, n.options.minLinkWidth || 0);
-				return e += a, e;
+		top(e) {
+			let t = this.series, r = t.nodePadding, i = this.points.reduce((n, i) => {
+				n > 0 && (n += r);
+				let a = Math.max(i.getSum() * e, t.options.minLinkWidth || 0);
+				return n += a, n;
 			}, 0);
-			return e(n.options.nodeAlignment || "center") * ((n.chart.plotSizeY || 0) - i);
+			return n(t.options.nodeAlignment || "center") * ((t.chart.plotSizeY || 0) - i);
 		}
 		left(e) {
 			let t = this.series, n = t.chart, r = t.options.equalNodes, i = n.inverted ? n.plotHeight : n.plotWidth, a = t.nodePadding, o = this.points.reduce((n, o) => {
@@ -41,43 +41,43 @@ var l;
 			return this.points.reduce((e, t) => e + t.getSum(), 0);
 		}
 		offset(e, t) {
-			let n = this.points, r = this.series, a = r.nodePadding, o = 0, s;
-			if (r.is("organization") && e.hangsFrom) return { absoluteTop: e.hangsFrom.nodeY };
+			let n = this.points, i = this.series, a = i.nodePadding, o = 0, s;
+			if (i.is("organization") && e.hangsFrom) return { absoluteTop: e.hangsFrom.nodeY };
 			for (let l = 0; l < n.length; l++) {
-				let u = n[l].getSum(), d = Math.max(u * t, r.options.minLinkWidth || 0), f = e.options[r.chart.inverted ? "offsetHorizontal" : "offsetVertical"], p = e.options.offset || 0;
-				if (s = u ? d + a : 0, n[l] === e) return { relativeTop: o + (c(f) ? i(f, d) : i(p, s)) };
+				let u = n[l].getSum(), d = Math.max(u * t, i.options.minLinkWidth || 0), f = e.options[i.chart.inverted ? "offsetHorizontal" : "offsetVertical"], p = e.options.offset || 0;
+				if (s = u ? d + a : 0, n[l] === e) return { relativeTop: o + (c(f) ? r(f, d) : r(p, s)) };
 				o += s;
 			}
 		}
 	}
-	t.SankeyColumnAdditions = r;
+	e.SankeyColumnAdditions = i;
 })(l ||= {});
 var u = l, { composed: d, deg2rad: f } = o;
-function p(e, r) {
-	let i = this.renderer.url, o = this.text || this, l = o.textPath, { attributes: u, enabled: d } = n({
+function p(e, n) {
+	let r = this.renderer.url, o = this.text || this, l = o.textPath, { attributes: u, enabled: d } = t({
 		enabled: !0,
 		attributes: {
 			dy: -5,
 			startOffset: "50%",
 			textAnchor: "middle"
 		}
-	}, r);
+	}, n);
 	if (e ||= l && l.path, l?.undo(), e && d) {
-		let n = a(o, "afterModifyTree", (n) => {
+		let t = i(o, "afterModifyTree", (t) => {
 			if (e && d) {
-				let r = e.attr("id");
-				r || e.attr("id", r = s());
-				let a = {
+				let n = e.attr("id");
+				n || e.attr("id", n = s());
+				let i = {
 					x: 0,
 					y: 0
 				};
-				c(u.dx) && (a.dx = u.dx, delete u.dx), c(u.dy) && (a.dy = u.dy, delete u.dy), o.attr(a), this.attr({ transform: "" }), this.box &&= this.box.destroy();
-				let l = n.nodes.slice(0);
-				n.nodes.length = 0, n.nodes[0] = {
+				c(u.dx) && (i.dx = u.dx, delete u.dx), c(u.dy) && (i.dy = u.dy, delete u.dy), o.attr(i), this.attr({ transform: "" }), this.box &&= this.box.destroy();
+				let l = t.nodes.slice(0);
+				t.nodes.length = 0, t.nodes[0] = {
 					tagName: "textPath",
-					attributes: t(u, {
+					attributes: a(u, {
 						"text-anchor": u.textAnchor,
-						href: `${i}#${r}`
+						href: `${r}#${n}`
 					}),
 					children: l
 				};
@@ -85,7 +85,7 @@ function p(e, r) {
 		});
 		o.textPath = {
 			path: e,
-			undo: n
+			undo: t
 		};
 	} else o.attr({
 		dx: 0,
@@ -124,10 +124,8 @@ function h(e) {
 	let t = e.labelOptions, n = e.point, r = t[n.formatPrefix + "TextPath"] || t.textPath;
 	r && !t.useHTML && (this.setTextPath(n.getDataLabelPath?.(this) || n.graphic, r), n.dataLabelPath && !r.enabled && (n.dataLabelPath = n.dataLabelPath.destroy()));
 }
-function g(e) {
-	r(d, "TextPath") && (a(e, "afterGetBBox", m), a(e, "beforeAddingDataLabel", h), e.prototype.setTextPath = e.prototype.setTextPath ?? p);
+function g(t) {
+	e(d, "TextPath") && (i(t, "afterGetBBox", m), i(t, "beforeAddingDataLabel", h), t.prototype.setTextPath = t.prototype.setTextPath ?? p);
 }
 //#endregion
 export { u as n, g as t };
-
-//# sourceMappingURL=TextPath-DK4Jkzd7.js.map

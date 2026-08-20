@@ -1,9 +1,10 @@
-import { E as e, U as t, Z as n, it as r, n as i, ot as a, q as o } from "./AnimationUtilities-Bby2idBR.js";
-import { t as s } from "./SeriesRegistry-0cj0ZJqn.js";
-import { t as c } from "./SVGElement-BmvC_qu3.js";
-import { n as l, t as u } from "./TextPath-DK4Jkzd7.js";
+import { K as e, X as t, et as n, k as r, lt as i, st as a, t as o } from "./AnimationUtilities-CJw-tdb_.js";
+import { t as s } from "./SeriesRegistry-CXsAINSj.js";
+import { t as c } from "./SVGElement-uTuGcjav.js";
+import { t as l } from "./BorderRadius-CqHYi9va.js";
+import { n as u, t as d } from "./TextPath-Coabnrz0.js";
 //#region node_modules/highcharts/es-modules/Series/DependencyWheel/DependencyWheelPoint.js
-var { sankey: { prototype: { pointClass: d } } } = s.seriesTypes, f = class extends d {
+var { sankey: { prototype: { pointClass: f } } } = s.seriesTypes, p = class extends f {
 	getSumTo() {
 		let e = 0;
 		for (let t of this.linksFrom) e += t.weightTo || t.weight || 0;
@@ -11,25 +12,25 @@ var { sankey: { prototype: { pointClass: d } } } = s.seriesTypes, f = class exte
 		return e;
 	}
 	getDataLabelPath(e) {
-		let t = this, n = t.series.chart.renderer, i = t.shapeArgs, a = t.angle < 0 || t.angle > Math.PI, s = i.start || 0, c = i.end || 0;
-		return t.dataLabelPath ? (t.dataLabelPath = t.dataLabelPath.destroy(), delete t.dataLabelPath) : r(e, "destroy", function(e) {
-			return t.dataLabelPath &&= t.dataLabelPath.destroy(), e.call(this);
-		}), t.dataLabelPath = n.arc({
+		let n = this, r = n.series.chart.renderer, i = n.shapeArgs, o = n.angle < 0 || n.angle > Math.PI, s = i.start || 0, c = i.end || 0;
+		return n.dataLabelPath ? (n.dataLabelPath = n.dataLabelPath.destroy(), delete n.dataLabelPath) : a(e, "destroy", function(e) {
+			return n.dataLabelPath &&= n.dataLabelPath.destroy(), e.call(this);
+		}), n.dataLabelPath = r.arc({
 			open: !0,
 			longArc: Math.abs(Math.abs(s) - Math.abs(c)) < Math.PI ? 0 : 1
 		}).attr({
 			x: i.x,
 			y: i.y,
-			r: (i.r || 0) + o(e.options?.distance || 0),
-			start: a ? s : c,
-			end: a ? c : s,
-			clockwise: +a
-		}).add(n.defs), t.dataLabelPath;
+			r: (i.r || 0) + t(e.options?.distance || 0),
+			start: o ? s : c,
+			end: o ? c : s,
+			clockwise: +o
+		}).add(r.defs), n.dataLabelPath;
 	}
 	isValid() {
 		return !0;
 	}
-}, p = {
+}, m = {
 	center: [null, null],
 	curveFactor: .6,
 	startAngle: 0,
@@ -41,13 +42,13 @@ var { sankey: { prototype: { pointClass: d } } } = s.seriesTypes, f = class exte
 		}
 	},
 	tooltip: { pointFormat: "{point.fromNode.name} → {point.toNode.name}: <b>{point.weight}</b><br/>{#if point.weightTo}{point.toNode.name} → {point.fromNode.name}: <b>{point.weightTo}</b><br/>{/if}" }
-}, { animObject: m } = i, { deg2rad: h } = a, { pie: g, sankey: _ } = s.seriesTypes;
-u(c);
+}, { deg2rad: h } = i, { pie: g, sankey: _ } = s.seriesTypes;
+d(c);
 var v = class extends _ {
 	animate(e) {
 		let t = this;
 		if (!e) {
-			let e = m(t.options.animation).duration / 2 / t.nodes.length, n = 0;
+			let e = o(t.options.animation).duration / 2 / t.nodes.length, n = 0;
 			for (let r of t.nodes) {
 				let t = r.graphic;
 				t && (t.attr({ opacity: 0 }), setTimeout(() => {
@@ -83,7 +84,7 @@ var v = class extends _ {
 		}, t;
 	}
 	createNodeColumns() {
-		let e = this, t = [l.compose([], e)];
+		let e = this, t = [u.compose([], e)];
 		for (let n of e.nodes) n.column = 0, t[0].push(n);
 		return t;
 	}
@@ -91,10 +92,10 @@ var v = class extends _ {
 		return this.options.nodePadding / Math.PI;
 	}
 	translate() {
-		let e = this, t = e.options, r = 2 * Math.PI / (e.chart.plotHeight + e.getNodePadding()), i = e.getCenter(), a = ((t.startAngle || 0) - 90) * h, o = t.borderRadius, s = typeof o == "object" ? o.radius : o;
+		let e = this, t = e.options, r = 2 * Math.PI / (e.chart.plotHeight + e.getNodePadding()), i = e.getCenter(), a = ((t.startAngle || 0) - 90) * h, o = l(t.borderRadius).radius;
 		super.translate();
 		for (let e of this.nodeColumns[0]) if (e.sum) {
-			let o = e.shapeArgs, c = i[0], l = i[1], u = i[2] / 2, d = t.nodeWidth === "auto" ? 20 : t.nodeWidth, f = u - n(d || 0, u), p = a + r * (o.y || 0), m = a + r * ((o.y || 0) + (o.height || 0));
+			let s = e.shapeArgs, c = i[0], l = i[1], u = i[2] / 2, d = t.nodeWidth === "auto" ? 20 : t.nodeWidth, f = u - n(d || 0, u), p = a + r * (s.y || 0), m = a + r * ((s.y || 0) + (s.height || 0));
 			e.angle = p + (m - p) / 2, e.shapeType = "arc", e.shapeArgs = {
 				x: c,
 				y: l,
@@ -102,7 +103,7 @@ var v = class extends _ {
 				innerR: f,
 				start: p,
 				end: m,
-				borderRadius: s
+				borderRadius: o
 			}, e.dlBox = {
 				x: c + Math.cos((p + m) / 2) * (u + f) / 2,
 				y: l + Math.sin((p + m) / 2) * (u + f) / 2,
@@ -175,7 +176,7 @@ var v = class extends _ {
 		super.translateNode(e, t), e.sumTo = e.getSumTo();
 	}
 };
-v.defaultOptions = t(_.defaultOptions, p), e(v.prototype, {
+v.defaultOptions = e(_.defaultOptions, m), r(v.prototype, {
 	orderNodes: !1,
 	pointArrayMap: [
 		"from",
@@ -184,11 +185,9 @@ v.defaultOptions = t(_.defaultOptions, p), e(v.prototype, {
 		"weightTo"
 	],
 	getCenter: g.prototype.getCenter
-}), v.prototype.pointClass = f, s.registerSeriesType("dependencywheel", v);
+}), v.prototype.pointClass = p, s.registerSeriesType("dependencywheel", v);
 //#endregion
 //#region node_modules/highcharts/es-modules/masters/modules/dependency-wheel.src.js
-var y = a;
+var y = i;
 //#endregion
 export { y as default };
-
-//# sourceMappingURL=dependency-wheel.src-BHmwx9rW.js.map
